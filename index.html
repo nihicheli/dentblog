@@ -168,7 +168,7 @@ html = r"""<!DOCTYPE html>
     <section id="view-home" class="view active home">
       <div class="hero">
         <h1>🦷DentBlog</h1>
-        <p class="typing">🦷DentBlog  플래시카드, 퀴즈, 칼럼으로 이론을 함께 학습하세요.</p>
+        <p class="typing">플래시카드·퀴즈·칼럼으로 치의학을 쉽게 학습하세요.</p>
         <div id="home-stats" class="chips" style="justify-content:center; gap:8px"></div>
       </div>
 
@@ -190,13 +190,13 @@ html = r"""<!DOCTYPE html>
         </div>
       </div>
 
-      <footer>© 2025 DentBlog · 교육용 프로토타입</footer>
+      <footer>© 2025 DentBlog · made by DO</footer>
     </section>
 
     <section id="view-sets" class="view sets">
       <div class="hero" style="text-align:left">
         <h1 style="font-size:var(--fs-h1)">학습 세트</h1>
-        <p class="muted">검색/구분으로 필터링 후 바로 Flash/Quiz를 시작하세요.</p>
+        <p class="muted">Flash/Quiz로 공부하세요.</p>
       </div>
       <div class="card shadow" style="margin-bottom:12px">
         <div class="filters">
@@ -323,7 +323,7 @@ html = r"""<!DOCTYPE html>
           <button class="btn" data-action="blog-new">새 글</button>
         </div>
       </div>
-      <p class="muted" style="margin-top:0;">일반 치의학 이론과 케이스 노트를 정리하세요.</p>
+      <p class="muted" style="margin-top:0;">치의학 이론을 공부해요.</p>
 
       <div class="blog">
         <aside class="blog-sidebar">
@@ -360,7 +360,7 @@ html = r"""<!DOCTYPE html>
     <section id="view-admin" class="view">
       <div class="hero" style="text-align:left">
         <h1 style="font-size:var(--fs-h1)">관리자</h1>
-        <p class="muted">관리자 키는 <b>0917</b>로 고정되어 있습니다. 저장 기능은 없습니다.</p>
+        <p class="muted">관리자 키는 고정되어 있습니다. 저장 기능은 없습니다.</p>
       </div>
       <div class="grid cols-2">
         <div class="card shadow">
@@ -480,7 +480,7 @@ html = r"""<!DOCTYPE html>
 
     let CurrentSet = null;
 
-    const Theme={ toggle(){ document.documentElement.classList.toggle('dark'); const isDark=document.documentElement.classList.contains('dark'); $('#theme-btn').textContent=isDark?'◑':'◐'; note(isDark?'다크 모드 적용':'라이트 모드 적용'); }, init(){ const saved=localStorage.getItem('theme'); if(saved==='dark'){ document.documentElement.classList.add('dark'); $('#theme-btn').textContent='◑'; } else { $('#theme-btn').textContent='◐'; } } };
+    const Theme={ toggle(){ document.documentElement.classList.toggle('dark'); const isDark=document.documentElement.classList.contains('dark'); $('#theme-btn').textContent=isDark?'☀️':'🌙'; note(isDark?'다크 모드 적용':'라이트 모드 적용'); }, init(){ const saved=localStorage.getItem('theme'); if(saved==='dark'){ document.documentElement.classList.add('dark'); $('#theme-btn').textContent='◑'; } else { $('#theme-btn').textContent='◐'; } } };
 
     function routeTo(view, params={}){
       if(!document.getElementById('view-flash').classList.contains('active') && view==='flash'){}
@@ -649,7 +649,7 @@ html = r"""<!DOCTYPE html>
       renderBins(){ const binEls = $$('#bins .bin'); const total = CurrentSet?.cards?.length||0; this.bins.forEach((b,i)=>{ const el=binEls[i]; if(!el||!total) return; el.querySelector('.bin-bar i').style.width = `${(b.length/total)*100}%`; el.querySelector('div:last-child').textContent = b.length; }); },
       toggleAutoplay(){
         this.autoplay = !this.autoplay;
-        $('#autoplay-btn').textContent = this.autoplay ? '∥' : '▸';
+        $('#autoplay-btn').textContent = this.autoplay ? '❚❚' : '▶︎';
         if(this.autoplay){
           $('#auto-next').checked = True;
           const firstUnsolved = this.order.findIndex(idx => this.binOf(idx) < 4);
@@ -682,7 +682,7 @@ html = r"""<!DOCTYPE html>
           ${q?.image?`<img src='${q.image}' alt='x-ray' style="max-height:360px; object-fit:contain"/>`:''}
           <div style='font-weight:900; font-size:var(--fs-h2)'>
             <span>${esc(q?.stem||'')}</span>
-            <button class="btn icon" data-action="tts-toggle" aria-label="읽기/일시정지" data-text="${esc(q?.stem||'')}">▸</button>
+            <button class="btn icon" data-action="tts-toggle" aria-label="읽기/일시정지" data-text="${esc(q?.stem||'')}">🔊</button>
             <button class="btn icon" data-action="tts-stop" aria-label="정지">■</button>
           </div>
           <div id='quiz-opts' class='grid' style="gap:8px"></div>

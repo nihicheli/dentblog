@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>🦷DentBlog | 치의학 블로그그</title>
+  <title>🦷DentBlog | 치의학 블로그</title>
   <meta name="description" content="치의학 영상·일반 학습을 위한 플래시카드 · 퀴즈 · 칼럼" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
@@ -201,10 +201,19 @@
       </div>
       <div class="card shadow" style="margin-bottom:12px">
         <div class="filters">
-          <input id="q" placeholder="검색" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a"/>
-          <div class="select">
-            <span class="label">구분</span>
-            <select id="mod">
+          <input id="q" placeholder="검색"
+            style="flex:1;padding:12px;border-radius:12px;
+                   border:1px solid var(--line);
+                   background:#fff;color:#0f172a"/>
+          <div>
+            <label for="mod" class="label">구분</label>
+            <select id="mod"
+              style="padding:8px;border-radius:8px;
+                     border:1px solid var(--line);
+                     background:#fff;color:#0f172a;
+                     appearance:none;-webkit-appearance:none;
+                     background:url('down-arrow.svg') no-repeat right 12px center;
+                     padding-right:28px;">
               <option value="">전체</option>
             </select>
           </div>

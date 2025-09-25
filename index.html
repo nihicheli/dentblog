@@ -1032,15 +1032,15 @@
     })();
   </script>
 
-  <!-- ===== PATCH: Google Sheets 우선 로더 (기존 기능/디자인 무손상) ===== -->
+  <!-- ===== PATCH: 헤더/칼럼 정규화 + 시트 우선 로더 (기존 기능/디자인 보존) ===== -->
   <script>
-  /* 0) 시트 설정 */
+  /* 0) 시트 ID (이미 있다면 이 블록은 무시됨) */
   window.SHEETS = window.SHEETS || {
     blogs: { id: '1B9zr1SQ7ROzIgwC2k8TmuTh0KfNM2-Y_FgNclQVEFZA', gid: '908527068' },
     sets:  { id: '1BWSJMBLuEU2v7eon5MdM02fAFHV0z5T2tr3_42K15dY', gid: '66467758' }
   };
   
-  /* 1) 유틸이 없을 때만 보강 */
+  /* 1) 유틸(없을 때만 정의) */
   if (typeof fetchText !== 'function') {
     async function fetchText(url){
       const res = await fetch(url, {cache:'no-store'});
@@ -1049,7 +1049,7 @@
     }
   }
   if (typeof parseCSV !== 'function') {
-    // 견고한 CSV 파서(따옴표/콤마/줄바꿈 대응)
+    // 따옴표/콤마/줄바꿈 안전 파서
     function parseCSV(text){
       const rows=[]; let row=[], i=0, s=text, val='', q=false;
       const push=()=>{ row.push(val); val=''; };
@@ -1070,7 +1070,12 @@
       }
       if(val.length || row.length) endrow();
       if(!rows.length) return [];
-      const headers = rows[0].map(h=>h.trim());
+      // 🔧 헤더 정리: BOM/제로폭 제거 + 트리밍
+      const clean = h => (h||'').toString()
+        .replace(/^\uFEFF/, '')                // BOM
+        .replace(/[\u200B-\u200D\uFEFF]/g,'')  // zero-width
+        .trim();
+      const headers = rows[0].map(clean);
       return rows.slice(1).filter(r=> r.some(c=>String(c).trim().length)).map(cols=>{
         const obj={};
         headers.forEach((h,idx)=> obj[h]= (cols[idx]??'').toString().trim());
@@ -1092,13 +1097,52 @@
     }
   }
   
-  /* 2) 세트: 평평한 행 → 화면이 쓰는 세트 구조로 변환 (없을 때만 추가) */
+  /* 2) 헤더 키 정규화 & 별칭 매핑 */
+  function __cleanKey(k){
+    return (k||'').toString()
+      .replace(/^\uFEFF/,'').replace(/[\u200B-\u200D\uFEFF]/g,'') // BOM/zero-width
+      .toLowerCase().trim().replace(/[\s_-]+/g,'');               // 공백/언더/대시 제거
+  }
+  // sets 시트 별칭 → 표준키
+  const __SETS_ALIAS = {
+    // 기본
+    q:'q', question:'q', 문제:'q', 질문:'q',
+    a:'a', answer:'a', 정답:'a',
+    e:'e', explain:'e', explanation:'e', 해설:'e', 설명:'e',
+    img:'img', image:'img', imageurl:'img', imgurl:'img', 이미지:'img', 사진:'img',
+    tags:'tags', tag:'tags', 태그:'tags',
+    set:'set', setid:'set', setname:'set', 세트:'set', 세트명:'set', 세트이름:'set', 이름:'set', name:'set',
+    modality:'modality', mode:'modality', 모드:'modality', 유형:'modality', 영상:'modality', 영상구분:'modality',
+    setdesc:'set_desc', desc:'set_desc', 설명문:'set_desc', 세트설명:'set_desc',
+    group:'group', 분류:'group', 그룹:'group', 카테고리:'group', 과목:'group'
+  };
+  // blogs 시트 별칭 → 표준키
+  const __BLOGS_ALIAS = {
+    id:'id', 번호:'id', no:'id',
+    title:'title', 제목:'title', 타이틀:'title',
+    body:'body', 본문:'body', 내용:'body', text:'body', article:'body', post:'body',
+    date:'date', when:'date', 작성일:'date', 날짜:'date',
+    category:'category', cat:'category', tags:'category', 분류:'category', 태그:'category', 카테고리:'category'
+  };
+  function normalizeRow(row, aliasMap){
+    const out={};
+    for(const [k,v] of Object.entries(row)){
+      const ck = __cleanKey(k);
+      const key = aliasMap[ck] || ck; // 모르는 키는 원래 키(소문자/트림/결합)로 둠
+      out[key] = v;
+    }
+    return out;
+  }
+  
+  /* 3) 평평한 행 → 세트 구조로 */
   if (typeof csvRowsToSets !== 'function') {
     function csvRowsToSets(rows){
       const map=new Map();
-      (rows||[]).forEach(r=>{
+      (rows||[]).forEach(r0=>{
+        const r = normalizeRow(r0, __SETS_ALIAS);   // ⬅️ 핵심: 헤더 정규화
         const title = (r.set||'unnamed').trim();
-        const id = (typeof slug==='function') ? slug(title) : title.toLowerCase().replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-');
+        const id = (typeof slug==='function') ? slug(title)
+                 : title.toLowerCase().replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-');
         if(!map.has(id)){
           map.set(id, {
             id,
@@ -1118,7 +1162,6 @@
           tags: parseTags(r.tags)
         });
       });
-  
       const sets = Array.from(map.values()).map(s=>{
         s.cards = (s.cards||[]).map(c=>{
           if (!c.img && typeof ph === 'function') return ({ ...c, img: ph(c.a||'Card') });
@@ -1126,59 +1169,55 @@
         });
         return s;
       });
-  
       if (typeof replaceSets === 'function') {
         replaceSets(sets);
       } else if (Array.isArray(window.DemoSets)) {
-        // 구형 구조 호환
-        window.DemoSets.length = 0;
-        sets.forEach(s=> window.DemoSets.push(s));
+        window.DemoSets.length = 0; sets.forEach(s=> window.DemoSets.push(s));
         if (typeof renderSetList==='function') renderSetList();
         if (typeof renderHome==='function') renderHome();
       } else {
-        // 최후 폴백
         window.Sets = sets;
       }
     }
   }
   
-  /* 3) tryLoadSets: 구글 시트 우선 → 실패 시 기존 로더로 폴백 */
+  /* 4) tryLoadSets: 시트 우선 + 폴백(원래 로더) */
   (function(){
-    const orig = window.tryLoadSets; // 기존 로더 보존
+    const orig = window.tryLoadSets;
     window.tryLoadSets = async function(){
       try{
-        const rows = await loadSheetCSV(window.SHEETS.sets);
-        if(rows && rows.length){
-          csvRowsToSets(rows); // 행 → 세트 구조
-          if (typeof logDev==='function') logDev('sets <- google sheet', rows.length);
+        const raw = await loadSheetCSV(window.SHEETS.sets);
+        if(raw && raw.length){
+          csvRowsToSets(raw);
+          if (typeof logDev==='function') logDev('sets <- google sheet (normalized)', raw.length);
           return 'sets.google';
         }
       }catch(e){
         if (typeof logDev==='function') logDev('sets google fail:', e.message||e);
       }
-      // 실패하면 기존 로더 실행 (디자인/기능 유지)
       if (typeof orig === 'function') return orig.apply(this, arguments);
       return null;
     };
   })();
   
-  /* 4) tryLoadBlogs: 구글 시트 우선 → 실패 시 기존 로더로 폴백 */
+  /* 5) tryLoadBlogs: 시트 우선 + 폴백(원래 로더) */
   (function(){
     const orig = window.tryLoadBlogs;
     window.tryLoadBlogs = async function(){
       try{
-        const rows = await loadSheetCSV(window.SHEETS.blogs);
-        if(rows && rows.length){
+        const raw = await loadSheetCSV(window.SHEETS.blogs);
+        if(raw && raw.length){
+          const rows = raw.map(r0=> normalizeRow(r0, __BLOGS_ALIAS)); // ⬅️ 제목/본문/날짜/카테고리 정규화
           window.BlogPosts = rows.map(r=>({
             id: r.id || (typeof uid==='function' ? uid() : (Math.random().toString(36).slice(2))),
             title: r.title || '',
-            body: r.body || '',
+            body: r.body  || '',
             when: r.date ? +new Date(r.date) : Date.now(),
-            category: r.category || r.cat || r.tags || ''
+            category: r.category || ''
           }));
           if (typeof persist==='function') try{persist();}catch{}
           if (typeof renderHome==='function') try{renderHome();}catch{}
-          if (typeof logDev==='function') logDev('blogs <- google sheet', rows.length);
+          if (typeof logDev==='function') logDev('blogs <- google sheet (normalized)', rows.length);
           return 'blogs.google';
         }
       }catch(e){
@@ -1190,5 +1229,6 @@
   })();
   </script>
   <!-- ===== /PATCH ===== -->
+
 </body>
 </html>

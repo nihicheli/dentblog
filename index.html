@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DxCards | 치의학 학습 플랫폼</title>
+  <meta name="description" content="치의학 영상·일반 학습을 위한 플래시카드 · 퀴즈 · 블로그" />
+  <!-- 폰트: Pretendard Variable + 시스템 폴백 -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    :root{
+      /* 색상 */
+      --bg:#fafafc;
+      --panel:#ffffff;
+      --panel-2:#f3f5f8;
+      --text:#0f172a;
+      --muted:#55627a;
+      --line:#e4e8ef;
+      --brand:#2563eb;
+      --brand-2:#1d4ed8;
+      --ok:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+      /* 레이아웃 */
+      --radius:14px;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --maxw:1120px;
+      /* 타입 스케일 */
+      --fs-hero: clamp(24px, 2.4vw, 36px);
+      --fs-h1: clamp(20px, 2vw, 28px);
+      --fs-h2: clamp(18px, 1.7vw, 24px);
+      --fs-h3: clamp(16px, 1.5vw, 20px);
+      --fs-body: clamp(14px, 1.2vw, 16px);
+      --fs-small: clamp(12px, 1vw, 14px);
+    }
+    html.dark{
+      --bg:#0f172a;
+      --panel:#111827;
+      --panel-2:#1f2937;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --line:#374151;
+      --brand:#60a5fa;
+      --brand-2:#3b82f6;
+      --ok:#4ade80;
+      --bad:#f87171;
+      --warn:#facc15;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font: 500 var(--fs-body)/1.65 "Pretendard","Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+      background:var(--bg); color:var(--text);
+      text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased;
+      transition:background-color .25s, color .25s;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    button{cursor:pointer}
+
+    /* HEADER */
+    header{position:sticky;top:0;z-index:50;background:color-mix(in oklab, var(--panel) 88%, transparent);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+    .nav{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900; letter-spacing:.1px}
+    .badge{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#93c5fd,#3b82f6);color:#0b1020;font-weight:900}
+    .tabs{margin-left:auto;display:flex;gap:6px}
+    .tab{padding:8px 12px;border-radius:10px;border:1px solid var(--line);color:var(--muted);background:var(--panel); transition:all .15s; font-weight:600}
+    .tab.active{background:linear-gradient(180deg,#eef2ff,#e0e7ff);color:#111827;border-color:#c7d2fe}
+    html.dark .tab.active{background:var(--panel-2); color:var(--text); border-color:var(--line)}
+    .theme{margin-left:6px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted);background:var(--panel)}
+
+    /* LAYOUT */
+    main{max-width:var(--maxw);margin:0 auto;padding:18px}
+    section.view{display:none}
+    section.view.active{display:block}
+
+    /* UI */
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px; transition:background-color .2s, border-color .2s}
+    .shadow{box-shadow:var(--shadow)}
+    .muted{color:var(--muted)}
+    .btn{border:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fafc);color:#111827;border-radius:10px;padding:9px 12px; transition:all .2s; font-weight:700}
+    html.dark .btn{background:var(--panel); color:var(--text)}
+    .btn:hover{border-color:#cbd5e1}
+    html.dark .btn:hover{border-color:var(--muted)}
+    .btn.primary{background:linear-gradient(180deg,#60a5fa,#3b82f6);color:#fff;border:none}
+    .btn.ok{background:linear-gradient(180deg,#34d399,#16a34a);color:#fff;border:none}
+    .btn.bad{background:linear-gradient(180deg,#fca5a5,#ef4444);color:#fff;border:none}
+    .btn-nav{
+      border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:9px 12px;
+      display:inline-flex;align-items:center;gap:6px; font-weight: 700;
+      transition:all .2s;
+    }
+    .btn-nav:hover{border-color:var(--brand); background:var(--panel-2)}
+    .chips{display:flex;gap:6px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;padding:2px 10px;border-radius:999px;border:1px solid var(--line);background:#eef2ff;color:#1e3a8a;font-size:12px}
+    html.dark .chip{background:var(--panel-2); color:var(--text)}
+
+    .grid{display:grid;gap:12px}
+    .cols-2{grid-template-columns:1.2fr .8fr}
+    .cols-3{grid-template-columns:repeat(3,1fr)}
+    @media (max-width:980px){.cols-3{grid-template-columns:repeat(2,1fr)}.cols-2{grid-template-columns:1fr}}
+    @media (max-width:680px){.cols-3{grid-template-columns:1fr}}
+
+    .row{display:flex;gap:12px;overflow:auto;padding-bottom:4px}
+    .row>.card{min-width:320px}
+
+    .hero{display:grid;gap:8px;margin:6px 0 14px;text-align:center;padding: 16px 0;}
+    .hero h1{margin:0;font-size:var(--fs-hero); font-weight:900}
+    .hero p{margin:0 auto; max-width:680px; font-size: clamp(15px, 1.3vw, 18px)}
+    .stat{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line); font-weight:800}
+
+    /* Tiles */
+    .set-tile{display:flex;gap:14px; cursor:pointer; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--panel)}
+    .set-tile:hover{background:var(--panel-2)}
+    .thumb{width:112px;height:84px;border-radius:10px;border:1px solid var(--line);overflow:hidden;background:var(--panel-2);display:grid;place-items:center}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .tile-body{flex:1;display:grid;gap:6px}
+
+    /* Flash */
+    .progress{height:10px;background:#e5e7eb;border:1px solid #d1d5db;border-radius:999px;overflow:hidden}
+    html.dark .progress{background:var(--panel-2);border-color:var(--line)}
+    .progress>i{display:block;height:100%;background:linear-gradient(90deg,#60a5fa,#3b82f6)}
+
+    .flash-frame{display:grid; grid-template-columns:1fr 1fr; gap:16px; box-shadow:var(--shadow)}
+    @media (max-width:900px){ .flash-frame{grid-template-columns:1fr} }
+    .flash-visual{display:flex; justify-content:center; align-items:center; padding:16px}
+    .flash-visual img{max-height:420px; width:100%; height:auto; object-fit:contain}
+    .flash-card{position:relative; display:flex; flex-direction:column; justify-content:center; text-align:center; padding:16px; cursor:pointer;}
+    .front,.back{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px; border-radius:12px; border:1px solid var(--line); transition:opacity .25s}
+    .front{background:var(--panel)}
+    .back{background:var(--panel-2); opacity:0; pointer-events:none}
+    .flip .front{opacity:0; pointer-events:none}
+    .flip .back{opacity:1; pointer-events:auto}
+    .countdown{ position:absolute; inset:0; display:grid; place-items:center; background:rgba(0,0,0,.55); color:#fff; font-size:48px; font-weight:900; border-radius:12px; opacity:0; transition:opacity .2s}
+    .countdown.show{ opacity:1 }
+
+    .tts-btn{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--panel-2); border:1px solid var(--line); color:var(--muted); margin-left:8px; }
+    html.dark .tts-btn{ background:var(--panel); }
+
+    .bin{ text-align:center }
+    .bin-bar{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;}
+    .bin-bar i{height:100%;display:block;background:var(--brand); transition:width .2s ease-in-out;}
+
+    /* Quiz */
+    .opt{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--panel); transition:all .2s}
+    .opt:hover{border-color:var(--brand);background:var(--panel-2)}
+    .opt.correct{border-color:var(--ok);background:color-mix(in oklab, var(--ok) 18%, transparent)}
+    .opt.wrong{border-color:var(--bad);background:color-mix(in oklab, var(--bad) 18%, transparent)}
+
+    /* Blog - 개선: 소제목 밑줄 제거 */
+    .blog{display:grid;grid-template-columns:320px 1fr;gap:16px; min-height:600px}
+    @media (max-width:980px){.blog{grid-template-columns:1fr}}
+    .blog-sidebar{position:sticky; top:84px; align-self:flex-start; max-height:calc(100vh - 120px); overflow-y:auto; padding:0;}
+    .blog-list{list-style:none;padding:0;margin:0}
+    .blog-list a{display:block;padding:10px 12px;border-radius:10px;color:var(--muted);border:1px solid transparent}
+    .blog-list a:hover{background:var(--panel-2); color:var(--text)}
+    .blog-list a.active{background:var(--brand); color:#fff; font-weight:800; border-color:transparent}
+    .blog-view{padding:18px;min-height:160px; background:var(--panel); border-radius:12px; box-shadow:var(--shadow)}
+    .blog-view h1{font-size:var(--fs-h1);margin:.2em 0 .5em; padding-bottom:8px}
+    .blog-view h2{font-size:var(--fs-h2);margin:1.3em 0 .4em; padding-bottom:4px}
+    .blog-view h3{font-size:var(--fs-h3);margin:1em 0 .4em}
+    .blog-view p{margin:0 0 1em}
+    .blog-view code{background:var(--panel-2); padding:2px 6px; border-radius:6px; font-size:90%}
+    .blog-view pre{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;margin:12px 0}
+    .editor input,.editor textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text)}
+    .editor textarea{min-height:180px;margin-bottom:8px}
+    .toc{margin-top:12px;font-size:var(--fs-small)}
+    .toc ul{list-style:none;margin:0;padding-left:0}
+    .toc li{margin:6px 0 0 0;padding-left:12px;border-left:1px dashed var(--line)}
+    .toc a{color:var(--muted)}
+    .toc a:hover{color:var(--text)}
+
+    /* Toast */
+    .toast{position:fixed;inset:auto 16px 16px auto;background:#111827;color:#e5e7eb;border:1px solid #374151;padding:10px 12px;border-radius:10px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:all .25s}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    footer{margin:24px 0;color:var(--muted); text-align:center}
+
+    /* 로딩 상태 */
+    .loading { opacity: 0.6; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand" data-nav="home" role="button" aria-label="홈으로 이동">
+        <div class="badge">Dx</div><div>DxCards</div>
+      </div>
+      <div class="tabs" role="tablist">
+        <a class="tab" data-nav="home" role="tab" aria-selected="true">홈</a>
+        <a class="tab" data-nav="sets" role="tab">세트</a>
+        <a class="tab" data-nav="blog" role="tab">블로그</a>
+        <a class="tab" data-nav="admin" role="tab">관리자</a>
+      </div>
+      <button id="theme-btn" class="theme" data-action="toggle-theme" aria-label="테마 전환">☀️</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section id="view-home" class="view active home">
+      <div class="hero">
+        <h1>DxCards</h1>
+        <p class="muted">치의학 영상 기반 플래시카드, 적응형 퀴즈, 블로그로 이론을 함께 학습하세요.</p>
+        <div id="home-stats" class="chips" style="justify-content:center; gap:8px"></div>
+      </div>
+
+      <div class="card shadow" style="padding:0; overflow:hidden; margin-bottom:12px">
+        <div style="display:flex; overflow:auto; gap:12px; padding:12px;">
+          <img src="https://via.placeholder.com/1100x120/2563eb/ffffff?text=임상+세트+프로모션" alt="광고" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:8px;"/>
+          <img src="https://via.placeholder.com/1100x120/1d4ed8/ffffff?text=CBCT+핵심+정리" alt="광고" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:8px;"/>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="card shadow">
+          <div class="muted" style="font-weight:800;margin-bottom:8px">추천 세트</div>
+          <div id="home-reco" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr));"></div>
+        </div>
+        <div class="card shadow">
+          <div class="muted" style="font-weight:800;margin-bottom:8px">블로그 최신</div>
+          <div id="home-blog-list" class="grid" style="grid-template-columns:1fr; gap:8px;"></div>
+        </div>
+      </div>
+
+      <footer>© 2025 DxCards · 교육용 프로토타입</footer>
+    </section>
+
+    <!-- SETS -->
+    <section id="view-sets" class="view sets">
+      <div class="hero" style="text-align:left">
+        <h1 style="font-size:var(--fs-h1)">학습 세트</h1>
+        <p class="muted">검색/모달리티로 필터링 후 Flash/Quiz를 시작하세요.</p>
+      </div>
+      <div class="card shadow" style="margin-bottom:12px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="q" placeholder="검색 (예: 낭종, CBCT, 임플란트)" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a"/>
+          <select id="mod" style="padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a">
+            <option value="">모달리티 전체</option>
+            <option>Panorama</option>
+            <option>CBCT</option>
+            <option>Periapical</option>
+          </select>
+        </div>
+      </div>
+      <div id="set-list" class="grid" style="grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));"></div>
+    </section>
+
+    <!-- DETAIL -->
+    <section id="view-detail" class="view">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <button class="btn-nav" data-nav="sets">← 목록</button>
+        <h2 id="detail-title" style="margin:0; font-size:var(--fs-h1)"></h2>
+      </div>
+      <div class="grid cols-2">
+        <div class="card shadow">
+          <div id="detail-desc" class="muted" style="margin-bottom:8px"></div>
+          <div id="detail-tags" class="chips" style="margin-bottom:10px"></div>
+          <div class="muted">카드 수: <b id="detail-count"></b></div>
+        </div>
+        <div class="card shadow">
+          <div class="muted" style="font-weight:800;margin-bottom:8px">시작하기</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn primary" data-action="start-mode" data-mode="flash">▶ Flashcards</button>
+            <button class="btn" data-action="start-mode" data-mode="quiz">▶ Quiz</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FLASH -->
+    <section id="view-flash" class="view">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
+        <button class="btn-nav" data-nav="detail">← 세트</button>
+        <div style="flex:1;">
+          <h2 id="flash-title" style="margin:0; font-size:var(--fs-h1)"></h2>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-nav" data-action="flash-prev">이전(←)</button>
+          <button class="btn-nav" data-action="flash-next">다음(→)</button>
+        </div>
+      </div>
+      <div class="progress"><i id="flash-bar" style="width:0%"></i></div>
+
+      <div id="flash-frame" class="card shadow flash-frame" style="margin-top:12px">
+        <div class="flash-visual">
+          <img id="flash-img" alt="x-ray"/>
+        </div>
+        <div class="flash-card" id="flash-card" data-action="flash-toggle">
+          <div class="front" id="flash-front">
+            <div style="font-weight:900; font-size:var(--fs-h2); display:flex; align-items:center; justify-content:center;">
+              <span>이 영상의 진단명은?</span>
+              <button class="tts-btn" data-action="tts-speak" data-text="이 영상의 진단명은?">🗣️</button>
+            </div>
+            <div class="muted" style="margin-top:8px;font-size:var(--fs-small)">클릭하여 답 확인</div>
+          </div>
+          <div class="back" id="flash-back">
+            <div style="text-align:center;">
+              <div class="muted">정답</div>
+              <div id="flash-answer" style="font-size:var(--fs-h2);font-weight:900;margin:4px 0 8px"></div>
+              <div id="flash-explain" class="muted" style="max-width:520px;margin:0 auto"></div>
+            </div>
+          </div>
+          <div id="countdown" class="countdown" aria-hidden="true"></div>
+        </div>
+        <div class="card">
+          <div class="muted" style="font-weight:800;margin-bottom:8px">채점</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn ok"  data-action="flash-grade" data-ok="1">알았다</button>
+            <button class="btn bad" data-action="flash-grade" data-ok="0">몰랐다</button>
+          </div>
+          <div id="bins" style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top: 12px;">
+            ${[1,2,3,4,5].map(()=>`
+            <div class="bin">
+              <div class="bin-bar"><i style="width:0%"></i></div>
+              <div class="muted" style="font-size:12px;margin-top:4px">Bin</div>
+              <div style="font-weight:900;font-size:18px">0</div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="card">
+          <div class="muted" style="font-weight:800;margin-bottom:8px">탐색·타이머</div>
+          <div style="display:flex;gap:8px;align-items:center; flex-wrap:wrap">
+            <span id="flash-pos" class="stat">0/0</span>
+            <select id="timer-select" style="padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--panel);min-width:100px">
+              <option value="3">3초</option>
+              <option value="5" selected>5초</option>
+              <option value="10">10초</option>
+            </select>
+            <button class="btn primary" data-action="start-timer" id="timer-btn">타이머 시작</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="view-quiz" class="view">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <button class="btn-nav" data-nav="detail">← 세트</button>
+        <h2 id="quiz-title" style="margin:0; font-size:var(--fs-h1)"></h2>
+      </div>
+      <div class="card shadow" style="margin-bottom:10px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <label>모드
+            <select id="quiz-mode" style="padding:8px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a">
+              <option value="mc">객관식</option>
+              <option value="tf">OX</option>
+              <option value="fill">빈칸</option>
+            </select>
+          </label>
+          <label>문항 수
+            <select id="quiz-n" style="padding:8px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a">
+              <option>5</option><option selected>10</option><option>15</option>
+            </select>
+          </label>
+          <button class="btn primary" data-action="quiz-start">시작</button>
+        </div>
+      </div>
+      <div class="card shadow" id="quiz-stage" style="display:none"></div>
+    </section>
+
+    <!-- BLOG -->
+    <section id="view-blog" class="view">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h1 style="margin:0;font-size:var(--fs-h1)">블로그</h1>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+          <input id="blog-q" placeholder="검색" style="padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text)"/>
+          <button class="btn" data-action="blog-new">새 글</button>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:0;">일반 치의학 이론과 케이스 노트를 정리하세요.</p>
+
+      <div class="blog">
+        <aside class="blog-sidebar">
+          <div class="card" style="padding:12px; position:sticky; top:0;">
+            <div style="font-weight:900; font-size:1.05em; padding-bottom:8px; border-bottom:1px solid var(--line);">글 목록</div>
+            <ul id="blog-list" class="blog-list" style="margin-top:8px"></ul>
+            <div id="blog-toc" class="toc" style="display:none;"></div>
+          </div>
+        </aside>
+        <div>
+          <div id="blog-view" class="blog-view"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+            <input id="blog-key" type="password" placeholder="관리자 키 (기본 0917)" style="padding:10px;border-radius:10px;border:1px solid var(--line)" />
+            <button class="btn" data-action="blog-edit">수정</button>
+            <button class="btn bad" data-action="blog-delete">삭제</button>
+          </div>
+          <div id="blog-editor" class="editor" style="display:none;margin-top:10px">
+            <input id="blog-title" placeholder="제목" />
+            <textarea id="blog-body" placeholder="내용(Markdown 지원)"></textarea>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn primary" data-action="blog-save">저장</button>
+              <button class="btn" data-action="blog-cancel">취소</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="view-admin" class="view">
+      <div class="hero" style="text-align:left">
+        <h1 style="font-size:var(--fs-h1)">관리자</h1>
+        <p class="muted">관리자 키가 일치하면 대량 등록/백업이 가능합니다. 기본 키: <code>0917</code></p>
+      </div>
+      <div class="grid cols-2">
+        <div class="card shadow">
+          <h3 style="margin-top:0; font-size:var(--fs-h2)">카드 일괄 등록</h3>
+          <div style="display:grid;gap:8px">
+            <input id="adm-key" type="password" placeholder="관리자 키"/>
+            <select id="adm-target" style="padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a"></select>
+            <input id="adm-newset" placeholder="새 세트 이름(신규 생성 시)"/>
+            <textarea id="adm-json" placeholder='[{"q":"문제","a":"정답","e":"해설","img":"url","tags":"CBCT;낭종"}]' rows="6"></textarea>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <input id="adm-csv" type="file" accept=".csv"/>
+              <button class="btn" data-action="adm-json">JSON 등록</button>
+              <button class="btn" data-action="adm-csv">CSV 등록</button>
+              <button class="btn" data-action="adm-export">전체 백업(JSON)</button>
+              <button class="btn bad" data-action="adm-reset">모든 데이터 초기화</button>
+              <button class="btn" data-action="load-remote-data">원격 데이터 로드</button>
+            </div>
+          </div>
+        </div>
+        <div class="card shadow">
+          <h3 style="margin-top:0; font-size:var(--fs-h2)">CSV 형식</h3>
+          <div class="muted">헤더 포함 권장. 지원 컬럼: <b>q, a, e, img, tags</b> (tags는 세미콜론 ; 구분)</div>
+<pre class="muted" style="white-space:pre-wrap;background:var(--panel-2);border:1px solid var(--line);padding:10px;border-radius:10px">q,a,e,img,tags
+이 영상의 진단명은?,Dentigerous cyst,매복치 치관 주위 방사선투과,https://ex.com/dentigerous.jpg,Panorama;낭종
+임플란트 주위 방사선투과 소견?,Peri-implantitis,크레이터형 결손,https://ex.com/implantitis.jpg,Periapical;임플란트</pre>
+        </div>
+        <div class="card shadow">
+          <h3 style="margin-top:0; font-size:var(--fs-h2)">개발자 도구</h3>
+          <div class="muted" style="margin-bottom:6px">런타임 진단/테스트</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+            <button class="btn" data-action="run-tests">런타임 진단 실행</button>
+          </div>
+          <pre id="dev-log" class="muted" style="white-space:pre-wrap;background:var(--panel-2);border:1px solid var(--line);padding:10px;border-radius:10px;max-height:260px;overflow:auto"></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* ----------------------------- Utilities ----------------------------- */
+    const $ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
+    const $ = (sel,root=document)=>root.querySelector(sel);
+    const note=(msg, warn)=>{ const t=$('#toast'); t.textContent=msg; t.style.background= warn? '#991b1b':'#111827'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1200); };
+    const uid=()=>Math.random().toString(36).slice(2,9);
+    const slug=s=>(s||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')||('set-'+uid());
+    const esc=s=>(s==null?'':String(s)).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+    const mdDate=t=>{ const d=new Date(t); const mm=('0'+(d.getMonth()+1)).slice(-2), dd=('0'+d.getDate()).slice(-2); return `${mm}/${dd}` };
+    const norm=s=>(s||'').toString().trim().toLowerCase().replace(/\s+/g,' ');
+    const sample=(a,n)=>{const x=[...a]; const out=[]; while(x.length&&out.length<n){ out.push(x.splice((Math.random()*x.length)|0,1)[0]) } return out };
+    const shuffle=a=>{for(let i=a.length-1;i>0;i++){const j=(Math.random()*(i+1)|0);[a[i],a[j]]=[a[j],a[i]]}return a};
+    const parseTags=t=>!t?[]:Array.isArray(t)?t:String(t).split(/;|,/).map(s=>s.trim()).filter(Boolean);
+    const splitCSV=line=>{ const res=[]; let cur=''; let q=false; for(let i=0;i<line.length;i++){ const ch=line[i]; if(ch==='"'){ if(q && line[i+1]==='"'){ cur+='"'; i++; } else { q=!q; } } else if(ch===',' && !q){ res.push(cur); cur=''; } else { cur+=ch; } } res.push(cur); return res.map(s=>s.trim()); };
+    const parseCSV=txt=>{ const lines = txt.split(/\r?\n/).filter(l=>l.trim()); if(!lines.length) return []; const head = splitCSV(lines[0]); const out=[]; for(let i=1;i<lines.length;i++){ const cols = splitCSV(lines[i]); const row={}; head.forEach((h,idx)=> row[h]=cols[idx]); out.push(row); } return out; };
+    const ph=label=>{ const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='720' height='420'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#e5e7eb'/><stop offset='1' stop-color='#cbd5e1'/></linearGradient></defs><rect width='100%' height='100%' fill='url(#g)'/><g fill='#1f2937' font-family='Arial' text-anchor='middle'><text x='50%' y='50%' font-size='22' font-weight='700'>${esc(label)}</text><text x='50%' y='58%' font-size='12' fill='#6b7280'>Demo Placeholder</text></g></svg>`; return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg); };
+
+    // Voice synthesis (TTS)
+    const tts = { synth: window.speechSynthesis, speak(text){ if(this.synth.speaking) this.synth.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='ko-KR'; this.synth.speak(u); } };
+
+    // Markdown (safe-ish) + TOC harvest - 개선: 소제목 밑줄 제거
+    const markdown=(src='')=>{
+      let s=esc(src);
+      const heads=[];
+      s = s.replace(/^(#{1,4})\s+(.+)$/gm,(_,h,ct)=>{
+        const id = slug(ct);
+        heads.push({id, level:h.length, text:ct});
+        return `<h${h.length} id="${id}">${ct}</h${h.length}>`;
+      });
+      s=s.replace(/```([\s\S]*?)```/g,(m,code)=>`<pre><code>${code.replace(/</g,'&lt;')}</code></pre>`);
+      s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
+      s=s.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+      s=s.replace(/\*([^*]+)\*/g,'<i>$1</i>');
+      s=s.replace(/\n/g,'<br>');
+      markdown.headings=heads;
+      return s;
+    };
+
+    /* ------------------------------ Demo Data (enhanced) ------------------------------ */
+    let DemoSets = [
+      { id:'set-pan', modality:'Panorama', title:'낭종 vs 종양 감별', desc:'경계/피질화/치근 흡수/매복치 관계로 감별 연습', tags:['낭종','종양','감별'],
+        cards:[
+          { q:'이 영상의 진단명은?', a:'Dentigerous cyst', e:'매복치 치관 주위에 well-defined corticated radiolucency, 치관 연결.', img:ph('Dentigerous cyst'), tags:['낭종','매복치'] },
+          { q:'이 영상의 진단명은?', a:'Ameloblastoma', e:'다방성, expansile, thinning/bowing, 치근 흡수 가능.', img:ph('Ameloblastoma'), tags:['종양','다방성'] },
+          { q:'이 영상의 진단명은?', a:'Radicular cyst', e:'비활성/괴사 치아 치근단의 원형 방사선투과성 병소, 얇은 피질 경계.', img:ph('Radicular cyst'), tags:['낭종','치근단'] },
+          { q:'이 영상의 진단명은?', a:'OKC', e:'Scalloped, 전후 길게, 상대적으로 팽창 적음, 재발 경향.', img:ph('OKC'), tags:['낭종','OKC'] },
+          { q:'다음 중 sunray appearance를 보이는 악성은?', a:'Osteosarcoma', e:'Periosteal reaction(sunburst)와 불규칙한 혼합음영.', img:ph('Osteosarcoma'), tags:['악성','periosteal'] }
+        ]
+      },
+      { id:'set-cbct', modality:'CBCT', title:'CBCT 혼합음영 병소', desc:'혼합음영·불규칙 경계 병소 감별 포인트', tags:['CBCT','혼합음영'],
+        cards:[
+          { q:'이 영상의 진단명은?', a:'Cemento-ossifying fibroma', e:'경계 명확·확장성·내부 혼합음영; 성인 여성, 하악 구치부 호발.', img:ph('COF'), tags:['혼합음영','양성'] },
+          { q:'이 영상의 진단명은?', a:'Chronic osteomyelitis', e:'불규칙 혼합음영, sequestrum/involucrum, periosteal reaction 가능.', img:ph('Osteomyelitis'), tags:['감염','염증'] },
+          { q:'이 영상의 진단명은?', a:'Fibrous dysplasia', e:'Ground-glass, 경계 불명확, cortical thinning; 청소년 호발.', img:ph('FD'), tags:['발육성','ground-glass'] },
+          { q:'이 영상의 진단명은?', a:'Osteosarcoma', e:'파괴적 경계, sunburst, widening of PDL space.', img:ph('OS'), tags:['악성','sunburst'] }
+        ]
+      },
+      { id:'set-peri', modality:'Periapical', title:'치주/임플란트 영상', desc:'치주성·임플 합병증 위주 체크', tags:['치주','임플란트'],
+        cards:[
+          { q:'이 영상의 진단명은?', a:'Horizontal bone loss', e:'치근장축 평행 수평성 골소실; stage 평가에 활용.', img:ph('Horizontal bone loss'), tags:['치주'] },
+          { q:'이 영상의 진단명은?', a:'Peri-implantitis', e:'임플란트 주위 투과 증가·crater-like defect, 나사선 노출.', img:ph('Peri-implantitis'), tags:['임플란트'] },
+          { q:'이 영상의 진단명은?', a:'External root resorption', e:'치근 외측 경계 소실·불규칙; 재흡수 범위 확인.', img:ph('ERR'), tags:['흡수'] },
+          { q:'임플란트 주위 mucositis와 peri-implantitis의 영상학적 차이는?', a:'골 소실 유무', e:'Mucositis=연조직 염증 중심(골변화 X), peri-implantitis=골소실 동반.', img:ph('Implant Q'), tags:['임플란트','감별'] }
+        ]
+      },
+      { id:'set-endo', modality:'Periapical', title:'근관치료 영상', desc:'근관치료 전후·합병증 영상 포인트', tags:['근관치료','Periapical'],
+        cards:[
+          { q:'이 영상의 진단명은?', a:'Apical periodontitis', e:'치근단 주위 방사선투과성 병소, PDL space widening.', img:ph('AP'), tags:['치근단','염증'] },
+          { q:'근관충전 평가에서 가장 중요한 기준은?', a:'치근단까지의 적절한 밀폐', e:'apex 근접·void 최소·테이퍼 적절', img:ph('Obturation'), tags:['질 평가'] },
+          { q:'이 영상의 합병증은?', a:'Instrument separation', e:'근관 내 금속 파절물 확인; 위치/길이 평가', img:ph('Separated file'), tags:['합병증'] }
+        ]
+      }
+    ];
+
+    // 추가 예시 블로그 (실전형)
+    let BlogPosts = [
+      {
+        id:uid(),
+        title:'방사선학적 낭종 감별: Dentigerous vs Radicular vs OKC',
+        body: `# 개요
+치성 낭종은 영상학적으로 **경계, 피질화, 치아와의 관계**로 감별합니다.
+
+## Dentigerous cyst
+- 매복치 *치관* 주위에 **well-defined, corticated** radiolucency
+- 치관과 병소의 **연결**이 핵심 단서
+
+## Radicular cyst
+- **비활성/괴사 치아** 치근단에 원형 투과성 병소
+- 얇은 코르텍스, 치근단 병변과의 연속성
+
+## OKC (Odontogenic keratocyst)
+- **Scalloped**, 전후 길게, 팽창 상대적으로 적음
+- 재발 경향, 다발성 시 NBCCS 고려`,
+        when: Date.now()-1000*60*60*24*2
+      },
+      {
+        id:uid(),
+        title:'임플란트 합병증의 영상학적 징후',
+        body:`# Peri-implant disease
+- **Mucositis**: 연조직 염증 중심, *골소실 없음*
+- **Peri-implantitis**: **crater-like** 골결손, 나사선 노출
+
+## 평가 포인트
+1. baseline 대비 **crestal bone level** 변화
+2. 나사선 노출 범위
+3. 보철 구조물 유무/적합`,
+        when: Date.now()-1000*60*60*20
+      },
+      {
+        id:uid(),
+        title:'CBCT 혼합음영 병소 감별 포인트',
+        body:`# Key lesions
+## COF
+경계 뚜렷, 확장성, 내부 **혼합음영**.
+
+## Fibrous dysplasia
+**Ground-glass**, 경계 불명확, cortical thinning.
+
+## Osteosarcoma
+파괴적 경계, **sunburst**, PDL space widening.`,
+        when: Date.now()-1000*60*60*3
+      },
+      {
+        id:uid(),
+        title:'치주염의 영상학적 소견 정리',
+        body:`# 치주염
+수평성·수직성 **치조골 소실**, interdental 크레스트의 변형.
+
+## Stage/Grade 개관
+- Stage: 파괴의 **심도/복잡성**
+- Grade: **진행속도**와 위험인자`,
+        when: Date.now()-1000*60*10
+      },
+      {
+        id:uid(),
+        title:'근관치료 영상 평가 체크리스트',
+        body:`# Pre-op
+- working length 추정, **apical constriction** 가늠
+
+# Post-op
+- **apex 근접** 충전, void 최소, taper 적절
+- 합병증: **ledge**, **perforation**, **separated file**`,
+        when: Date.now()-1000*30
+      }
+    ];
+
+    /* -------------------------------- STATE -------------------------------- */
+    let CurrentSet = null;
+
+    /* -------------------------------- THEME -------------------------------- */
+    const Theme={
+      toggle(){
+        document.documentElement.classList.toggle('dark');
+        const isDark = document.documentElement.classList.contains('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        $('#theme-btn').textContent = isDark ? '🌙' : '☀️';
+        note(isDark ? '다크 모드 적용' : '라이트 모드 적용');
+      },
+      init(){
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+          $('#theme-btn').textContent = '🌙';
+        } else {
+          $('#theme-btn').textContent = '☀️';
+        }
+      }
+    };
+
+    /* -------------------------------- ROUTER -------------------------------- */
+    function routeTo(view, params={}){
+      $('section.view').forEach(s=>s.classList.remove('active'));
+      $('#view-'+view)?.classList.add('active');
+      $('.tab').forEach(t=>t.classList.toggle('active', t.dataset.nav===view));
+      routeTo.params = params;
+      if(view==='home')  renderHome();
+      if(view==='sets')  renderSetList();
+      if(view==='detail') renderDetail(params);
+      if(view==='flash') Flash.mount();
+      if(view==='quiz')  Quiz.mount();
+      if(view==='blog')  Blog.render();
+      if(view==='admin') Admin.mount();
+      history.pushState(null, '', '#'+view);
+    }
+    window.addEventListener('hashchange',()=>{ const v=(location.hash||'#home').slice(1); routeTo(v, routeTo.params||{}); });
+
+    /* ------------------------------ RENDERERS ------------------------------ */
+    const homeStats=()=>({
+      sets: DemoSets.length,
+      cards: DemoSets.reduce((n,s)=>n+(s.cards?.length||0),0),
+      blogs: BlogPosts.length
+    });
+
+    function renderHome(){
+      const st=homeStats();
+      $('#home-stats').innerHTML = [
+        `<span class='stat'>세트 <b>${st.sets}</b></span>`,
+        `<span class='stat'>카드 <b>${st.cards}</b></span>`,
+        `<span class='stat'>블로그 <b>${st.blogs}</b></span>`
+      ].join(' ');
+
+      $('#home-reco').innerHTML = DemoSets.map(s=>tile(s)).join('');
+
+      const latest = [...BlogPosts].sort((a,b)=>b.when-a.when).slice(0,6)
+        .map(p=>`<a class='card' href="#blog" data-action="blog-select" data-id="${p.id}" style='padding:12px;'>
+          <div style='font-weight:900; font-size:16px;'>${esc(p.title)}</div>
+          <div class='muted' style='font-size:12px; margin-bottom:6px;'>${mdDate(p.when)}</div>
+          <div class='muted' style='overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;'>
+            ${esc((p.body||'').replace(/\n/g, ' ').replace(/#+ /g, '').slice(0,180))}...
+          </div>
+        </a>`).join('');
+      $('#home-blog-list').innerHTML = latest || '<div class="muted">글이 없습니다.</div>';
+    }
+
+    function tile(s){
+      const tags = (s.tags||[]).slice(0,3).map(t=>`<span class='chip'>#${esc(t)}</span>`).join('');
+      const img = (s.cards?.[0]?.img) || ph(s.title);
+      return `<a class='set-tile' href="#detail" data-action='open-detail' data-id='${s.id}'>
+        <div class='thumb'><img alt='thumb' src='${img}'/></div>
+        <div class='tile-body'>
+          <div style='font-weight:900; font-size:16px'>${esc(s.title)}</div>
+          <div class='muted' style="font-size:var(--fs-small)">${esc(s.desc||'')}</div>
+          <div class='chips'>${tags}</div>
+          <div style='display:flex;gap:8px;margin-top:6px'>
+            <button class='btn' data-action='open-detail' data-id='${s.id}'>자세히</button>
+            <button class='btn primary' data-action='start-mode' data-mode='flash' data-id='${s.id}'>Flash</button>
+          </div>
+        </div>
+      </a>`;
+    }
+
+    function renderSetList(){
+      const q = $('#q')?.value?.trim().toLowerCase()||''; const mod=$('#mod')?.value||'';
+      const list = DemoSets.filter(s=>{
+        const bag=[s.title,s.desc,s.modality,(s.tags||[]).join(' '),(s.cards||[]).map(c=>[c.q,c.a,(c.tags||[]).join(' ')].join(' ')).join(' ')].join(' ').toLowerCase();
+        const okQ=!q||bag.includes(q); const okM=!mod||s.modality===mod; return okQ&&okM;
+      });
+      $('#set-list').innerHTML = list.map(tile).join('') || '<div class="card muted">조건에 맞는 세트가 없습니다.</div>';
+    }
+
+    function renderDetail(params={}){
+      const id = params.id || CurrentSet?.id || DemoSets[0].id; CurrentSet = DemoSets.find(s=>s.id===id)||DemoSets[0];
+      $('#detail-title').textContent=CurrentSet.title;
+      $('#detail-desc').textContent=CurrentSet.desc||'';
+      $('#detail-count').textContent=CurrentSet.cards.length;
+      $('#detail-tags').innerHTML=(CurrentSet.tags||[]).map(t=>`<span class='chip'>#${esc(t)}</span>`).join('');
+    }
+
+    /* -------------------------------- FLASH -------------------------------- */
+    const Flash={ i:0, flipped:false, order:[], bins:[[],[],[],[],[]], setId:null, countdownId:null,
+      mount(){
+        if(!CurrentSet) CurrentSet=DemoSets[0];
+        $('#flash-title').textContent=CurrentSet.title;
+        if(this.setId!==CurrentSet.id){ this.reset(); }
+        this.render();
+      },
+      reset(){
+        this.setId=CurrentSet.id;
+        this.order = CurrentSet.cards.map((_,i)=>i);
+        this.bins=[[],[],[],[],[]]; this.bins[0]=[...this.order];
+        this.i=0; this.flipped=false; this.stopTimer(); this.render();
+      },
+      card(){ return CurrentSet.cards[this.order[this.i]]; },
+      toggle(){
+        this.flipped=!this.flipped;
+        $('#flash-card').classList.toggle('flip', this.flipped);
+        this.stopTimer();
+      },
+      next(){ if(this.i<this.order.length-1){ this.i++; this.flipped=false; this.stopTimer(); this.render(); } },
+      prev(){ if(this.i>0){ this.i--; this.flipped=false; this.stopTimer(); this.render(); } },
+      grade(ok){
+        const idx=this.order[this.i];
+        let from=this.bins.findIndex(b=>b.includes(idx)); if(from<0) from=0;
+        this.bins[from]=this.bins[from].filter(x=>x!==idx);
+        const to= ok? Math.min(from+1,4):0;
+        this.bins[to].push(idx);
+        note(ok? '✨ 좋아요!':'❌ 다시 복습');
+        this.next(); this.renderBins();
+      },
+      startTimer(){
+        this.stopTimer(); this.flipped=false; $('#flash-card').classList.remove('flip');
+        let t = +$('#timer-select').value;
+        const cd=$('#countdown'); cd.textContent=t; cd.classList.add('show');
+        this.countdownId = setInterval(()=>{
+          t--; cd.textContent=t;
+          if(t<=0){ clearInterval(this.countdownId); this.countdownId=null; cd.classList.remove('show'); this.toggle(); note('정답 공개!'); }
+        },1000);
+      },
+      stopTimer(){
+        const cd=$('#countdown'); cd.textContent=''; cd.classList.remove('show');
+        if(this.countdownId){ clearInterval(this.countdownId); this.countdownId=null; }
+      },
+      render(){
+        this.stopTimer();
+        $('#flash-card').classList.toggle('flip', this.flipped);
+        if(!CurrentSet.cards.length){
+          $('#flash-img').src=''; $('#flash-answer').textContent=''; $('#flash-explain').textContent='카드가 없습니다.'; $('#flash-pos').textContent='0/0'; $('#flash-bar').style.width='0%';
+          return;
+        }
+        const k=this.card();
+        $('#flash-img').src=k.img;
+        $('#flash-answer').innerHTML=`<span>${esc(k.a)}</span>`;
+        $('#flash-explain').innerHTML=`<span>${esc(k.e||'')}</span>`;
+        $('#flash-pos').textContent=`${this.i+1}/${this.order.length}`;
+        $('#flash-bar').style.width=((this.i+1)/this.order.length*100|0)+'%';
+        this.renderBins();
+      },
+      renderBins(){
+        const binEls = $('#bins .bin');
+        const total = CurrentSet.cards.length;
+        this.bins.forEach((b,i)=>{
+          const el=binEls[i]; if(!el) return;
+          el.querySelector('.bin-bar i').style.width = `${(b.length/total)*100}%`;
+          el.querySelector('div:last-child').textContent = b.length;
+        });
+      }
+    };
+
+    /* -------------------------------- QUIZ -------------------------------- */
+    const Quiz={ sheet:[], i:0, score:0,
+      mount(){ if(!CurrentSet) CurrentSet=DemoSets[0]; $('#quiz-title').textContent=CurrentSet.title+' — Quiz'; $('#quiz-stage').style.display='none'; },
+      start(){ const mode=$('#quiz-mode').value; const n=+$('#quiz-n').value; const pool=[...CurrentSet.cards]; this.sheet = sample(pool, Math.min(n,pool.length)).map(c=> makeQ(mode,c)); this.i=0; this.score=0; this.render(); },
+      cur(){ return this.sheet[this.i]; },
+      render(){
+        const q=this.cur(); const stage=$('#quiz-stage'); stage.style.display='block';
+        stage.innerHTML = `
+        <div class='muted' style='display:flex;gap:8px;align-items:center;margin-bottom:8px'>
+          문항 <b>${this.i+1}/${this.sheet.length}</b>
+          <span style='margin-left:auto'>점수 <b>${this.score}</b></span>
+        </div>
+        <div style='display:grid;gap:10px'>
+          ${q.image?`<img src='${q.image}' alt='x-ray' style="max-height:360px; object-fit:contain"/>`:''}
+          <div style='font-weight:900; font-size:var(--fs-h2)'>
+            <span>${esc(q.stem)}</span>
+            <button class="tts-btn" data-action="tts-speak" data-text="${esc(q.stem)}">🗣️</button>
+          </div>
+          <div id='quiz-opts' class='grid' style="gap:8px"></div>
+          <div id='quiz-exp' class='muted' style='display:none'></div>
+          <div style='display:flex;gap:8px'>
+            <button class='btn' data-action='quiz-prev'>이전</button>
+            <button class='btn primary' data-action='quiz-next'>다음</button>
+          </div>
+        </div>`;
+        const wrap=$('#quiz-opts');
+        if(q.kind==='mc'||q.kind==='tf'){
+          q.options.forEach((opt,idx)=>{ const el=document.createElement('div'); el.className='opt'; el.textContent=opt; el.dataset.action='quiz-pick'; el.dataset.idx=idx; wrap.appendChild(el); });
+        } else {
+          const input=document.createElement('input'); input.placeholder='정답 입력'; input.style.cssText='padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a';
+          const btn=document.createElement('button'); btn.className='btn'; btn.textContent='확인'; btn.dataset.action='quiz-fill';
+          wrap.appendChild(input); wrap.appendChild(btn);
+        }
+      },
+      pick(idx){ const q=this.cur(); const nodes=$('#quiz-opts .opt'); nodes.forEach((n,i)=>{n.dataset.action=''; n.classList.toggle('correct', i===q.answerIndex); if(i===idx && i!==q.answerIndex) n.classList.add('wrong');}); if(idx===q.answerIndex){this.score++; note('✨ 정답!');} else {note('❌ 오답');} this.explain(); },
+      fillCheck(val){ const q=this.cur(); const ok = norm(val)===norm(q.answerText); if(ok){this.score++; note('✨ 정답!');} else {note('❌ 오답');} this.explain(ok?undefined:`정답: ${q.answerText}`); },
+      explain(extra){ const q=this.cur(); const exp=$('#quiz-exp'); exp.style.display='block'; exp.textContent = (extra? extra+ ' · ' : '') + (q.explain||''); },
+      next(){ if(this.i<this.sheet.length-1){ this.i++; this.render(); } else this.finish(); },
+      prev(){ if(this.i>0){ this.i--; this.render(); } },
+      finish(){ const acc=((this.score/this.sheet.length)*100|0); $('#quiz-stage').innerHTML = `<div style='font-size:22px;font-weight:900;margin-bottom:6px'>퀴즈 완료!</div><div class='muted'>최종 점수</div><div style='font-size:46px;font-weight:900;margin:6px 0 14px'>${this.score}/${this.sheet.length} (${acc}%)</div><div style='display:flex;gap:8px'><button class='btn primary' data-action='quiz-restart'>다시 풀기</button><button class='btn' data-action='start-mode' data-mode='flash'>Flash 복습</button></div>`; }
+    };
+
+    function makeQ(mode, k){
+      if(mode==='tf'){
+        const truth = Math.random()<0.5; const others = DemoSets.flatMap(s=>s.cards).filter(x=>x!==k); const alt = others.length? sample(others,1)[0] : k;
+        const text = truth ? k.a : alt.a; const stem = '이 영상의 진단명은 ' + esc(text) + ' 이다.';
+        return {kind:'tf', stem, image:k.img, explain:k.e, options:['O','X'], answerIndex: truth?0:1};
+      }
+      if(mode==='fill'){
+        return {kind:'fill', stem:'아래 영상의 진단명을 입력하세요.', image:k.img, explain:k.e, answerText:k.a};
+      }
+      const others = DemoSets.flatMap(s=>s.cards).filter(x=>x!==k); const picks = sample(others, Math.min(3, others.length)).map(o=>o.a); const opts = [...picks, k.a]; shuffle(opts);
+      return {kind:'mc', stem:'아래 영상의 진단명은?', image:k.img, explain:k.e, options:opts, answerIndex:opts.indexOf(k.a)};
+    }
+
+    /* -------------------------------- BLOG -------------------------------- */
+    const Blog={ curId:null,
+      new(){ this.curId=null; this.showEditor(true); $('#blog-title').value=''; $('#blog-body').value=''; $('#blog-view').innerHTML='<div class="muted">새 글 작성 중...</div>'; $('#blog-toc').style.display='none'; },
+      select(id){
+        this.curId=id; const p=BlogPosts.find(x=>x.id===id); if(!p) return;
+        this.showEditor(false); this.renderView(p); this.renderTOC();
+        $('#blog-list a').forEach(el => el.classList.toggle('active', el.dataset.id === id));
+      },
+      renderView(p){
+        const html = `<h1>${esc(p.title)} <button class="tts-btn" data-action="tts-speak" data-text="${esc(p.title)}">🗣️</button></h1><div class="muted" style="margin-bottom:12px">${mdDate(p.when)}</div>`+ markdown(p.body||'');
+        $('#blog-view').innerHTML=html;
+      },
+      renderTOC(){
+        const toc = markdown.headings||[]; const el=$('#blog-toc');
+        if(!toc.length){ el.style.display='none'; el.innerHTML=''; return; }
+        let h='<div style="font-weight:900;margin:10px 0 6px">목차</div><ul>';
+        let prev = 1;
+        toc.forEach(({id, level, text})=>{
+          if(level>prev) h+='<ul>'; else if(level<prev) h+='</ul>'.repeat(prev-level);
+          h+=`<li><a href="#${id}">${esc(text)}</a></li>`; prev=level;
+        });
+        h+='</ul>'.repeat(prev)+'</ul>';
+        el.innerHTML=h; el.style.display='block';
+      },
+      editStart(){ if($('#blog-key').value!==Admin.key){ note('관리자 키 오류',true); return; } const p=BlogPosts.find(x=>x.id===this.curId); if(!p){ note('선택된 글 없음'); return; } this.showEditor(true); $('#blog-title').value=p.title; $('#blog-body').value=p.body; },
+      save(){ if($('#blog-key').value!==Admin.key){ note('관리자 키 오류',true); return; } const t=$('#blog-title').value.trim(); const b=$('#blog-body').value.trim(); if(!t||!b){ note('제목/내용을 입력'); return; } if(this.curId){ const p=BlogPosts.find(x=>x.id===this.curId); if(p){ p.title=t; p.body=b; p.when=Date.now(); this.renderView(p); } } else { const np={id:uid(), title:t, body:b, when:Date.now()}; BlogPosts.unshift(np); this.curId=np.id; this.render(); } persist(); note('저장됨'); this.showEditor(false); renderHome(); },
+      cancel(){ this.showEditor(false); const p=BlogPosts.find(x=>x.id===this.curId); if(p) this.renderView(p); },
+      delete(){ if($('#blog-key').value!==Admin.key){ note('관리자 키 오류',true); return; } if(!this.curId){ note('선택된 글 없음'); return; } if(!confirm('정말 삭제할까요?')) return; BlogPosts = BlogPosts.filter(x=>x.id!==this.curId); this.curId = BlogPosts[0]?.id||null; persist(); this.render(); note('삭제됨'); renderHome(); },
+      showEditor(show){ $('#blog-editor').style.display= show? 'block':'none'; },
+      render(){
+        const q = ($('#blog-q')?.value||'').toLowerCase();
+        const list = BlogPosts.filter(p=>!q|| p.title.toLowerCase().includes(q)||p.body.toLowerCase().includes(q));
+        $('#blog-list').innerHTML = list.map(p=>`<li><a data-action='blog-select' data-id='${p.id}'>${esc(p.title)}</a></li>`).join('') || '<div class="muted" style="padding:8px">글이 없습니다.</div>';
+        if(this.curId){
+          const p = BlogPosts.find(x=>x.id===this.curId);
+          if(p) this.select(this.curId);
+        } else if (list.length > 0) {
+          this.select(list[0].id);
+        } else {
+          $('#blog-view').innerHTML = '';
+          $('#blog-toc').style.display = 'none';
+        }
+        renderHome();
+      }
+    };
+
+    /* -------------------------------- ADMIN ------------------------------- */
+    const Admin={ key:'0917', 
+      mount(){ fillTargetSets(); },
+      checkKey(){ const k=$('#adm-key').value; if(k!==this.key){ note('관리자 키 오류',true); return false } return true; },
+      uploadJSON(){ if(!this.checkKey())return; try{ const arr=JSON.parse($('#adm-json').value||'[]'); addCards(arr, targetSetId()); note('등록 완료'); location.hash='#sets'; routeTo('sets'); }catch(e){ note('JSON 오류: '+e.message,true) } },
+      uploadCSV(){ if(!this.checkKey())return; const f=$('#adm-csv').files[0]; if(!f){ note('CSV 선택'); return;} const r=new FileReader(); r.onload=()=>{ const arr=parseCSV(r.result); addCards(arr, targetSetId()); note('등록 완료'); location.hash='#sets'; routeTo('sets'); }; r.readAsText(f); },
+      exportAll(){ const data = { sets: DemoSets, blogs: BlogPosts }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='dxcards-backup.json'; a.click(); },
+      resetConfirm(){ if(!this.checkKey())return; if(confirm('정말 모든 데이터를 초기화할까요?')){ localStorage.clear(); location.reload(); } },
+      // 새로운 기능: 원격 데이터 로드
+      async loadRemoteData(){
+        if(!this.checkKey()) return;
+        
+        const baseUrl = 'https://raw.githubusercontent.com/[YOUR-USERNAME]/dxcards-data/main/';
+        const files = ['flashcards.csv', 'blogs.csv'];
+        
+        try {
+          document.body.classList.add('loading');
+          note('원격 데이터 로딩 중...');
+          
+          // 플래시카드 데이터 로드
+          const flashResponse = await fetch(baseUrl + 'flashcards.csv');
+          if (flashResponse.ok) {
+            const csvText = await flashResponse.text();
+            const cards = parseCSV(csvText);
+            
+            // 기본 세트에 추가 또는 새 세트 생성
+            const remoteSetId = 'remote-cards';
+            let remoteSet = DemoSets.find(s => s.id === remoteSetId);
+            if (!remoteSet) {
+              remoteSet = {
+                id: remoteSetId,
+                modality: 'Mixed',
+                title: '원격 카드 세트',
+                desc: 'GitHub에서 불러온 플래시카드',
+                tags: ['remote'],
+                cards: []
+              };
+              DemoSets.push(remoteSet);
+            }
+            
+            cards.forEach(row => {
+              remoteSet.cards.push({
+                q: row.q || '이 영상의 진단명은?',
+                a: row.a || '',
+                e: row.e || '',
+                img: row.img || ph(row.a || 'Remote Card'),
+                tags: parseTags(row.tags)
+              });
+            });
+          }
+          
+          // 블로그 데이터 로드
+          const blogResponse = await fetch(baseUrl + 'blogs.csv');
+          if (blogResponse.ok) {
+            const csvText = await blogResponse.text();
+            const blogs = parseCSV(csvText);
+            
+            blogs.forEach(row => {
+              if (row.title && row.body) {
+                BlogPosts.push({
+                  id: uid(),
+                  title: row.title,
+                  body: row.body,
+                  when: row.date ? new Date(row.date).getTime() : Date.now()
+                });
+              }
+            });
+          }
+          
+          persist();
+          note('원격 데이터 로드 완료!');
+          renderHome();
+          renderSetList();
+          fillTargetSets();
+          
+        } catch (error) {
+          console.error('Remote data load error:', error);
+          note('원격 데이터 로드 실패: ' + error.message, true);
+        } finally {
+          document.body.classList.remove('loading');
+        }
+      }
+    };
+
+    function targetSetId(){ const sel=$('#adm-target').value; const name=($('#adm-newset').value||'').trim(); if(sel==='__new__' && name){ let s={id:slug(name), modality:'Mixed', title:name, desc:'관리자 생성 세트', tags:['custom'], cards:[]}; DemoSets.push(s); fillTargetSets(); return s.id; } return sel; }
+    function fillTargetSets(){ const el=$('#adm-target'); if(!el) return; const opts = DemoSets.map(s=>`<option value='${s.id}'>${esc(s.title)} (${s.cards.length})</option>`).join('') + `<option value='__new__'>+ 새 세트…</option>`; el.innerHTML=opts; }
+    function addCards(arr,setId){ const s = DemoSets.find(x=>x.id===setId)||DemoSets[0]; (arr||[]).forEach(row=>{ s.cards.push({ q: row.q||'이 영상의 진단명은?', a: row.a||'', e: row.e||'', img: row.img||ph(row.a||'Custom'), tags: parseTags(row.tags) }); }); persist(); renderSetList(); renderHome(); }
+
+    /* ------------------------------- STORAGE ------------------------------ */
+    const KEY='dxc_state_v3';
+    const persist=()=>localStorage.setItem(KEY, JSON.stringify({sets:DemoSets, blogs:BlogPosts}));
+    (function boot(){ 
+      const raw=localStorage.getItem(KEY); 
+      if(raw){ 
+        try{ const st=JSON.parse(raw); if(st.sets) mergeSets(st.sets); if(st.blogs) BlogPosts=st.blogs; } 
+        catch(e){ console.warn('restore failed',e); }
+      }
+      const initial = (location.hash.slice(1) || 'home');
+      routeTo(initial);
+      Theme.init();
+      attachGlobalHandlers();
+    })();
+
+    function mergeSets(saved){ const byId = Object.fromEntries(DemoSets.map(s=>[s.id,s])); saved.forEach(sv=>{ if(byId[sv.id]) byId[sv.id].cards=sv.cards; else DemoSets.push(sv); }); }
+
+    /* ------------------------- Event Delegation --------------------------- */
+    function attachGlobalHandlers(){
+      document.addEventListener('click', (e)=>{
+        const nav = e.target.closest('[data-nav]'); 
+        if(nav){ e.preventDefault(); const v=nav.dataset.nav; if(v==='detail'){ routeTo('detail', {id:CurrentSet?.id||DemoSets[0].id}); } else { routeTo(v); } return; }
+        const act = e.target.closest('[data-action]'); if(!act) return; const a = act.dataset.action;
+
+        // Common
+        if(a==='toggle-theme'){ Theme.toggle(); }
+        if(a==='open-detail'){ routeTo('detail',{id:act.dataset.id}); }
+        if(a==='start-mode'){ const id = act.dataset.id||CurrentSet?.id||DemoSets[0].id; CurrentSet = DemoSets.find(s=>s.id===id)||DemoSets[0]; const mode=act.dataset.mode||'flash'; routeTo(mode==='flash'?'flash':'quiz',{id}); }
+
+        // TTS
+        if(a==='tts-speak'){ tts.speak(act.dataset.text||''); }
+
+        // Flash - 개선: 카드 클릭으로 토글
+        if(a==='flash-toggle'){ Flash.toggle(); }
+        if(a==='flash-prev'){ Flash.prev(); }
+        if(a==='flash-next'){ Flash.next(); }
+        if(a==='flash-grade'){ Flash.grade( act.dataset.ok==='1' ); }
+        if(a==='start-timer'){ Flash.startTimer(); }
+
+        // Quiz
+        if(a==='quiz-start'){ Quiz.start(); }
+        if(a==='quiz-next'){ Quiz.next(); }
+        if(a==='quiz-prev'){ Quiz.prev(); }
+        if(a==='quiz-restart'){ Quiz.start(); }
+        if(a==='quiz-pick'){ const idx=+act.dataset.idx; Quiz.pick(idx); }
+        if(a==='quiz-fill'){ const input=$('#quiz-opts input'); Quiz.fillCheck(input?.value||''); }
+
+        // Blog
+        if(a==='blog-new'){ Blog.new(); }
+        if(a==='blog-select'){ e.preventDefault(); Blog.select(act.dataset.id); routeTo('blog'); }
+        if(a==='blog-edit'){ Blog.editStart(); }
+        if(a==='blog-save'){ Blog.save(); }
+        if(a==='blog-cancel'){ Blog.cancel(); }
+        if(a==='blog-delete'){ Blog.delete(); }
+
+        // Admin
+        if(a==='adm-json'){ Admin.uploadJSON(); }
+        if(a==='adm-csv'){ Admin.uploadCSV(); }
+        if(a==='adm-export'){ Admin.exportAll(); }
+        if(a==='adm-reset'){ Admin.resetConfirm(); }
+        if(a==='load-remote-data'){ Admin.loadRemoteData(); }
+
+        // Dev
+        if(a==='run-tests'){ runTests(); }
+      });
+
+      // Live search
+      $('#q')?.addEventListener('input', renderSetList);
+      $('#mod')?.addEventListener('change', renderSetList);
+      $('#blog-q')?.addEventListener('input', ()=>Blog.render());
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e)=>{
+        const view = document.querySelector('section.view.active')?.id || '';
+        if(view==='view-flash'){
+          if(e.key==='ArrowRight') Flash.next();
+          if(e.key==='ArrowLeft') Flash.prev();
+          if(e.key===' '){ e.preventDefault(); Flash.toggle(); }
+        }
+      });
+    }
+
+    function runTests(){
+      const log=[
+        '== DxCards Runtime Test ==',
+        `Sets: ${DemoSets.length}`,
+        `Cards(total): ${DemoSets.reduce((n,s)=>n+(s.cards?.length||0),0)}`,
+        `Blogs: ${BlogPosts.length}`,
+        `Theme: ${(document.documentElement.classList.contains('dark')?'dark':'light')}`,
+        'LocalStorage: '+(localStorage.getItem(KEY)?'present':'empty'),
+        'Router: '+(location.hash||'#home')
+      ].join('\n');
+      $('#dev-log').textContent=log;
+      note('진단 완료');
+    }
+  </script>
+</body>
+</html>

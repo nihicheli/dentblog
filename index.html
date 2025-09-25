@@ -871,22 +871,32 @@
       uploadCSV(){ if(!this.checkKey())return; const f=$('#adm-csv').files[0]; if(!f){ note('CSV 선택'); return;} const r=new FileReader(); r.onload=()=>{ const arr=parseCSV(r.result); addCards(arr, targetSetId()); note('등록 완료'); location.hash='#sets'; routeTo('sets'); }; r.readAsText(f); },
       exportAll(){ const data = { sets: DemoSets, blogs: BlogPosts }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='dxcards-backup.json'; a.click(); },
       resetConfirm(){ if(!this.checkKey())return; if(confirm('정말 모든 데이터를 초기화할까요?')){ localStorage.clear(); location.reload(); } },
-      // 새로운 기능: 원격 데이터 로드
+      // 새로운 기능: 원격 데이터 로드 (XLSX 지원)
       async loadRemoteData(){
         if(!this.checkKey()) return;
         
-        const baseUrl = 'https://raw.githubusercontent.com/nihicheli/dxcards-data/main/';
-        const files = ['flashcards.csv', 'blogs.csv'];
+        const baseUrl = 'https://raw.githubusercontent.com/[YOUR-USERNAME]/dxcards-data/main/';
         
         try {
           document.body.classList.add('loading');
           note('원격 데이터 로딩 중...');
           
+          // XLSX 라이브러리 동적 로드
+          if (!window.XLSX) {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+            document.head.appendChild(script);
+            await new Promise(resolve => script.onload = resolve);
+          }
+          
           // 플래시카드 데이터 로드
-          const flashResponse = await fetch(baseUrl + 'flashcards.csv');
+          const flashResponse = await fetch(baseUrl + 'flashcards.xlsx');
           if (flashResponse.ok) {
-            const csvText = await flashResponse.text();
-            const cards = parseCSV(csvText);
+            const arrayBuffer = await flashResponse.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const cards = XLSX.utils.sheet_to_json(worksheet);
             
             // 기본 세트에 추가 또는 새 세트 생성
             const remoteSetId = 'remote-cards';
@@ -903,22 +913,33 @@
               DemoSets.push(remoteSet);
             }
             
+            // 기존 원격 카드 초기화
+            remoteSet.cards = [];
+            
             cards.forEach(row => {
-              remoteSet.cards.push({
-                q: row.q || '이 영상의 진단명은?',
-                a: row.a || '',
-                e: row.e || '',
-                img: row.img || ph(row.a || 'Remote Card'),
-                tags: parseTags(row.tags)
-              });
+              if (row.q && row.a) {
+                remoteSet.cards.push({
+                  q: row.q || '이 영상의 진단명은?',
+                  a: row.a || '',
+                  e: row.e || '',
+                  img: row.img || ph(row.a || 'Remote Card'),
+                  tags: parseTags(row.tags)
+                });
+              }
             });
           }
           
           // 블로그 데이터 로드
-          const blogResponse = await fetch(baseUrl + 'blogs.csv');
+          const blogResponse = await fetch(baseUrl + 'blogs.xlsx');
           if (blogResponse.ok) {
-            const csvText = await blogResponse.text();
-            const blogs = parseCSV(csvText);
+            const arrayBuffer = await blogResponse.arrayBuffer();
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const blogs = XLSX.utils.sheet_to_json(worksheet);
+            
+            // 기존 원격 블로그 제거
+            BlogPosts = BlogPosts.filter(p => !p.remote);
             
             blogs.forEach(row => {
               if (row.title && row.body) {
@@ -926,7 +947,8 @@
                   id: uid(),
                   title: row.title,
                   body: row.body,
-                  when: row.date ? new Date(row.date).getTime() : Date.now()
+                  when: row.date ? new Date(row.date).getTime() : Date.now(),
+                  remote: true
                 });
               }
             });

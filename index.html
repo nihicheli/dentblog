@@ -2,99 +2,428 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>dentblog · ver11-fix (Blog)</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script defer src="app.js"></script>
+  <title>DentBlog · ver11 (fixed)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root { --chip:#0d6efd; }
+    body{ font-size:14px; background:#fff; }
+    .topbar{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.8);backdrop-filter:saturate(180%) blur(6px);}
+    .topbar .inner{max-width:1200px;margin:0 auto;padding:.5rem .75rem;display:flex;gap:.75rem;align-items:center;justify-content:space-between;}
+    .topbar .brand{color:#fff;font-weight:700;}
+    .container-narrow{max-width:1200px;margin:10px auto;padding:0 12px;}
+    .card{border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);border:1px solid #e9ecef;}
+    .card-header{background:linear-gradient(90deg,#0d6efd,#00b4d8);color:#fff;padding:.5rem .75rem;border-radius:12px 12px 0 0;}
+    .chip{display:inline-block;padding:.25rem .6rem;border:1px solid var(--chip);color:var(--chip);border-radius:999px;margin:.2rem .35rem .2rem 0;font-size:.8rem}
+    .chip.active{background:var(--chip);color:#fff}
+    .muted{color:#6c757d}
+    .hl{background:yellow;padding:0 .15rem}
+    .list-hover tbody tr:hover{background:#f8f9ff}
+    .icon-btn{border:1px solid #dee2e6;border-radius:8px;padding:.25rem .6rem;display:inline-flex;align-items:center;gap:.25rem}
+    .tts-status{font-size:.9rem}
+    .post-item{cursor:pointer}
+    /* 가벼운 유지 스타일(원본 컨셉 존중) */
+    .section-title{font-weight:700;font-size:1rem;margin-bottom:.25rem}
+    .small{font-size:.85rem}
+  </style>
 </head>
-<body class="bg-light">
-  <nav class="navbar navbar-dark bg-dark sticky-top">
-    <div class="container-fluid">
-      <span class="navbar-brand fw-semibold">dentblog · Blog Console (ver11-fix)</span>
-      <div class="d-flex gap-2 align-items-center">
-        <button id="btn-status" class="btn btn-outline-light btn-sm">연결상태</button>
-        <button id="btn-export" class="btn btn-warning btn-sm">blogs.xlsx 내보내기</button>
-        <button id="btn-new" class="btn btn-primary btn-sm">새 글</button>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">DentBlog · ver11 (fixed)</div>
+      <div class="d-flex gap-2">
+        <a class="btn btn-sm btn-light" href="#tab-blogs">블로그</a>
+        <a class="btn btn-sm btn-outline-light" href="#tab-sets">세트</a>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <main class="container py-3">
-    <section class="card shadow-sm mb-3">
-      <div class="card-body">
-        <div class="row g-2 align-items-end">
-          <div class="col-md-6">
-            <label class="form-label small">GitHub raw baseUrl</label>
-            <div class="input-group input-group-sm">
-              <input id="baseUrl" class="form-control" placeholder="https://raw.githubusercontent.com/nihicheli/dentblog/main/" />
-              <button id="btn-save-base" class="btn btn-outline-secondary">저장</button>
-              <button id="btn-test" class="btn btn-outline-success">로드</button>
-            </div>
-            <div id="status" class="form-text mt-1"></div>
+  <div class="container-narrow">
+    <!-- 블로그 -->
+    <div id="tab-blogs" class="mb-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="section-title mb-0">블로그</div>
+            <div class="small">데이터: git/data/blogs.xlsx</div>
           </div>
-          <div class="col-md-6">
-            <label class="form-label small">검색</label>
-            <input id="search" class="form-control form-control-sm" placeholder="제목/본문/카테고리/태그 검색…" />
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-lg-4">
+              <div class="mb-2">
+                <input id="blog-search" type="search" class="form-control" placeholder="제목/카테고리/태그/본문 검색…" />
+                <div class="small muted mt-1">※ 초성/부분 일치 OK, 200ms 디바운스</div>
+              </div>
+              <div id="blog-list-wrap" class="table-responsive">
+                <table class="table table-sm table-bordered list-hover mb-0" id="blog-list">
+                  <thead class="table-light">
+                    <tr><th style="width:45%">제목</th><th style="width:25%">카테고리</th><th style="width:30%">날짜</th></tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-lg-8">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="chip" id="chip-all" data-cat="__ALL__">전체</span>
+                  <span class="muted small">카테고리 필터</span>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="icon-btn" id="btn-tts-play" title="재생"><span>▶️</span>재생</button>
+                  <button class="icon-btn" id="btn-tts-pause" title="일시정지"><span>⏸️</span>일시정지</button>
+                  <button class="icon-btn" id="btn-tts-resume" title="다시재생"><span>⏯️</span>다시재생</button>
+                  <button class="icon-btn" id="btn-tts-stop" title="정지"><span>⏹️</span>정지</button>
+                </div>
+              </div>
+              <div class="small muted mt-2">읽기 대상: **본문** (제목/메타 제외). 음성환경: 시스템 기본 음성, rate/pitch 안전값.</div>
+              <div class="mt-1 tts-status" id="tts-status">🔈 대기 중</div>
+              <hr class="my-2" />
+              <div id="blog-view">
+                <div class="small muted">왼쪽에서 글을 선택하세요.</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="card shadow-sm">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <span class="fw-semibold">블로그 글</span>
-        <span class="small text-muted" id="count">0 posts</span>
-      </div>
-      <div id="posts" class="list-group list-group-flush"></div>
-    </section>
-  </main>
-
-  <!-- New Post Modal -->
-  <div class="modal fade" id="newModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">새 글 작성</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-2">
-            <div class="col-md-3">
-              <label class="form-label small">날짜(YYYY-MM-DD)</label>
-              <input id="np-date" class="form-control form-control-sm" placeholder="2025-09-25" />
-            </div>
-            <div class="col-md-3">
-              <label class="form-label small">카테고리</label>
-              <input id="np-cat" class="form-control form-control-sm" placeholder="교정/보철/노하우 등" />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small">태그(쉼표로 구분)</label>
-              <input id="np-tags" class="form-control form-control-sm" placeholder="예: 교정, 브라켓, 와이어" />
-            </div>
-            <div class="col-12">
-              <label class="form-label small">제목</label>
-              <input id="np-title" class="form-control form-control-sm" />
-            </div>
-            <div class="col-12">
-              <label class="form-label small">본문 (마크다운 가능)</label>
-              <textarea id="np-content" class="form-control" rows="6"></textarea>
-            </div>
-            <div class="col-12">
-              <label class="form-label small">커버 이미지 URL (선택)</label>
-              <input id="np-image" class="form-control form-control-sm" placeholder="https://..." />
-            </div>
+    <!-- 세트 -->
+    <div id="tab-sets" class="mb-5">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="section-title mb-0">세트</div>
+            <div class="small">데이터: git/data/sets.xlsx</div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-          <button id="np-save" class="btn btn-primary">추가</button>
+        <div class="card-body">
+          <div id="sets-wrap" class="table-responsive">
+            <table class="table table-sm table-bordered list-hover mb-0" id="sets-table">
+              <thead class="table-light">
+                <tr><th style="width:35%">제목</th><th style="width:45%">설명</th><th style="width:20%">태그/분류</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="small muted mt-2">썸네일 이미지는 의도적으로 미표시(텍스트 중심).</div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- deps -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+  // -----------------------------
+  // CONFIG & Helpers
+  // -----------------------------
+  const CONFIG = {
+    // 여러 후보 경로에서 순차적으로 시도: /git/data → /data → Raw GitHub
+    baseUrls: (()=>{
+      const u = new URL(window.location.href);
+      const qBase = u.searchParams.get('base'); // ?base= 절대/상대 경로 지정 가능
+      const arr = [];
+      if (qBase) arr.push(qBase.replace(/\/+$/,'') + '/');
+      arr.push('/git/data/');
+      arr.push('/data/');
+      // 필요시 여기를 본인 레포로 교체
+      arr.push('https://raw.githubusercontent.com/nihicheli/dentblog/main/git/data/');
+      return arr;
+    })(),
+    files: {
+      blogs: 'blogs.xlsx',
+      sets:  'sets.xlsx',
+    },
+    searchDebounce: 200,
+  };
+
+  const $ = (sel,root=document)=>root.querySelector(sel);
+  const $$= (sel,root=document)=>Array.from(root.querySelectorAll(sel));
+  const esc = s => (s??'').toString().replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]) );
+
+  function debounce(fn, ms){
+    let t = null;
+    return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); };
+  }
+
+  async function fetchWithFallback(rel){
+    let lastErr = null;
+    for (const b of CONFIG.baseUrls){
+      const url = b + rel;
+      try{
+        const r = await fetch(url, {cache:'no-store'});
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const buf = await r.arrayBuffer();
+        if (buf.byteLength>0) return { ok:true, buffer:buf, url };
+      }catch(e){ lastErr = e; }
+    }
+    return { ok:false, error:lastErr };
+  }
+
+  function sheetToObjects(wb, idx=0){
+    const ws = wb.Sheets[wb.SheetNames[idx]];
+    const rows = XLSX.utils.sheet_to_json(ws, { defval:"" });
+    // 키 정규화(대소문자/한글 혼용 대비)
+    return rows.map(row=>{
+      const map = {};
+      for (const [k,v] of Object.entries(row)){
+        map[k.trim().toLowerCase()] = v;
+      }
+      return map;
+    });
+  }
+
+  function pick(obj, candidates){
+    for (const k of candidates){
+      const kk = k.toLowerCase();
+      if (kk in obj && obj[kk]!==undefined && obj[kk]!=="") return obj[kk];
+    }
+    return "";
+  }
+
+  // -----------------------------
+  // Data Load
+  // -----------------------------
+  let BLOGS = [];       // {id,title,content,category,tags,date}
+  let BLOG_CATS = [];   // category 목록
+  let SETS  = [];       // {title,desc,tags}
+
+  async function loadBlogs(){
+    const rr = await fetchWithFallback(CONFIG.files.blogs);
+    if (!rr.ok) throw rr.error || new Error('blogs.xlsx fetch failed');
+    const wb = XLSX.read(new Uint8Array(rr.buffer), { type:'array' });
+    const rows = sheetToObjects(wb);
+    BLOGS = rows.map(r=>{
+      const id    = pick(r, ['id','번호','no']) || crypto.randomUUID();
+      const title = pick(r, ['title','제목']);
+      const cat   = pick(r, ['category','카테고리','분류']);
+      const tags  = pick(r, ['tags','태그']);
+      const date  = pick(r, ['date','날짜']);
+      const body  = pick(r, ['content','본문','내용','markdown','md']);
+      return { id, title, category:cat, tags, date, content:body };
+    });
+    BLOG_CATS = Array.from(new Set(BLOGS.map(b=>b.category).filter(Boolean))).sort();
+  }
+
+  async function loadSets(){
+    const rr = await fetchWithFallback(CONFIG.files.sets);
+    if (!rr.ok) throw rr.error || new Error('sets.xlsx fetch failed');
+    const wb = XLSX.read(new Uint8Array(rr.buffer), { type:'array' });
+    const rows = sheetToObjects(wb);
+    SETS = rows.map(r=>{
+      const title = pick(r, ['title','제목','name','이름']);
+      const desc  = pick(r, ['desc','설명','description']);
+      const tags  = pick(r, ['tags','태그','category','분류']);
+      return { title, desc, tags };
+    });
+  }
+
+  // -----------------------------
+  // Blog UI
+  // -----------------------------
+  let ACTIVE_POST = null;
+  let ACTIVE_CAT  = '__ALL__';
+  let LAST_QUERY  = '';
+
+  function renderCatChips(){
+    const wrap = $('#chip-all').parentElement;
+    // 기존 chip-all을 제외하고 모두 제거
+    $$('.chip', wrap).forEach(el=>{ if (el.id!=='chip-all') el.remove(); });
+    BLOG_CATS.forEach(cat=>{
+      const s = document.createElement('span');
+      s.className = 'chip';
+      s.dataset.cat = cat;
+      s.textContent = cat || '기타';
+      wrap.appendChild(s);
+    });
+    // 이벤트
+    $$('.chip', wrap).forEach(el=>{
+      el.addEventListener('click', ()=>{
+        $$('.chip', wrap).forEach(c=>c.classList.remove('active'));
+        el.classList.add('active');
+        ACTIVE_CAT = el.dataset.cat || '__ALL__';
+        if (el.id==='chip-all') ACTIVE_CAT='__ALL__';
+        renderBlogList();
+      });
+    });
+    $('#chip-all').classList.add('active');
+  }
+
+  function matchQuery(b, q){
+    if (!q) return true;
+    const L = (s)=> (s??'').toString().toLowerCase();
+    const tgt = [b.title, b.category, b.tags, b.content].map(L).join(' ');
+    return L(tgt).includes(L(q));
+  }
+
+  function hl(text, q){
+    if (!q) return esc(text);
+    const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+    return esc(text).replace(re, '<span class="hl">$1</span>');
+  }
+
+  function renderBlogList(){
+    const tb = $('#blog-list tbody');
+    tb.innerHTML='';
+    const q = LAST_QUERY.trim();
+    const rows = BLOGS.filter(b=>{
+      const catOk = (ACTIVE_CAT==='__ALL__') || ((b.category||'')===ACTIVE_CAT);
+      const qOk   = matchQuery(b, q);
+      return catOk && qOk;
+    });
+    rows.forEach(b=>{
+      const tr = document.createElement('tr');
+      tr.className='post-item';
+      tr.dataset.id = b.id;
+      tr.innerHTML = `
+        <td>${hl(b.title||'(제목없음)', q)}</td>
+        <td>${hl(b.category||'', q)}</td>
+        <td>${hl(b.date||'', q)}</td>
+      `;
+      tr.addEventListener('click', ()=> openPost(b.id));
+      tb.appendChild(tr);
+    });
+    if (!rows.length){
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td colspan="3" class="text-center muted">검색 결과가 없습니다.</td>`;
+      tb.appendChild(tr);
+    }
+  }
+
+  function mdToHtml(md){
+    try{ return marked.parse(md||''); }catch{ return `<pre>${esc(md||'')}</pre>`; }
+  }
+
+  function openPost(id){
+    const post = BLOGS.find(x=>x.id===id);
+    if (!post) return;
+    ACTIVE_POST = post;
+    const view = $('#blog-view');
+    view.innerHTML = `
+      <h5 class="mb-1">${esc(post.title||'(제목없음)')}</h5>
+      <div class="muted small mb-2">${esc(post.category||'')} · ${esc(post.tags||'')} · ${esc(post.date||'')}</div>
+      <div id="post-body" class="prose">${mdToHtml(post.content || '')}</div>
+    `;
+    // 선택 시 자동으로 이전 읽기 중지
+    ttsStop(true);
+  }
+
+  // -----------------------------
+  // Sets UI
+  // -----------------------------
+  function renderSets(){
+    const tb = $('#sets-table tbody');
+    tb.innerHTML='';
+    SETS.forEach(s=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML = `
+        <td>${esc(s.title||'(제목없음)')}</td>
+        <td>${esc(s.desc||'')}</td>
+        <td>${esc(s.tags||'')}</td>
+      `;
+      tb.appendChild(tr);
+    });
+    if (!SETS.length){
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td colspan="3" class="text-center muted">세트 데이터가 없습니다.</td>`;
+      tb.appendChild(tr);
+    }
+  }
+
+  // -----------------------------
+  // TTS (본문만 읽기)
+  // -----------------------------
+  let utter = null;
+  let isSpeaking = false;
+  let isPaused = false;
+
+  function ttsUpdate(msg){
+    $('#tts-status').textContent = msg;
+  }
+  function getReadableText(){
+    const body = $('#post-body');
+    if (!body) return '';
+    // 제목이 아니라 **본문만** 읽음
+    return body.innerText.trim();
+  }
+  function ttsPlay(){
+    const supports = 'speechSynthesis' in window;
+    if (!supports){ ttsUpdate('⚠️ 이 브라우저는 음성합성을 지원하지 않습니다.'); return; }
+    const txt = getReadableText();
+    if (!txt){ ttsUpdate('🔈 읽을 본문이 없습니다.'); return; }
+    if (speechSynthesis.speaking){ speechSynthesis.cancel(); }
+    utter = new SpeechSynthesisUtterance(txt);
+    // 안전한 기본값
+    utter.rate = 1.0; // 0.1~10
+    utter.pitch = 1.0; // 0~2
+    utter.onstart = ()=>{ isSpeaking=true; isPaused=false; ttsUpdate('▶️ 재생 중…'); };
+    utter.onend   = ()=>{ isSpeaking=false; isPaused=false; ttsUpdate('✅ 완료'); };
+    utter.onerror = (e)=>{ isSpeaking=false; isPaused=false; ttsUpdate('❌ 오류: '+(e.error||'unknown')); };
+    speechSynthesis.speak(utter);
+  }
+  function ttsPause(){
+    if (!speechSynthesis.speaking) return;
+    if (!speechSynthesis.paused){ speechSynthesis.pause(); isPaused=true; ttsUpdate('⏸️ 일시정지'); }
+  }
+  function ttsResume(){
+    if (speechSynthesis.paused){ speechSynthesis.resume(); isPaused=false; ttsUpdate('▶️ 재생 중…'); }
+  }
+  function ttsStop(silent=false){
+    try{ speechSynthesis.cancel(); }catch{}
+    isSpeaking=false; isPaused=false;
+    if (!silent) ttsUpdate('⏹️ 정지');
+  }
+
+  // -----------------------------
+  // Wire-up
+  // -----------------------------
+  function bindEvents(){
+    $('#btn-tts-play').addEventListener('click', ttsPlay);
+    $('#btn-tts-pause').addEventListener('click', ttsPause);
+    $('#btn-tts-resume').addEventListener('click', ttsResume);
+    $('#btn-tts-stop').addEventListener('click', ()=>ttsStop(false));
+
+    // 검색
+    const onSearch = debounce(()=>{
+      LAST_QUERY = $('#blog-search').value || '';
+      renderBlogList();
+    }, CONFIG.searchDebounce);
+    $('#blog-search').addEventListener('input', onSearch);
+
+    // 해시 탭 이동(심플)
+    window.addEventListener('hashchange', ()=>{
+      const id = location.hash || '#tab-blogs';
+      document.querySelector(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  }
+
+  // -----------------------------
+  // Init
+  // -----------------------------
+  (async function init(){
+    try{
+      bindEvents();
+      await Promise.all([loadBlogs(), loadSets()]);
+      renderCatChips();
+      renderBlogList();
+      renderSets();
+      // UX: 첫 글 자동 선택(있을 경우)
+      if (BLOGS.length) openPost(BLOGS[0].id);
+      ttsUpdate('🔈 준비 완료');
+    }catch(e){
+      console.error(e);
+      ttsUpdate('⚠️ 데이터 로드 실패: ' + (e.message||e));
+      $('#blog-list tbody').innerHTML = `<tr><td colspan="3" class="text-center text-danger">blogs.xlsx 로드 실패</td></tr>`;
+      $('#sets-table tbody').innerHTML = `<tr><td colspan="3" class="text-center text-danger">sets.xlsx 로드 실패</td></tr>`;
+    }
+  })();
+  </script>
 </body>
 </html>

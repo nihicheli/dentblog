@@ -894,121 +894,55 @@
     }
 
     async function tryLoadSets(){
-      for(const p of RemotePaths.sets){
-        const url = baseUrl + p;
-        try{
-          if(p.endsWith('.json')){
-            const js = await fetchJSON(url);
-            if(Array.isArray(js)){
-              replaceSets(js);
-              logDev('sets <-', p, '(array)');
-              return 'sets.json';
-            } else if(js?.sets){
-              replaceSets(js.sets);
-              logDev('sets <-', p, '(wrapper.sets)');
-              return 'sets.json(wrapper)';
-            }
-          } else if(p.endsWith('.csv')){
-            const txt = await fetchText(url);
-            const rows = parseCSV(txt);
-            if(rows.length){
-              // CSV는 카드 행 형태를 세트별로 묶어서 생성
-              const bySet = {};
-              rows.forEach(r=>{
-                const setName = (r.set||'기본 세트').trim();
-                bySet[setName] = bySet[setName]||{ id:slug(setName), modality:r.modality||'Mixed', title:setName, desc:r.set_desc||'', group:r.group||'', tags:[], cards:[] };
-                bySet[setName].cards.push({ q:r.q||'', a:r.a||'', e:r.e||'', img:r.img||'', tags:parseTags(r.tags) });
-              });
-              replaceSets(Object.values(bySet));
-              logDev('sets <-', p, `(${rows.length} rows)`);
-              return 'sets.csv';
-            }
-          } else if(p.endsWith('.xlsx')){
-            const buf = await fetchBuf(url);
-            await ensureXLSX();
-            const wb = XLSX.read(buf, {type:'array'});
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-            if(rows.length){
-              const bySet = {};
-              rows.forEach(r=>{
-                const setName = (r.set||'기본 세트').trim();
-                bySet[setName] = bySet[setName]||{ id:slug(setName), modality:r.modality||'Mixed', title:setName, desc:r.set_desc||'', group:r.group||'', tags:[], cards:[] };
-                bySet[setName].cards.push({ q:r.q||'', a:r.a||'', e:r.e||'', img:r.img||'', tags:parseTags(r.tags) });
-              });
-              replaceSets(Object.values(bySet));
-              logDev('sets <-', p, `(${rows.length} rows)`);
-              return 'sets.xlsx';
-            }
-          }
-        }catch(e){
-          logDev('sets load fail:', p, e.message||e);
+      try{
+        // ✅ Google Sheets CSV API
+        const sheetId = "1BWSJMBLuEU2v7eon5MdM02fAFHV0z5T2tr3_42K15dY"; // sets 시트 ID
+        const gid = "66467758"; // sets 시트 GID
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+    
+        const txt = await fetchText(url);
+        const rows = parseCSV(txt);
+        if(rows.length){
+          Sets = rows;
+          renderSetList();
+          logDev('sets <- google sheet', `(${rows.length} rows)`);
+          return 'sets.google';
         }
+      }catch(e){
+        logDev('sets load fail (google):', e.message||e);
       }
       return null;
     }
 
+
+
     async function tryLoadBlogs(){
-      for(const p of RemotePaths.blogs){
-        const url = baseUrl + p;
-        try{
-          if(p.endsWith('.json')){
-            const js = await fetchJSON(url);
-            let arr = [];
-            if(Array.isArray(js)) arr = js;
-            else if(js?.blogs) arr = js.blogs;
-            if(arr.length){
-              BlogPosts = arr.map(b=>({
-                id: b.id || uid(),
-                title: b.title || '',
-                body: b.body || '',
-                when: b.when ? +b.when : Date.now(),
-                category: b.category || ''
-              }));
-              persist(); renderHome();
-              logDev('blogs <-', p, `(${arr.length})`);
-              return 'blogs.json';
-            }
-          } else if(p.endsWith('.csv')){
-            const txt = await fetchText(url);
-            const rows = parseCSV(txt);
-            if(rows.length){
-              BlogPosts = rows.map(r=>({
-                id: uid(),
-                title: r.title || '',
-                body: r.body || '',
-                when: r.when ? +r.when : Date.now(),
-                category: r.category || r.cat || ''
-              }));
-              persist(); renderHome();
-              logDev('blogs <-', p, `(${rows.length} rows)`);
-              return 'blogs.csv';
-            }
-          } else if(p.endsWith('.xlsx')){
-            const buf = await fetchBuf(url);
-            await ensureXLSX();
-            const wb = XLSX.read(buf, {type:'array'});
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-            if(rows.length){
-              BlogPosts = rows.map(r=>({
-                id: uid(),
-                title: r.title || '',
-                body: r.body || '',
-                when: r.when ? +r.when : Date.now(),
-                category: r.category || r.cat || ''
-              }));
-              persist(); renderHome();
-              logDev('blogs <-', p, `(${rows.length} rows)`);
-              return 'blogs.xlsx';
-            }
-          }
-        }catch(e){
-          logDev('blogs load fail:', p, e.message||e);
+      try{
+        // Google Sheets CSV API
+        const sheetId = "1B9zr1SQ7ROzIgwC2k8TmuTh0KfNM2-Y_FgNclQVEFZA"; // blogs 시트 ID
+        const gid = "908527068"; // blogs gid
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+        
+        const txt = await fetchText(url);
+        const rows = parseCSV(txt);
+        if(rows.length){
+          BlogPosts = rows.map(r=>({
+            id: r.id || uid(),
+            title: r.title || '',
+            body: r.body || '',
+            when: r.date ? +new Date(r.date) : Date.now(),
+            category: r.category || r.cat || r.tags || ''
+          }));
+          persist(); renderHome();
+          logDev('blogs <- google sheet', `(${rows.length} rows)`);
+          return 'blogs.google';
         }
+      }catch(e){
+        logDev('blogs load fail (google):', e.message||e);
       }
       return null;
     }
+
 
     async function remoteReload(){
       busy(true,'원격 데이터 확인 중...');

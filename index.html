@@ -32,17 +32,17 @@
     }
     a{color:inherit;text-decoration:none}
     img{max-width:100%;display:block}
-    button{cursor:pointer}
+    button{cursor:pointer; font-family:inherit}
 
     header{position:sticky;top:0;z-index:50;background:color-mix(in oklab, var(--panel) 88%, transparent);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
     .nav{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px}
     .brand{display:flex;align-items:center;gap:10px;font-weight:900; letter-spacing:.1px}
     .badge{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#93c5fd,#3b82f6);color:#0b1020;font-weight:900}
     .tabs{margin-left:auto;display:flex;gap:6px}
-    .tab{padding:8px 12px;border-radius:10px;border:1px solid var(--line);color:var(--muted);background:var(--panel); transition:all .15s; font-weight:600}
-    .tab.active{background:linear-gradient(180deg,#eef2ff,#e0e7ff);color:#111827;border-color:#c7d2fe}
-    html.dark .tab.active{background:var(--panel-2); color:var(--text); border-color:var(--line)}
-    .theme{margin-left:6px;border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted);background:var(--panel)}
+    .tab{padding:10px 14px;border-radius:10px;background:var(--panel); color:var(--muted); font-weight:700; box-shadow:0 1px 0 var(--line) inset; transition:all .15s}
+    .tab.active{background:linear-gradient(180deg,#eef2ff,#e0e7ff); color:#111827}
+    html.dark .tab.active{background:var(--panel-2); color:var(--text)}
+    .theme{margin-left:6px;border:none;border-radius:12px;padding:10px 12px;background:var(--panel); box-shadow:0 1px 0 var(--line) inset; color:var(--muted)}
 
     main{max-width:var(--maxw);margin:0 auto;padding:18px}
     section.view{display:none}
@@ -51,17 +51,24 @@
     .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px; transition:background-color .2s, border-color .2s}
     .shadow{box-shadow:var(--shadow)}
     .muted{color:var(--muted)}
-    .btn{border:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fafc);color:#111827;border-radius:10px;padding:9px 12px; transition:all .2s; font-weight:700}
+
+    /* Revamped buttons */
+    .btn{border:none;background:linear-gradient(180deg,#ffffff,#f8fafc);color:#0b1020;border-radius:12px;padding:10px 14px; font-weight:800; box-shadow:0 1px 0 rgba(0,0,0,.04) inset; transition:transform .08s ease;}
+    .btn:active{transform:translateY(1px)}
     html.dark .btn{background:var(--panel); color:var(--text)}
-    .btn:hover{border-color:#cbd5e1}
-    html.dark .btn:hover{border-color:var(--muted)}
-    .btn.primary{background:linear-gradient(180deg,#60a5fa,#3b82f6);color:#fff;border:none}
-    .btn.ok{background:linear-gradient(180deg,#34d399,#16a34a);color:#fff;border:none}
-    .btn.bad{background:linear-gradient(180deg,#fca5a5,#ef4444);color:#fff;border:none}
-    .btn-nav{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:9px 12px;display:inline-flex;align-items:center;gap:6px;font-weight:700;transition:all .2s}
-    .btn-nav:hover{border-color:var(--brand); background:var(--panel-2)}
+    .btn.primary{background:linear-gradient(180deg,#60a5fa,#3b82f6);color:#fff}
+    .btn.ok{background:linear-gradient(180deg,#34d399,#16a34a);color:#fff}
+    .btn.bad{background:linear-gradient(180deg,#fca5a5,#ef4444);color:#fff}
+    .btn.ghost{background:var(--panel); box-shadow:none}
+    .btn.small{padding:8px 10px; border-radius:10px; font-weight:700}
+    .btn.round{border-radius:999px; padding:8px 10px}
+    .btn.icon{width:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:12px;font-size:18px}
+
+    .btn-nav{border:none;background:var(--panel);color:var(--text);border-radius:12px;padding:10px 12px;display:inline-flex;align-items:center;gap:6px;font-weight:800;box-shadow:0 1px 0 var(--line) inset;transition:transform .08s}
+    .btn-nav:active{transform:translateY(1px)}
+
     .chips{display:flex;gap:6px;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;padding:2px 10px;border-radius:999px;border:1px solid var(--line);background:#eef2ff;color:#1e3a8a;font-size:12px}
+    .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#eef2ff;color:#1e3a8a;font-size:12px}
     html.dark .chip{background:var(--panel-2); color:var(--text)}
     .grid{display:grid;gap:12px}
     .cols-2{grid-template-columns:1.2fr .8fr}
@@ -113,14 +120,14 @@
     }
     .countdown.show{ opacity:1; pointer-events:auto }
 
-    .tts-btn{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:999px; padding:0 8px; background:var(--panel-2); border:1px solid var(--line); color:var(--muted); margin-left:8px; font-size:12px }
+    .tts-btn{ display:inline-grid; place-items:center; width:36px; height:36px; border-radius:10px; background:var(--panel-2); border:1px solid var(--line); color:var(--muted); margin-left:8px; font-size:18px }
     html.dark .tts-btn{ background:var(--panel); }
 
     .bin{ text-align:center }
     .bin-bar{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;}
     .bin-bar i{height:100%;display:block;background:var(--brand); transition:width .2s ease-in-out;}
 
-    .opt{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--panel); transition:all .2s}
+    .opt{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel); transition:all .2s}
     .opt:hover{border-color:var(--brand);background:var(--panel-2)}
     .opt.correct{border-color:var(--ok);background:color-mix(in oklab, var(--ok) 18%, transparent)}
     .opt.wrong{border-color:var(--bad);background:color-mix(in oklab, var(--bad) 18%, transparent)}
@@ -134,7 +141,6 @@
     .blog-list a.active{background:var(--brand); color:#fff; font-weight:800; border-color:transparent}
     .blog-view{padding:18px;min-height:160px; background:var(--panel); border-radius:12px; box-shadow:var(--shadow)}
     .blog-view h1{font-size:var(--fs-h1);margin:.2em 0 .5em; border-bottom:1px solid var(--line); padding-bottom:8px}
-    /* 소제목 밑줄 제거 */
     .blog-view h2{font-size:var(--fs-h2);margin:1.3em 0 .4em; border-bottom:none; padding-bottom:0}
     .blog-view h3{font-size:var(--fs-h3);margin:1em 0 .4em}
     .blog-view p{margin:0 0 1em}
@@ -207,16 +213,13 @@
     <section id="view-sets" class="view sets">
       <div class="hero" style="text-align:left">
         <h1 style="font-size:var(--fs-h1)">학습 세트</h1>
-        <p class="muted">검색/모달리티로 필터링 후 바로 Flash/Quiz를 시작하세요.</p>
+        <p class="muted">검색/구분으로 필터링 후 바로 Flash/Quiz를 시작하세요.</p>
       </div>
       <div class="card shadow" style="margin-bottom:12px">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input id="q" placeholder="검색 (예: 낭종, CBCT, 임플란트)" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a"/>
-          <select id="mod" style="padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a">
-            <option value="">모달리티 전체</option>
-            <option>Panorama</option>
-            <option>CBCT</option>
-            <option>Periapical</option>
+          <input id="q" placeholder="검색" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a"/>
+          <select id="mod" style="padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a;min-width:160px">
+            <option value="">구분</option>
           </select>
         </div>
       </div>
@@ -247,8 +250,8 @@
           <div class="front" id="flash-front">
             <div style="font-weight:900; font-size:var(--fs-h2); display:flex; align-items:center; justify-content:center; text-align:center">
               <span id="flash-question">이 영상의 진단명은?</span>
-              <button class="tts-btn" data-action="tts-toggle" data-text="이 영상의 진단명은?">▶ 읽기</button>
-              <button class="tts-btn" data-action="tts-stop">■ 정지</button>
+              <button class="tts-btn" data-action="tts-toggle" aria-label="읽기/일시정지" data-text="이 영상의 진단명은?">▶️</button>
+              <button class="tts-btn" data-action="tts-stop" aria-label="정지">⏹️</button>
             </div>
             <div class="hint">카드를 클릭하거나 스페이스바를 눌러 정답을 확인하세요</div>
           </div>
@@ -273,10 +276,10 @@
 
         <div class="card">
           <div class="muted" style="font-weight:800;margin-bottom:8px">탐색·타이머</div>
-          <div style="display:flex;gap:8px;align-items:center; flex-wrap:wrap">
+          <div style="display:flex;gap:10px;align-items:center; flex-wrap:wrap">
             <span id="flash-pos" class="stat">0/0</span>
             <label>타이머
-              <select id="timer-select" style="padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--panel);min-width:100px">
+              <select id="timer-select" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel);min-width:100px">
                 <option value="3">3초</option>
                 <option value="5" selected>5초</option>
                 <option value="10">10초</option>
@@ -290,13 +293,16 @@
             </label>
             <label>
               지연
-              <select id="auto-next-delay" style="padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--panel);min-width:90px">
+              <select id="auto-next-delay" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel);min-width:90px">
                 <option value="3000">3초</option>
                 <option value="5000" selected>5초</option>
                 <option value="7000">7초</option>
                 <option value="10000">10초</option>
               </select>
             </label>
+
+            <!-- Autoplay (연속 진행) -->
+            <button class="btn round" data-action="flash-autoplay" id="autoplay-btn" aria-label="연속 자동 학습 토글">▶️</button>
           </div>
         </div>
       </div>
@@ -311,14 +317,14 @@
       <div class="card shadow" style="margin-bottom:10px">
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <label>모드
-            <select id="quiz-mode" style="padding:8px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a">
+            <select id="quiz-mode" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a">
               <option value="mc">객관식</option>
               <option value="tf">OX</option>
               <option value="fill">빈칸</option>
             </select>
           </label>
           <label>문항 수
-            <select id="quiz-n" style="padding:8px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a">
+            <select id="quiz-n" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a">
               <option>5</option><option selected>10</option><option>15</option>
             </select>
           </label>
@@ -333,7 +339,7 @@
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <h1 style="margin:0;font-size:var(--fs-h1)">블로그</h1>
         <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-          <input id="blog-q" placeholder="검색" style="padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text)"/>
+          <input id="blog-q" placeholder="검색" style="padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text)"/>
           <button class="btn" data-action="blog-new">새 글</button>
         </div>
       </div>
@@ -344,7 +350,7 @@
           <div class="card" style="padding:12px; position:sticky; top:0;">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-bottom:8px; border-bottom:1px solid var(--line)">
               <div style="font-weight:900; font-size:1.05em;">글 목록</div>
-              <button class="btn" style="padding:6px 10px" data-action="blog-list-toggle">접기/펼치기</button>
+              <button class="btn small" data-action="blog-list-toggle">접기/펼치기</button>
             </div>
             <ul id="blog-list" class="blog-list" style="margin-top:8px"></ul>
             <div id="blog-toc" class="toc" style="display:none;"></div>
@@ -353,13 +359,13 @@
         <div>
           <div id="blog-view" class="blog-view"></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
-            <input id="blog-key" type="password" placeholder="관리자 키" style="padding:10px;border-radius:10px;border:1px solid var(--line)" />
+            <input id="blog-key" type="password" placeholder="관리자 키" style="padding:10px;border-radius:12px;border:1px solid var(--line)" />
             <button class="btn" data-action="save-admin-key">키 저장</button>
             <button class="btn" data-action="blog-edit">수정</button>
             <button class="btn bad" data-action="blog-delete">삭제</button>
-            <!-- 제목 대신 본문 읽기 + 제어 -->
-            <button class="btn" data-action="tts-body">본문 읽기 ▶/⏸</button>
-            <button class="btn" data-action="tts-stop">정지 ■</button>
+            <!-- 제목 대신 본문 읽기 + 제어 (emoji-only) -->
+            <button class="btn icon" data-action="tts-body" aria-label="본문 읽기/일시정지">▶️</button>
+            <button class="btn icon" data-action="tts-stop" aria-label="정지">⏹️</button>
           </div>
           <div id="blog-editor" class="editor" style="display:none;margin-top:10px">
             <input id="blog-title" placeholder="제목" />
@@ -384,7 +390,7 @@
           <h3 style="margin-top:0; font-size:var(--fs-h2)">카드 일괄 등록</h3>
           <div style="display:grid;gap:8px">
             <input id="adm-key" type="password" placeholder="관리자 키"/>
-            <select id="adm-target" style="padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a"></select>
+            <select id="adm-target" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a"></select>
             <input id="adm-newset" placeholder="새 세트 이름(신규 생성 시)"/>
             <textarea id="adm-json" placeholder='[{"q":"문제","a":"정답","e":"해설","img":"url","tags":"CBCT;낭종"}]' rows="6"></textarea>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -449,7 +455,7 @@
     const parseCSV=txt=>{ if(!txt) return []; const lines = txt.split(/\r?\n/).filter(l=>l.trim()); if(!lines.length) return []; const head = splitCSV(lines[0]); const out=[]; for(let i=1;i<lines.length;i++){ const cols = splitCSV(lines[i]); const row={}; head.forEach((h,idx)=> row[h]=cols[idx]); out.push(row); } return out; };
     const ph=label=>{ const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='720' height='420'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#e5e7eb'/><stop offset='1' stop-color='#cbd5e1'/></linearGradient></defs><rect width='100%' height='100%' fill='url(#g)'/><g fill='#1f2937' font-family='Arial' text-anchor='middle'><text x='50%' y='50%' font-size='22' font-weight='700'>${esc(label)}</text><text x='50%' y='58%' font-size='12' fill='#6b7280'>Demo Placeholder</text></g></svg>`; return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg); };
 
-    // Voice synthesis (TTS) with toggle
+    // Voice synthesis (TTS) with emoji-only labels
     const tts = {
       synth: window.speechSynthesis,
       state: 'idle', // idle | speaking | paused
@@ -476,7 +482,7 @@
     };
     function updateTTSLabels(){
       $$('.tts-btn[data-action="tts-toggle"]').forEach(b=>{
-        b.textContent = (tts.state==='speaking')? '⏸ 일시정지' : (tts.state==='paused'? '▶ 이어듣기' : '▶ 읽기');
+        b.textContent = (tts.state==='speaking')? '⏸️' : (tts.state==='paused'? '▶️' : '▶️');
       });
     }
 
@@ -503,9 +509,7 @@
       return (tmp.textContent||'').replace(/\s+\n/g,'\n');
     };
 
-    const excelToDate = (val)=>{ if(typeof val==='number'){ const d = new Date(Math.round((val - 25569) * 86400 * 1000)); return d; } const t = Date.parse(val); return isNaN(t)? new Date(): new Date(t); };
-    const loadScript = (src)=> new Promise((resolve,reject)=>{ const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>resolve(); s.onerror=()=>reject(new Error('Script load fail: '+src)); document.head.appendChild(s); });
-    const ensureXLSX = async ()=>{ if(window.XLSX) return; await loadScript('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'); };
+    const ensureXLSX = async ()=>{ if(window.XLSX) return; const s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'; s.async=true; await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; document.head.appendChild(s); }); };
 
     /* ------------------------------ Demo Data (fallback) ------------------------------ */
     const DemoSets = [
@@ -601,6 +605,7 @@
       const tags = (s.tags||[]).slice(0,3).map(t=>`<span class='chip'>#${esc(t)}</span>`).join('');
       const img = (s.cards?.[0]?.img) || ph(s.title);
       const count = (s.cards?.length||0);
+      const mod = s.modality||'Mixed';
       return `<div class='set-tile'>
         <div class='thumb'><img alt='thumb' src='${img}'/></div>
         <div class='tile-body'>
@@ -609,39 +614,64 @@
             <span class='chip'>🃏 ${count}장</span>
           </div>
           <div class='muted' style="font-size:var(--fs-small)">${esc(s.desc||'')}</div>
-          <div class='chips'>${tags}</div>
+          <div class='chips'>
+            <span class='chip'>${esc(mod)}</span>
+            ${tags}
+          </div>
           <div style='display:flex;gap:8px;margin-top:6px'>
-            <button class='btn primary' data-action='start-mode' data-mode='flash' data-id='${s.id}'>▶ Flash</button>
-            <button class='btn' data-action='start-mode' data-mode='quiz' data-id='${s.id}'>▶ Quiz</button>
+            <button class='btn primary' data-action='start-mode' data-mode='flash' data-id='${s.id}'>Flash</button>
+            <button class='btn' data-action='start-mode' data-mode='quiz' data-id='${s.id}'>Quiz</button>
           </div>
         </div>
       </div>`;
     }
+    function uniqueModalities(){
+      const set = new Set((DemoSets||[]).map(s=> (s.modality||'').trim()).filter(Boolean));
+      return Array.from(set).sort();
+    }
+    function ensureModOptions(){
+      const sel = $('#mod'); if(!sel) return;
+      // If only the placeholder exists, inject options dynamically
+      if(sel.options.length <= 1){
+        const mods = uniqueModalities();
+        mods.forEach(m=>{
+          const opt = document.createElement('option');
+          opt.value = m; opt.textContent = m;
+          sel.appendChild(opt);
+        });
+      }
+    }
     function renderSetList(){
-      const q = $('#q')?.value?.trim().toLowerCase()||''; const mod=$('#mod')?.value||'';
+      ensureModOptions();
+      const q = $('#q')?.value?.trim().toLowerCase()||'';
+      const mod=$('#mod')?.value?.trim()||'';
       const list = DemoSets.filter(s=>{
         const bag=[s.title,s.desc,s.modality,(s.tags||[]).join(' '),(s.cards||[]).map(c=>[c.q,c.a,(c.tags||[]).join(' ')].join(' ')).join(' ')].join(' ').toLowerCase();
-        const okQ=!q||bag.includes(q); const okM=!mod||s.modality===mod; return okQ&&okM;
+        const okQ=!q||bag.includes(q);
+        const okM=!mod|| norm(s.modality)===norm(mod);
+        return okQ&&okM;
       });
       $('#set-list').innerHTML = list.map(tile).join('') || '<div class="card muted">조건에 맞는 세트가 없습니다.</div>';
     }
 
     /* -------------------------------- FLASH -------------------------------- */
     const Flash={ i:0, flipped:false, order:[], bins:[[],[],[],[],[]], setId:null, countdownId:null,
-      autoNext:true, autoNextDelay:5000,
+      autoNext:true, autoNextDelay:5000, autoplay:false,
       mount(){
         if(!CurrentSet) CurrentSet=DemoSets[0];
         $('#flash-title').textContent=CurrentSet?.title||'';
         if(this.setId!==CurrentSet?.id){ this.reset(); }
-        $('#bins').innerHTML = Array.from({length:5}).map(()=>`
+        const labels=['1회차','2회차','3회차','4회차','5회차'];
+        $('#bins').innerHTML = labels.map((lb)=>`
           <div class="bin">
             <div class="bin-bar"><i style="width:0%"></i></div>
-            <div class="muted" style="font-size:12px;margin-top:4px">Bin</div>
+            <div class="muted" style="font-size:12px;margin-top:4px">${lb}</div>
             <div style="font-weight:900;font-size:18px">0</div>
           </div>`).join('');
         // 상태 반영
         $('#auto-next').checked = this.autoNext;
         $('#auto-next-delay').value = String(this.autoNextDelay);
+        $('#autoplay-btn').textContent = this.autoplay ? '⏸️' : '▶️';
         this.render();
         if(!CurrentSet?.cards?.length){ note('이 세트에는 카드가 없습니다. Admin에서 데이터 확인 또는 원격 새로고침을 실행하세요.', true); }
       },
@@ -682,7 +712,11 @@
             this.showBack(); note('정답 공개!');
             if($('#auto-next').checked){
               const delay = +($('#auto-next-delay').value||this.autoNextDelay);
-              setTimeout(()=> this.next(), delay || 5000);
+              setTimeout(()=> {
+                this.next();
+                // 연속 자동 진행(autoplay)일 경우 다음 카드에서 자동 타이머 시작
+                if(this.autoplay) { this.startTimer(); }
+              }, delay || 5000);
             }
           }
         },1000);
@@ -701,7 +735,6 @@
         const k=this.card(); if(!k) return;
         $('#flash-img').src=k.img||ph('No image');
         $('#flash-question').textContent = k.q || '이 영상의 진단명은?';
-        // update tts button payload
         const tbtn = $('.tts-btn[data-action="tts-toggle"]'); if(tbtn){ tbtn.dataset.text = k.q || ''; }
         $('#flash-answer').innerHTML=`<span>${esc(k.a||'')}</span>`;
         $('#flash-explain').innerHTML=`<span>${esc(k.e||'')}</span>`;
@@ -709,6 +742,7 @@
         $('#flash-bar').style.width=((this.i+1)/this.order.length*100|0)+'%';
         this.renderBins();
         this.showFront();
+        if(this.autoplay){ this.startTimer(); }
       },
       renderBins(){
         const binEls = $$('#bins .bin');
@@ -718,6 +752,18 @@
           el.querySelector('.bin-bar i').style.width = `${(b.length/total)*100}%`;
           el.querySelector('div:last-child').textContent = b.length;
         });
+      },
+      toggleAutoplay(){
+        this.autoplay = !this.autoplay;
+        $('#autoplay-btn').textContent = this.autoplay ? '⏸️' : '▶️';
+        if(this.autoplay){
+          // 강제로 auto-next 옵션 켜기
+          $('#auto-next').checked = true;
+          // 즉시 시작
+          this.startTimer();
+        }else{
+          this.stopTimer();
+        }
       }
     };
 
@@ -743,8 +789,8 @@
           ${q?.image?`<img src='${q.image}' alt='x-ray' style="max-height:360px; object-fit:contain"/>`:''}
           <div style='font-weight:900; font-size:var(--fs-h2)'>
             <span>${esc(q?.stem||'')}</span>
-            <button class="tts-btn" data-action="tts-toggle" data-text="${esc(q?.stem||'')}">▶ 읽기</button>
-            <button class="tts-btn" data-action="tts-stop">■ 정지</button>
+            <button class="tts-btn" data-action="tts-toggle" aria-label="읽기/일시정지" data-text="${esc(q?.stem||'')}">▶️</button>
+            <button class="tts-btn" data-action="tts-stop" aria-label="정지">⏹️</button>
           </div>
           <div id='quiz-opts' class='grid' style="gap:8px"></div>
           <div id='quiz-exp' class='muted' style='display:none'></div>
@@ -758,7 +804,7 @@
         if(q.kind==='mc'||q.kind==='tf'){
           q.options.forEach((opt,idx)=>{ const el=document.createElement('div'); el.className='opt'; el.textContent=opt; el.dataset.action='quiz-pick'; el.dataset.idx=idx; wrap.appendChild(el); });
         } else {
-          const input=document.createElement('input'); input.placeholder='정답 입력'; input.style.cssText='padding:10px;border-radius:10px;border:1px solid var(--line);background:#fff;color:#0f172a';
+          const input=document.createElement('input'); input.placeholder='정답 입력'; input.style.cssText='padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a';
           const btn=document.createElement('button'); btn.className='btn'; btn.textContent='확인'; btn.dataset.action='quiz-fill';
           wrap.appendChild(input); wrap.appendChild(btn);
         }
@@ -797,7 +843,6 @@
         let h='<div style="font-weight:900;margin:10px 0 6px">목차</div><ul>'; let prev = 1;
         toc.forEach(({id, level, text})=>{
           if(level>prev) h+='<ul>'; else if(level<prev) h+='</ul>'.repeat(prev-level);
-          // hash 충돌 방지: 링크 대신 data-id로 스크롤
           h+=`<li><a href="javascript:void(0)" data-action="toc-goto" data-target="${id}">${esc(text)}</a></li>`; prev=level;
         });
         h+='</ul>'.repeat(prev)+'</ul>';
@@ -812,7 +857,6 @@
         const q = ($('#blog-q')?.value||'').toLowerCase();
         const list = BlogPosts.filter(p=>!q|| p.title.toLowerCase().includes(q)||p.body.toLowerCase().includes(q));
         $('#blog-list').innerHTML = list.map(p=>`<li><a data-action='blog-select' data-id='${p.id}'>${esc(p.title)}</a></li>`).join('') || '<div class="muted" style="padding:8px">글이 없습니다.</div>';
-        // 사이드바 토글 상태
         this.listOpen = localStorage.getItem('blog_list_open')!=='0';
         $('#blog-list').style.display = this.listOpen ? 'block' : 'none';
         $('#blog-toc').style.display = this.listOpen ? $('#blog-toc').style.display : 'none';
@@ -925,7 +969,6 @@
           } else if(p.endsWith('.csv')){
             const txt = await fetchText(url);
             const rows = parseCSV(txt);
-            // rows (q,a,e,img,tags,set,modality,set_desc,group) → sets로 변환
             csvRowsToSets(rows); return 'sets.csv';
           } else if(p.endsWith('.xlsx')){
             await ensureXLSX();
@@ -990,12 +1033,18 @@
 
     /* ---------------------------- Event Handling --------------------------- */
     document.addEventListener('click', (e)=>{
+      // NAV 우선 처리
+      const navEl = e.target.closest('[data-nav]');
+      if(navEl){
+        e.preventDefault();
+        routeTo(navEl.dataset.nav, routeTo.params||{});
+        return;
+      }
+
       const a = e.target.closest('[data-action]'); if(!a) return;
       const act = a.dataset.action;
 
-      // Nav
       if(act==='toggle-theme'){ Theme.toggle(); }
-      if(a.matches('[data-nav]')){ routeTo(a.dataset.nav, routeTo.params||{}); }
 
       // Sets → start
       if(act==='start-mode'){
@@ -1011,6 +1060,7 @@
       if(act==='flash-grade'){ Flash.grade(+a.dataset.ok===1); }
       if(act==='start-timer'){ Flash.startTimer(); }
       if(act==='flash-toggle'){ Flash.toggle(); }
+      if(act==='flash-autoplay'){ Flash.toggleAutoplay(); }
 
       // Quiz
       if(act==='quiz-start'){ Quiz.start(); }
@@ -1037,20 +1087,6 @@
 
       // TTS generic (flash, quiz stems)
       if(act==='tts-toggle'){ tts.toggle(a.dataset.text||''); }
-
-      // Admin
-      if(act==='adm-json'){ Admin.uploadJSON(); }
-      if(act==='adm-file'){ Admin.uploadFile(); }
-      if(act==='adm-export'){ Admin.exportAll(); }
-      if(act==='adm-reset'){ Admin.resetConfirm(); }
-      if(act==='remote-reload'){ remoteReload(); }
-      if(act==='save-admin-key'){
-        const k = $('#blog-key').value.trim();
-        if(!k){ note('키를 입력하세요', true); return; }
-        Admin.key = k; localStorage.setItem('adm_key', k);
-        $('#adm-key').value = k;
-        note('관리자 키 저장됨');
-      }
     });
 
     // Keyboard shortcuts for Flash
@@ -1064,13 +1100,14 @@
     // Options change
     $('#auto-next')?.addEventListener('change', ()=>{ Flash.autoNext = $('#auto-next').checked; });
     $('#auto-next-delay')?.addEventListener('change', ()=>{ Flash.autoNextDelay = +$('#auto-next-delay').value || 5000; });
+    $('#q')?.addEventListener('input', renderSetList);
+    $('#mod')?.addEventListener('change', renderSetList);
 
     /* ------------------------------ INIT ------------------------------ */
     (async function init(){
       Theme.init();
       restoreLocal();
       renderHome(); renderSetList(); Blog.render();
-      // 관리자 뷰는 탭이 없으므로 해시로만 접근
       const view = (location.hash||'#home').slice(1);
       if(['home','sets','flash','quiz','blog','admin'].includes(view)) routeTo(view); else routeTo('home');
     })();

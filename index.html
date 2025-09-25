@@ -750,8 +750,6 @@
           ${q?.image?`<img src='${q.image}' alt='x-ray' style="max-height:360px; object-fit:contain"/>`:''}
           <div style='font-weight:900; font-size:var(--fs-h2)'>
             <span>${esc(q?.stem||'')}</span>
-            <button class="btn icon" data-action="tts-toggle" aria-label="읽기/일시정지" data-text="${esc(q?.stem||'')}">🔊</button>
-            <button class="btn icon" data-action="tts-stop" aria-label="정지">■</button>
           </div>
           <div id='quiz-opts' class='grid' style="gap:8px"></div>
           <div id='quiz-exp' class='muted' style='display:none'></div>

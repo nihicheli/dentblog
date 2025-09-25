@@ -158,6 +158,9 @@
         <a class="tab" data-nav="blog" role="tab">칼럼</a>
         <a class="tab" data-nav="admin" role="tab">관리</a>
       </div>
+      <style>
+        [data-nav="admin"] { display:none !important; }
+      </style>
       <button id="theme-btn" class="theme" data-action="toggle-theme" aria-label="테마 전환">◐</button>
     </div>
   </header>
@@ -584,17 +587,17 @@
       const tags = (s.tags||[]).slice(0,3).map(t=>`<span class='chip'>#${esc(t)}</span>`).join('');
       const count = (s.cards?.length||0);
       const mod = s.modality||'Mixed';
+      const img = (s.cards && s.cards[0]?.img) || '';
+      const thumb = img
+        ? `<img class='thumb' src='${esc(img)}' alt='preview'>`
+        : '';
+    
       return `<div class='set-tile'>
-        <div class='thumb'></div>
+        ${thumb}
         <div class='tile-body'>
           <div style='display:flex;align-items:center;gap:8px;justify-content:space-between'>
             <div style='font-weight:900; font-size:16px'>${esc(s.title)}</div>
             <span class='chip'>🃏 ${count}장</span>
-          </div>
-          <div class='muted' style="font-size:var(--fs-small)">${esc(s.desc||'')}</div>
-          <div class='chips'>
-            <span class='chip'>${esc(mod)}</span>
-            ${tags}
           </div>
           <div style='display:flex;gap:8px;margin-top:6px'>
             <button class='btn primary' data-action='start-mode' data-mode='flash' data-id='${s.id}'>Flash</button>

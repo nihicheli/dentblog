@@ -893,19 +893,57 @@
       el.scrollTop = el.scrollHeight;
     }
 
+    function parseCSV(txt){
+      const lines = txt.split(/\r?\n/).filter(l=>l.trim().length);
+      if(!lines.length) return [];
+      const headers = lines[0].split(',').map(h=>h.trim());
+      return lines.slice(1).map(line=>{
+        const cols = line.split(',');
+        const row = {};
+        headers.forEach((h,i)=> row[h]= (cols[i]||'').trim());
+        return row;
+      });
+    }
+    
+    // CSV rows → 세트 구조 변환
+    function csvRowsToSets(rows){
+      const map=new Map();
+      (rows||[]).forEach(r=>{
+        const setId = slug(r.set || 'unnamed');
+        if(!map.has(setId)){
+          map.set(setId, {
+            id:setId,
+            modality:r.modality||'Mixed',
+            title:r.set||'unnamed',
+            desc:r.set_desc||'',
+            tags:[],
+            group:r.group||'',
+            cards:[]
+          });
+        }
+        map.get(setId).cards.push({
+          q:r.q||'',
+          a:r.a||'',
+          e:r.e||'',
+          img:r.img||'',
+          tags:parseTags(r.tags)
+        });
+      });
+      replaceSets(Array.from(map.values()));
+    }
+    
     async function tryLoadSets(){
       try{
-        // ✅ Google Sheets CSV API
-        const sheetId = "1BWSJMBLuEU2v7eon5MdM02fAFHV0z5T2tr3_42K15dY"; // sets 시트 ID
-        const gid = "66467758"; // sets 시트 GID
+        const sheetId = "1BWSJMBLuEU2v7eon5MdM02fAFHV0z5T2tr3_42K15dY";
+        const gid = "66467758";
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
     
         const txt = await fetchText(url);
         const rows = parseCSV(txt);
         if(rows.length){
-          Sets = rows;
-          renderSetList();
-          logDev('sets <- google sheet', `(${rows.length} rows)`);
+          // ✅ CSV 행들을 세트별(DemoSets 구조)로 묶어서 교체
+          csvRowsToSets(rows);
+          logDev('sets <- google sheet (grouped)', `(${rows.length} rows)`);
           return 'sets.google';
         }
       }catch(e){
@@ -913,6 +951,7 @@
       }
       return null;
     }
+
 
 
 

@@ -285,7 +285,7 @@
               </select>
             </label>
 
-            <button class="btn round" data-action="flash-autoplay" id="autoplay-btn" aria-label="연속 자동 학습 토글">▸</button>
+            <button class="btn round" data-action="flash-autoplay" id="autoplay-btn" aria-label="연속 자동 학습 토글">▶</button>
           </div>
         </div>
       </div>
@@ -331,7 +331,7 @@
           <div class="card" style="padding:12px; position:sticky; top:0;">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-bottom:8px; border-bottom:1px solid var(--line)">
               <div style="font-weight:900; font-size:1.05em;">글 목록</div>
-              <button class="btn small" data-action="blog-list-toggle" title="접기/펼치기">⮞</button>
+              <button class="btn small" data-action="blog-list-toggle" title="접기/펼치기">⏵</button>
             </div>
             <ul id="blog-list" class="blog-list" style="margin-top:8px"></ul>
             <div id="blog-toc" class="toc" style="display:none;"></div>
@@ -340,10 +340,10 @@
         <div>
           <div id="blog-view" class="blog-view"></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
-            <input id="blog-key" type="password" placeholder="관리자 키(0917)" style="padding:10px;border-radius:12px;border:1px solid var(--line)" />
+            <input id="blog-key" type="password" placeholder="관리자 키" style="padding:10px;border-radius:12px;border:1px solid var(--line)" />
             <button class="btn" data-action="blog-edit">수정</button>
             <button class="btn bad" data-action="blog-delete">삭제</button>
-            <button class="btn icon" data-action="tts-body" aria-label="본문 읽기/일시정지">▸</button>
+            <button class="btn icon" data-action="tts-body" aria-label="본문 읽기/일시정지">▶</button>
             <button class="btn icon" data-action="tts-stop" aria-label="정지">■</button>
           </div>
           <div id="blog-editor" class="editor" style="display:none;margin-top:10px">
@@ -367,7 +367,7 @@
         <div class="card shadow">
           <h3 style="margin-top:0; font-size:var(--fs-h2)">카드 일괄 등록</h3>
           <div style="display:grid;gap:8px">
-            <input id="adm-key" type="password" placeholder="관리자 키(0917)"/>
+            <input id="adm-key" type="password" placeholder="관리자 키"/>
             <select id="adm-target" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a"></select>
             <input id="adm-newset" placeholder="새 세트 이름(신규 생성 시)"/>
             <textarea id="adm-json" placeholder='[{"q":"문제","a":"정답","e":"해설","img":"url","tags":"CBCT;낭종"}]' rows="6"></textarea>
@@ -457,7 +457,7 @@
       stop(){ try{ this.synth.cancel(); this.state='idle'; updateTTSLabels(); }catch(e){} }
     };
     function updateTTSLabels(){
-      $$('.btn.icon[data-action="tts-body"]').forEach(b=>{ b.textContent = (tts.state==='speaking')? '∥' : (tts.state==='paused'? '▸' : '▸'); });
+      $$('.btn.icon[data-action="tts-body"]').forEach(b=>{ b.textContent = (tts.state==='speaking')? '❚❚' : (tts.state==='paused'? '▶' : '▶'); });
       $$('.btn.icon[data-action="tts-stop"]').forEach(b=> b.textContent='■');
     }
 
@@ -636,7 +636,7 @@
           </div>`).join('');
         $('#auto-next').checked = this.autoNext;
         $('#auto-next-delay').value = String(this.autoNextDelay);
-        $('#autoplay-btn').textContent = this.autoplay ? '∥' : '▸';
+        $('#autoplay-btn').textContent = this.autoplay ? '❚❚' : '▶';
         this.render();
         if(!CurrentSet?.cards?.length){ note('이 세트에는 카드가 없습니다. Admin에서 데이터 확인 또는 원격 새로고침을 실행하세요.', true); }
       },
@@ -723,7 +723,7 @@
           this.startTimer();
         }else{ this.stopTimer(); }
       },
-      stopAutoplay(done=false){ this.autoplay=false; $('#autoplay-btn').textContent = '▸'; this.stopTimer(); if(done) note('모든 카드 5회차 완료! 자동 진행 종료'); },
+      stopAutoplay(done=false){ this.autoplay=false; $('#autoplay-btn').textContent = '▶'; this.stopTimer(); if(done) note('모든 카드 5회차 완료! 자동 진행 종료'); },
       allMastered(){ return this.order.every(idx => this.binOf(idx)===4); }
     };
 

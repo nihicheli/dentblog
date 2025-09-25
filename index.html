@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DxCards | 치의학 학습 플랫폼</title>
+  <title>🦷DentBlog | 치의학 학습 플랫폼</title>
   <meta name="description" content="치의학 영상·일반 학습을 위한 플래시카드 · 퀴즈 · 블로그" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
@@ -85,7 +85,7 @@
     html.dark .progress{background:var(--panel-2);border-color:var(--line)}
     .progress>i{display:block;height:100%;background:linear-gradient(90deg,#60a5fa,#3b82f6)}
 
-    /* FLASH 레이아웃: 콘텐츠 길이에 따라 카드 높이 자동 */
+    /* FLASH */
     .flash-frame{display:grid; grid-template-columns:1fr 1fr; gap:16px; box-shadow:var(--shadow)}
     @media (max-width:900px){ .flash-frame{grid-template-columns:1fr} }
     .flash-visual{display:flex; justify-content:center; align-items:center; padding:16px}
@@ -94,7 +94,7 @@
     .flash-card{position:relative; padding:12px; cursor:pointer}
     .flash-card .front,
     .flash-card .back{
-      display:none; /* 상태 클래스에 따라 표시 */
+      display:none;
       flex-direction:column; align-items:center; justify-content:center;
       gap:10px; padding:16px; border-radius:12px; border:1px solid var(--line);
       background:var(--panel); text-align:center;
@@ -109,11 +109,11 @@
       position:absolute; inset:0; display:grid; place-items:center;
       background:rgba(0,0,0,.55); color:#fff; font-size:48px; font-weight:900;
       border-radius:12px; opacity:0; transition:opacity .2s;
-      pointer-events:none; z-index:2; /* 숨김일 때 클릭 통과 */
+      pointer-events:none; z-index:2;
     }
-    .countdown.show{ opacity:1; pointer-events:auto } /* 보일 때만 가로챔 */
+    .countdown.show{ opacity:1; pointer-events:auto }
 
-    .tts-btn{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--panel-2); border:1px solid var(--line); color:var(--muted); margin-left:8px; }
+    .tts-btn{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; border-radius:999px; padding:0 8px; background:var(--panel-2); border:1px solid var(--line); color:var(--muted); margin-left:8px; font-size:12px }
     html.dark .tts-btn{ background:var(--panel); }
 
     .bin{ text-align:center }
@@ -134,7 +134,7 @@
     .blog-list a.active{background:var(--brand); color:#fff; font-weight:800; border-color:transparent}
     .blog-view{padding:18px;min-height:160px; background:var(--panel); border-radius:12px; box-shadow:var(--shadow)}
     .blog-view h1{font-size:var(--fs-h1);margin:.2em 0 .5em; border-bottom:1px solid var(--line); padding-bottom:8px}
-    /* ✅ 소제목 밑줄 제거 */
+    /* 소제목 밑줄 제거 */
     .blog-view h2{font-size:var(--fs-h2);margin:1.3em 0 .4em; border-bottom:none; padding-bottom:0}
     .blog-view h3{font-size:var(--fs-h3);margin:1em 0 .4em}
     .blog-view p{margin:0 0 1em}
@@ -161,13 +161,13 @@
   <header>
     <div class="nav">
       <div class="brand" data-nav="home" role="button" aria-label="홈으로 이동">
-        <div class="badge">Dx</div><div>DxCards</div>
+        <div class="badge">🦷</div><div>DentBlog</div>
       </div>
       <div class="tabs" role="tablist">
         <a class="tab" data-nav="home" role="tab" aria-selected="true">홈</a>
         <a class="tab" data-nav="sets" role="tab">세트</a>
         <a class="tab" data-nav="blog" role="tab">블로그</a>
-        <a class="tab" data-nav="admin" role="tab">관리자</a>
+        <!-- 관리자 탭은 숨김 (주소창에 /#admin 입력 시 접근) -->
       </div>
       <button id="theme-btn" class="theme" data-action="toggle-theme" aria-label="테마 전환">☀️</button>
     </div>
@@ -177,15 +177,15 @@
     <!-- HOME -->
     <section id="view-home" class="view active home">
       <div class="hero">
-        <h1>DxCards</h1>
+        <h1>🦷DentBlog</h1>
         <p class="muted">치의학 영상 기반 플래시카드, 적응형 퀴즈, 블로그로 이론을 함께 학습하세요.</p>
         <div id="home-stats" class="chips" style="justify-content:center; gap:8px"></div>
       </div>
 
       <div class="card shadow" style="padding:0; overflow:hidden; margin-bottom:12px">
         <div style="display:flex; overflow:auto; gap:12px; padding:12px;">
-          <img src="https://via.placeholder.com/1100x120/2563eb/ffffff?text=임상+세트+프로모션" alt="광고" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:8px;"/>
-          <img src="https://via.placeholder.com/1100x120/1d4ed8/ffffff?text=CBCT+핵심+정리" alt="광고" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:8px;"/>
+          <img src="https://via.placeholder.com/1100x120/2563eb/ffffff?text=%EA%B4%91%EA%B3%A0+%EC%98%88%EC%8B%9C+1" alt="광고" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:8px;"/>
+          <img src="https://via.placeholder.com/1100x120/1d4ed8/ffffff?text=%EA%B4%91%EA%B3%A0+%EC%98%88%EC%8B%9C+2" alt="광고" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:8px;"/>
         </div>
       </div>
 
@@ -200,14 +200,14 @@
         </div>
       </div>
 
-      <footer>© 2025 DxCards · 교육용 프로토타입</footer>
+      <footer>© 2025 DentBlog · 교육용 프로토타입</footer>
     </section>
 
     <!-- SETS -->
     <section id="view-sets" class="view sets">
       <div class="hero" style="text-align:left">
         <h1 style="font-size:var(--fs-h1)">학습 세트</h1>
-        <p class="muted">검색/모달리티로 필터링 후 Flash/Quiz를 시작하세요.</p>
+        <p class="muted">검색/모달리티로 필터링 후 바로 Flash/Quiz를 시작하세요.</p>
       </div>
       <div class="card shadow" style="margin-bottom:12px">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -223,32 +223,10 @@
       <div id="set-list" class="grid" style="grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));"></div>
     </section>
 
-    <!-- DETAIL -->
-    <section id="view-detail" class="view">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <button class="btn-nav" data-nav="sets">← 목록</button>
-        <h2 id="detail-title" style="margin:0; font-size:var(--fs-h1)"></h2>
-      </div>
-      <div class="grid cols-2">
-        <div class="card shadow">
-          <div id="detail-desc" class="muted" style="margin-bottom:8px"></div>
-          <div id="detail-tags" class="chips" style="margin-bottom:10px"></div>
-          <div class="muted">카드 수: <b id="detail-count"></b></div>
-        </div>
-        <div class="card shadow">
-          <div class="muted" style="font-weight:800;margin-bottom:8px">시작하기</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn primary" data-action="start-mode" data-mode="flash">▶ Flashcards</button>
-            <button class="btn" data-action="start-mode" data-mode="quiz">▶ Quiz</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- FLASH -->
     <section id="view-flash" class="view">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
-        <button class="btn-nav" data-nav="detail">← 세트</button>
+        <button class="btn-nav" data-nav="sets">← 세트</button>
         <div style="flex:1;">
           <h2 id="flash-title" style="margin:0; font-size:var(--fs-h1)"></h2>
         </div>
@@ -269,7 +247,8 @@
           <div class="front" id="flash-front">
             <div style="font-weight:900; font-size:var(--fs-h2); display:flex; align-items:center; justify-content:center; text-align:center">
               <span id="flash-question">이 영상의 진단명은?</span>
-              <button class="tts-btn" data-action="tts-speak" data-text="이 영상의 진단명은?">🗣️</button>
+              <button class="tts-btn" data-action="tts-toggle" data-text="이 영상의 진단명은?">▶ 읽기</button>
+              <button class="tts-btn" data-action="tts-stop">■ 정지</button>
             </div>
             <div class="hint">카드를 클릭하거나 스페이스바를 눌러 정답을 확인하세요</div>
           </div>
@@ -305,7 +284,6 @@
             </label>
             <button class="btn primary" data-action="start-timer" id="timer-btn">타이머 시작</button>
 
-            <!-- ✅ 정답 후 자동 넘김 옵션 -->
             <label style="display:inline-flex;gap:6px;align-items:center;margin-left:8px">
               <input type="checkbox" id="auto-next" checked />
               정답 후 자동 넘김
@@ -327,7 +305,7 @@
     <!-- QUIZ -->
     <section id="view-quiz" class="view">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <button class="btn-nav" data-nav="detail">← 세트</button>
+        <button class="btn-nav" data-nav="sets">← 세트</button>
         <h2 id="quiz-title" style="margin:0; font-size:var(--fs-h1)"></h2>
       </div>
       <div class="card shadow" style="margin-bottom:10px">
@@ -364,7 +342,10 @@
       <div class="blog">
         <aside class="blog-sidebar">
           <div class="card" style="padding:12px; position:sticky; top:0;">
-            <div style="font-weight:900; font-size:1.05em; padding-bottom:8px; border-bottom:1px solid var(--line);">글 목록</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-bottom:8px; border-bottom:1px solid var(--line)">
+              <div style="font-weight:900; font-size:1.05em;">글 목록</div>
+              <button class="btn" style="padding:6px 10px" data-action="blog-list-toggle">접기/펼치기</button>
+            </div>
             <ul id="blog-list" class="blog-list" style="margin-top:8px"></ul>
             <div id="blog-toc" class="toc" style="display:none;"></div>
           </div>
@@ -372,11 +353,13 @@
         <div>
           <div id="blog-view" class="blog-view"></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
-            <input id="blog-key" type="password" placeholder="관리자 키 (기본 0917)" style="padding:10px;border-radius:10px;border:1px solid var(--line)" />
+            <input id="blog-key" type="password" placeholder="관리자 키" style="padding:10px;border-radius:10px;border:1px solid var(--line)" />
+            <button class="btn" data-action="save-admin-key">키 저장</button>
             <button class="btn" data-action="blog-edit">수정</button>
             <button class="btn bad" data-action="blog-delete">삭제</button>
-            <!-- ✅ 제목 대신 본문 읽기 버튼 -->
-            <button class="btn" data-action="tts-body">본문 읽기 🗣️</button>
+            <!-- 제목 대신 본문 읽기 + 제어 -->
+            <button class="btn" data-action="tts-body">본문 읽기 ▶/⏸</button>
+            <button class="btn" data-action="tts-stop">정지 ■</button>
           </div>
           <div id="blog-editor" class="editor" style="display:none;margin-top:10px">
             <input id="blog-title" placeholder="제목" />
@@ -390,11 +373,11 @@
       </div>
     </section>
 
-    <!-- ADMIN -->
+    <!-- ADMIN (탭 없음, 해시로만 진입) -->
     <section id="view-admin" class="view">
       <div class="hero" style="text-align:left">
         <h1 style="font-size:var(--fs-h1)">관리자</h1>
-        <p class="muted">관리자 키가 일치하면 대량 등록/백업 및 원격 데이터 새로고침이 가능합니다. 기본 키: <code>0917</code></p>
+        <p class="muted">관리자 키가 일치하면 대량 등록/백업 및 원격 데이터 새로고침이 가능합니다.</p>
       </div>
       <div class="grid cols-2">
         <div class="card shadow">
@@ -428,11 +411,11 @@
         </div>
 
         <div class="card shadow" style="grid-column:1/-1">
-          <h3 style="margin-top:0; font-size:var(--fs-h2)">CSV 형식</h3>
-          <div class="muted">헤더 포함 권장. 지원 컬럼: <b>q, a, e, img, tags, set, modality, set_desc</b> (tags는 세미콜론; 구분)</div>
-<pre class="muted" style="white-space:pre-wrap;background:var(--panel-2);border:1px solid var(--line);padding:10px;border-radius:10px">q,a,e,img,tags,set,modality,set_desc
-이 영상의 진단명은?,Dentigerous cyst,매복치 치관 주위 방사선투과,https://ex.com/dentigerous.jpg,Panorama;낭종,낭종 vs 종양 감별,Panorama,경계·피질화·치근 흡수·매복치 관계
-임플란트 주위 방사선투과 소견?,Peri-implantitis,크레이터형 결손,https://ex.com/implantitis.jpg,Periapical;임플란트,치주/임플란트 영상,Periapical,합병증 위주 체크</pre>
+          <h3 style="margin-top:0; font-size:var(--fs-h2)">CSV/XLSX 컬럼 가이드</h3>
+          <div class="muted">헤더 권장. 지원 컬럼: <b>q, a, e, img, tags, set, modality, set_desc, group</b> (tags는 세미콜론; 구분) — 세트 묶음은 <b>group</b> 사용.</div>
+<pre class="muted" style="white-space:pre-wrap;background:var(--panel-2);border:1px solid var(--line);padding:10px;border-radius:10px">q,a,e,img,tags,set,modality,set_desc,group
+이 영상의 진단명은?,Dentigerous cyst,매복치 치관 주위 방사선투과,https://ex.com/dentigerous.jpg,Panorama;낭종,낭종 vs 종양 감별,Panorama,경계·피질화·치근 흡수·매복치 관계,영상감별(기본)
+임플란트 주위 방사선투과 소견?,Peri-implantitis,크레이터형 결손,https://ex.com/implantitis.jpg,Periapical;임플란트,치주/임플란트 영상,Periapical,합병증 위주 체크,임플란트</pre>
         </div>
       </div>
     </section>
@@ -466,8 +449,36 @@
     const parseCSV=txt=>{ if(!txt) return []; const lines = txt.split(/\r?\n/).filter(l=>l.trim()); if(!lines.length) return []; const head = splitCSV(lines[0]); const out=[]; for(let i=1;i<lines.length;i++){ const cols = splitCSV(lines[i]); const row={}; head.forEach((h,idx)=> row[h]=cols[idx]); out.push(row); } return out; };
     const ph=label=>{ const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='720' height='420'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#e5e7eb'/><stop offset='1' stop-color='#cbd5e1'/></linearGradient></defs><rect width='100%' height='100%' fill='url(#g)'/><g fill='#1f2937' font-family='Arial' text-anchor='middle'><text x='50%' y='50%' font-size='22' font-weight='700'>${esc(label)}</text><text x='50%' y='58%' font-size='12' fill='#6b7280'>Demo Placeholder</text></g></svg>`; return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg); };
 
-    // Voice synthesis (TTS)
-    const tts = { synth: window.speechSynthesis, speak(text){ try{ if(this.synth.speaking) this.synth.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='ko-KR'; this.synth.speak(u); }catch(e){ console.warn(e) } } };
+    // Voice synthesis (TTS) with toggle
+    const tts = {
+      synth: window.speechSynthesis,
+      state: 'idle', // idle | speaking | paused
+      speak(text){
+        try{
+          if(!text || !this.synth) return;
+          if(this.synth.speaking){ this.synth.cancel(); }
+          const u=new SpeechSynthesisUtterance(text);
+          u.lang='ko-KR';
+          u.onend=()=>{ this.state='idle'; updateTTSLabels(); };
+          this.synth.speak(u);
+          this.state='speaking';
+          updateTTSLabels();
+        }catch(e){ console.warn(e) }
+      },
+      toggle(text){
+        if(this.state==='speaking'){ this.pause(); return; }
+        if(this.state==='paused'){ this.resume(); return; }
+        this.speak(text);
+      },
+      pause(){ try{ this.synth.pause(); this.state='paused'; updateTTSLabels(); }catch(e){} },
+      resume(){ try{ this.synth.resume(); this.state='speaking'; updateTTSLabels(); }catch(e){} },
+      stop(){ try{ this.synth.cancel(); this.state='idle'; updateTTSLabels(); }catch(e){} }
+    };
+    function updateTTSLabels(){
+      $$('.tts-btn[data-action="tts-toggle"]').forEach(b=>{
+        b.textContent = (tts.state==='speaking')? '⏸ 일시정지' : (tts.state==='paused'? '▶ 이어듣기' : '▶ 읽기');
+      });
+    }
 
     // Markdown (safe-ish) + TOC harvest
     const markdown=(src='')=>{
@@ -498,7 +509,7 @@
 
     /* ------------------------------ Demo Data (fallback) ------------------------------ */
     const DemoSets = [
-      { id:'set-pan', modality:'Panorama', title:'낭종 vs 종양 감별', desc:'경계/피질화/치근 흡수/매복치 관계로 감별 연습', tags:['낭종','종양','감별'],
+      { id:'set-pan', modality:'Panorama', title:'낭종 vs 종양 감별', desc:'경계/피질화/치근 흡수/매복치 관계로 감별 연습', tags:['낭종','종양','감별'], group:'영상감별(기본)',
         cards:[
           { q:'이 영상의 진단명은?', a:'Dentigerous cyst', e:'매복치 치관 주위에 well-defined corticated radiolucency, 치관 연결.', img:ph('Dentigerous cyst'), tags:['낭종','매복치'] },
           { q:'이 영상의 진단명은?', a:'Ameloblastoma', e:'다방성, expansile, thinning/bowing, 치근 흡수 가능.', img:ph('Ameloblastoma'), tags:['종양','다방성'] },
@@ -507,7 +518,7 @@
           { q:'다음 중 sunray appearance를 보이는 악성은?', a:'Osteosarcoma', e:'Periosteal reaction(sunburst)와 불규칙한 혼합음영.', img:ph('Osteosarcoma'), tags:['악성','periosteal'] }
         ]
       },
-      { id:'set-cbct', modality:'CBCT', title:'CBCT 혼합음영 병소', desc:'혼합음영·불규칙 경계 병소 감별 포인트', tags:['CBCT','혼합음영'],
+      { id:'set-cbct', modality:'CBCT', title:'CBCT 혼합음영 병소', desc:'혼합음영·불규칙 경계 병소 감별 포인트', tags:['CBCT','혼합음영'], group:'영상감별(고급)',
         cards:[
           { q:'이 영상의 진단명은?', a:'Cemento-ossifying fibroma', e:'경계 명확·확장성·내부 혼합음영; 성인 여성, 하악 구치부 호발.', img:ph('COF'), tags:['혼합음영','양성'] },
           { q:'이 영상의 진단명은?', a:'Chronic osteomyelitis', e:'불규칙 혼합음영, sequestrum/involucrum, periosteal reaction 가능.', img:ph('Osteomyelitis'), tags:['감염','염증'] },
@@ -530,7 +541,7 @@
 
 ## OKC (Odontogenic keratocyst)
 - **Scalloped**, 전후 길게, 팽창 상대적으로 적음
-- 재발 경향, 다발성 시 NBCCS 고려`, when: Date.now()-1000*60*60*24*2 },
+- 재발 경향, 다발성 시 NBCCS 고려`, when: Date.now()-1000*60*60*24*2, category:'영상감별' },
       { id:uid(), title:'임플란트 합병증의 영상학적 징후', body:`# Peri-implant disease
 - **Mucositis**: 연조직 염증 중심, *골소실 없음*
 - **Peri-implantitis**: **crater-like** 골결손, 나사선 노출
@@ -538,7 +549,7 @@
 ## 평가 포인트
 1. baseline 대비 **crestal bone level** 변화
 2. 나사선 노출 범위
-3. 보철 구조물 유무/적합`, when: Date.now()-1000*60*60*20 }
+3. 보철 구조물 유무/적합`, when: Date.now()-1000*60*60*20, category:'임플란트' }
     ];
 
     /* -------------------------------- STATE -------------------------------- */
@@ -558,12 +569,11 @@
       routeTo.params = params;
       if(view==='home')  renderHome();
       if(view==='sets')  renderSetList();
-      if(view==='detail') renderDetail(params);
       if(view==='flash') Flash.mount();
       if(view==='quiz')  Quiz.mount();
       if(view==='blog')  Blog.render();
       if(view==='admin') Admin.mount();
-      history.pushState(null, '', '#'+view);
+      history.replaceState(null, '', '#'+view);
     }
     window.addEventListener('hashchange',()=>{ const v=(location.hash||'#home').slice(1); routeTo(v, routeTo.params||{}); });
 
@@ -590,18 +600,22 @@
     function tile(s){
       const tags = (s.tags||[]).slice(0,3).map(t=>`<span class='chip'>#${esc(t)}</span>`).join('');
       const img = (s.cards?.[0]?.img) || ph(s.title);
-      return `<a class='set-tile' href="#detail" data-action='open-detail' data-id='${s.id}'>
+      const count = (s.cards?.length||0);
+      return `<div class='set-tile'>
         <div class='thumb'><img alt='thumb' src='${img}'/></div>
         <div class='tile-body'>
-          <div style='font-weight:900; font-size:16px'>${esc(s.title)}</div>
+          <div style='display:flex;align-items:center;gap:8px;justify-content:space-between'>
+            <div style='font-weight:900; font-size:16px'>${esc(s.title)}</div>
+            <span class='chip'>🃏 ${count}장</span>
+          </div>
           <div class='muted' style="font-size:var(--fs-small)">${esc(s.desc||'')}</div>
           <div class='chips'>${tags}</div>
           <div style='display:flex;gap:8px;margin-top:6px'>
-            <button class='btn' data-action='open-detail' data-id='${s.id}'>자세히</button>
-            <button class='btn primary' data-action='start-mode' data-mode='flash' data-id='${s.id}'>Flash</button>
+            <button class='btn primary' data-action='start-mode' data-mode='flash' data-id='${s.id}'>▶ Flash</button>
+            <button class='btn' data-action='start-mode' data-mode='quiz' data-id='${s.id}'>▶ Quiz</button>
           </div>
         </div>
-      </a>`;
+      </div>`;
     }
     function renderSetList(){
       const q = $('#q')?.value?.trim().toLowerCase()||''; const mod=$('#mod')?.value||'';
@@ -611,18 +625,10 @@
       });
       $('#set-list').innerHTML = list.map(tile).join('') || '<div class="card muted">조건에 맞는 세트가 없습니다.</div>';
     }
-    function renderDetail(params={}){
-      const id = params.id || CurrentSet?.id || DemoSets[0]?.id; CurrentSet = DemoSets.find(s=>s.id===id)||DemoSets[0];
-      if(!CurrentSet){ $('#detail-title').textContent=''; $('#detail-desc').textContent=''; $('#detail-count').textContent='0'; $('#detail-tags').innerHTML=''; return; }
-      $('#detail-title').textContent=CurrentSet.title;
-      $('#detail-desc').textContent=CurrentSet.desc||'';
-      $('#detail-count').textContent=CurrentSet.cards.length;
-      $('#detail-tags').innerHTML=(CurrentSet.tags||[]).map(t=>`<span class='chip'>#${esc(t)}</span>`).join('');
-    }
 
     /* -------------------------------- FLASH -------------------------------- */
     const Flash={ i:0, flipped:false, order:[], bins:[[],[],[],[],[]], setId:null, countdownId:null,
-      autoNext:true, autoNextDelay:5000, // ✅ 새 옵션
+      autoNext:true, autoNextDelay:5000,
       mount(){
         if(!CurrentSet) CurrentSet=DemoSets[0];
         $('#flash-title').textContent=CurrentSet?.title||'';
@@ -672,9 +678,9 @@
           if(t<=0){
             clearInterval(this.countdownId); this.countdownId=null;
             cd.classList.remove('show');
-            // ✅ 타이머 종료 → 정답 표시 → 지연 후 자동 넘김(옵션)
+            // 타이머 종료 → 정답 표시 → 지연 후 자동 넘김(옵션)
             this.showBack(); note('정답 공개!');
-            if(this.autoNext){
+            if($('#auto-next').checked){
               const delay = +($('#auto-next-delay').value||this.autoNextDelay);
               setTimeout(()=> this.next(), delay || 5000);
             }
@@ -687,7 +693,6 @@
       },
       render(){
         this.stopTimer();
-        // 내용 바인딩
         if(!CurrentSet?.cards?.length){
           $('#flash-img').src=''; $('#flash-answer').textContent=''; $('#flash-explain').textContent='카드가 없습니다.'; $('#flash-pos').textContent='0/0'; $('#flash-bar').style.width='0%';
           $('#flash-card').classList.add('show-front');
@@ -696,12 +701,13 @@
         const k=this.card(); if(!k) return;
         $('#flash-img').src=k.img||ph('No image');
         $('#flash-question').textContent = k.q || '이 영상의 진단명은?';
+        // update tts button payload
+        const tbtn = $('.tts-btn[data-action="tts-toggle"]'); if(tbtn){ tbtn.dataset.text = k.q || ''; }
         $('#flash-answer').innerHTML=`<span>${esc(k.a||'')}</span>`;
         $('#flash-explain').innerHTML=`<span>${esc(k.e||'')}</span>`;
         $('#flash-pos').textContent=`${this.i+1}/${this.order.length}`;
         $('#flash-bar').style.width=((this.i+1)/this.order.length*100|0)+'%';
         this.renderBins();
-        // 앞면으로 표시
         this.showFront();
       },
       renderBins(){
@@ -737,7 +743,8 @@
           ${q?.image?`<img src='${q.image}' alt='x-ray' style="max-height:360px; object-fit:contain"/>`:''}
           <div style='font-weight:900; font-size:var(--fs-h2)'>
             <span>${esc(q?.stem||'')}</span>
-            <button class="tts-btn" data-action="tts-speak" data-text="${esc(q?.stem||'')}">🗣️</button>
+            <button class="tts-btn" data-action="tts-toggle" data-text="${esc(q?.stem||'')}">▶ 읽기</button>
+            <button class="tts-btn" data-action="tts-stop">■ 정지</button>
           </div>
           <div id='quiz-opts' class='grid' style="gap:8px"></div>
           <div id='quiz-exp' class='muted' style='display:none'></div>
@@ -777,11 +784,11 @@
     }
 
     /* -------------------------------- BLOG -------------------------------- */
-    const Blog={ curId:null,
+    const Blog={ curId:null, listOpen:true,
       new(){ this.curId=null; this.showEditor(true); $('#blog-title').value=''; $('#blog-body').value=''; $('#blog-view').innerHTML='<div class="muted">새 글 작성 중...</div>'; $('#blog-toc').style.display='none'; },
       select(id){ this.curId=id; const p=BlogPosts.find(x=>x.id===id); if(!p) return; this.showEditor(false); this.renderView(p); this.renderTOC(); $$('#blog-list a').forEach(el => el.classList.toggle('active', el.dataset.id === id)); },
       renderView(p){
-        const html = `<h1>${esc(p.title)}</h1><div class="muted" style="margin-bottom:12px">${mdDate(p.when)}</div>`+ markdown(p.body||'');
+        const html = `<h1>${esc(p.title)}</h1><div class="muted" style="margin-bottom:12px">${mdDate(p.when)}${p.category? ' · '+esc(p.category):''}</div>`+ markdown(p.body||'');
         $('#blog-view').innerHTML=html;
       },
       renderTOC(){
@@ -790,7 +797,8 @@
         let h='<div style="font-weight:900;margin:10px 0 6px">목차</div><ul>'; let prev = 1;
         toc.forEach(({id, level, text})=>{
           if(level>prev) h+='<ul>'; else if(level<prev) h+='</ul>'.repeat(prev-level);
-          h+=`<li><a href="#${id}">${esc(text)}</a></li>`; prev=level;
+          // hash 충돌 방지: 링크 대신 data-id로 스크롤
+          h+=`<li><a href="javascript:void(0)" data-action="toc-goto" data-target="${id}">${esc(text)}</a></li>`; prev=level;
         });
         h+='</ul>'.repeat(prev)+'</ul>';
         el.innerHTML=h; el.style.display='block';
@@ -804,6 +812,11 @@
         const q = ($('#blog-q')?.value||'').toLowerCase();
         const list = BlogPosts.filter(p=>!q|| p.title.toLowerCase().includes(q)||p.body.toLowerCase().includes(q));
         $('#blog-list').innerHTML = list.map(p=>`<li><a data-action='blog-select' data-id='${p.id}'>${esc(p.title)}</a></li>`).join('') || '<div class="muted" style="padding:8px">글이 없습니다.</div>';
+        // 사이드바 토글 상태
+        this.listOpen = localStorage.getItem('blog_list_open')!=='0';
+        $('#blog-list').style.display = this.listOpen ? 'block' : 'none';
+        $('#blog-toc').style.display = this.listOpen ? $('#blog-toc').style.display : 'none';
+
         if(this.curId){
           const p = BlogPosts.find(x=>x.id===this.curId);
           if(p) this.select(this.curId);
@@ -815,13 +828,15 @@
         }
         renderHome();
       },
-      speakBody(){ const p=BlogPosts.find(x=>x.id===this.curId); if(!p) return; const text = toPlainText(p.body||''); if(!text.trim()) { note('읽을 본문이 없습니다.'); return; } tts.speak(text); }
+      speakBody(){ const p=BlogPosts.find(x=>x.id===this.curId); if(!p) return; const text = toPlainText(p.body||''); if(!text.trim()) { note('읽을 본문이 없습니다.'); return; } tts.toggle(text); },
+      stopSpeak(){ tts.stop(); },
+      toggleList(){ this.listOpen = !this.listOpen; localStorage.setItem('blog_list_open', this.listOpen? '1':'0'); this.render(); }
     };
 
     /* -------------------------------- ADMIN ------------------------------- */
-    const Admin={ key:'0917', mount(){ fillTargetSets(); },
+    const Admin={ key: localStorage.getItem('adm_key') || '', mount(){ fillTargetSets(); $('#adm-key').value = this.key; },
       checkKey(){ const k=$('#adm-key').value; if(k!==this.key){ note('관리자 키 오류',true); return false } return true; },
-      uploadJSON(){ if(!this.checkKey())return; try{ const arr=JSON.parse($('#adm-json').value||'[]'); addCards(arr, targetSetId()); note('등록 완료'); location.hash='#sets'; routeTo('sets'); }catch(e){ note('JSON 오류: '+e.message,true) } },
+      uploadJSON(){ if(!this.checkKey())return; try{ const arr=JSON.parse($('#adm-json').value||'[]'); addCards(arr, targetSetId()); note('등록 완료'); routeTo('sets'); }catch(e){ note('JSON 오류: '+e.message,true) } },
       uploadFile: async ()=>{ if(!Admin.checkKey()) return;
         const f=$('#adm-file').files?.[0]; if(!f){ note('파일 선택'); return; }
         const ext = (f.name.split('.').pop()||'').toLowerCase();
@@ -843,13 +858,13 @@
           }
         }catch(e){ note('파싱 실패: '+e.message, true); return; }
         if(Array.isArray(rows) && rows.length && !rows[0].q && rows[0].cards){
-          mergeSets(rows);
+          replaceSets(rows);
         }else{
           addCards(rows, targetSetId());
         }
         note('등록 완료'); routeTo('sets');
       },
-      exportAll(){ const data = { sets: DemoSets, blogs: BlogPosts }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='dxcards-backup.json'; a.click(); },
+      exportAll(){ const data = { sets: DemoSets, blogs: BlogPosts }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='dentblog-backup.json'; a.click(); },
       resetConfirm(){ if(!this.checkKey())return; if(confirm('정말 모든 데이터를 초기화할까요?')){ localStorage.clear(); location.reload(); } }
     };
     function targetSetId(){ const sel=$('#adm-target').value; const name=($('#adm-newset').value||'').trim(); if(sel==='__new__' && name){ let s={id:slug(name), modality:'Mixed', title:name, desc:'관리자 생성 세트', tags:['custom'], cards:[]}; DemoSets.push(s); fillTargetSets(); return s.id; } return sel; }
@@ -862,31 +877,33 @@
         const e = row.e || row.explain || row.explanation || '';
         const img = row.img || '';
         const tags = parseTags(row.tags);
+        const modality = row.modality || s.modality || 'Mixed';
+        const setDesc = row.set_desc || s.desc || '';
+        const group = row.group || s.group || '';
+        s.modality = modality; s.desc = setDesc; s.group = group;
         s.cards.push({ q, a, e, img: img||ph(a||'Card'), tags });
       });
       persist(); renderSetList(); renderHome();
     }
+    function replaceSets(newSets){
+      if(!Array.isArray(newSets)) return;
+      DemoSets.length = 0;
+      newSets.forEach(s=> DemoSets.push(s));
+      persist(); renderSetList(); renderHome();
+    }
 
     /* ------------------------------- STORAGE ------------------------------ */
-    const KEY='dxc_state_v4';
+    const KEY='dentblog_state_v1';
     const persist=()=>{ try{ localStorage.setItem(KEY, JSON.stringify({sets:DemoSets, blogs:BlogPosts})); }catch(e){ console.warn('persist fail', e)} };
     function restoreLocal(){
       const raw=localStorage.getItem(KEY);
       if(!raw) return false;
       try{
         const st=JSON.parse(raw);
-        if(st.sets) mergeSets(st.sets);
+        if(st.sets) replaceSets(st.sets);
         if(st.blogs) BlogPosts=st.blogs;
         return true;
       }catch(e){ console.warn('restore failed',e); return false; }
-    }
-    function mergeSets(saved){
-      if(!Array.isArray(saved)) return;
-      const byId = Object.fromEntries((DemoSets||[]).map(s=>[s.id,s]));
-      saved.forEach(sv=>{
-        if(byId[sv.id]) byId[sv.id].cards=sv.cards;
-        else DemoSets.push(sv);
-      });
     }
 
     /* --------------------------- Remote Loading --------------------------- */
@@ -900,46 +917,38 @@
         try{
           if(p.endsWith('.json')){
             const js = await fetchJSON(url);
-            if(Array.isArray(js)){ if(js.every(x=>Array.isArray(x.cards))) { replaceSets(js); return 'sets.json'; } }
-            else if(js?.sets){ replaceSets(js.sets); return 'sets.json(sets)'; }
-          }
-          if(p.endsWith('.csv')){
-            const rows = parseCSV(await fetchText(url));
-            if(rows.length){ applySetRows(rows); return 'sets.csv'; }
-          }
-          if(p.endsWith('.xlsx')){
+            if(Array.isArray(js)){
+              replaceSets(js); return 'sets.json';
+            } else if(js?.sets){
+              replaceSets(js.sets); return 'sets.json(wrapper)';
+            }
+          } else if(p.endsWith('.csv')){
+            const txt = await fetchText(url);
+            const rows = parseCSV(txt);
+            // rows (q,a,e,img,tags,set,modality,set_desc,group) → sets로 변환
+            csvRowsToSets(rows); return 'sets.csv';
+          } else if(p.endsWith('.xlsx')){
             await ensureXLSX();
-            const wb = XLSX.read(await fetchBuf(url), {type:'array'});
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-            if(rows.length){ applySetRows(rows); return 'sets.xlsx'; }
+            const buf=await fetchBuf(url);
+            const wb=XLSX.read(buf,{type:'array'});
+            const ws=wb.Sheets[wb.SheetNames[0]];
+            const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+            csvRowsToSets(rows); return 'sets.xlsx';
           }
-        }catch(_e){}
+        }catch(e){ /* 다음 후보 시도 */ }
       }
       return null;
     }
-    function applySetRows(rows){
-      const bySet = {};
-      rows.forEach(r=>{
-        const setName = r.set || r.set_name || 'Imported';
-        const id = slug(setName);
-        bySet[id] = bySet[id] || { id, title:setName, modality: r.modality || 'Mixed', desc: r.set_desc || '', tags: parseTags(r.set_tags||''), cards:[] };
-        const q=r.q||r.question||'이 영상의 진단명은?';
-        const a=r.a||r.answer||'';
-        const e=r.e||r.explain||'';
-        const img=r.img||'';
-        const tags=parseTags(r.tags||'');
-        bySet[id].cards.push({q,a,e,img:img||ph(a||'Card'),tags});
+    function csvRowsToSets(rows){
+      const map=new Map();
+      (rows||[]).forEach(r=>{
+        const setId = slug(r.set || 'unnamed');
+        if(!map.has(setId)){
+          map.set(setId, { id:setId, modality:r.modality||'Mixed', title:r.set||'unnamed', desc:r.set_desc||'', tags:[], group:r.group||'', cards:[] });
+        }
+        map.get(setId).cards.push({ q:r.q||'', a:r.a||'', e:r.e||'', img:r.img||'', tags:parseTags(r.tags) });
       });
-      const arr = Object.values(bySet);
-      replaceSets(arr);
-    }
-    function replaceSets(arr){
-      if(!Array.isArray(arr)) return;
-      const valid = arr.filter(s=>Array.isArray(s.cards) && s.cards.length>0);
-      if(!valid.length){ note('원격 세트 데이터에 카드가 없습니다. 기존 데이터를 유지합니다.', true); return; }
-      DemoSets.length = 0; valid.forEach(s=> DemoSets.push(s));
-      fillTargetSets(); renderSetList(); renderHome(); persist();
+      replaceSets(Array.from(map.values()));
     }
 
     async function tryLoadBlogs(){
@@ -948,148 +957,122 @@
         try{
           if(p.endsWith('.json')){
             const js = await fetchJSON(url);
-            if(Array.isArray(js) && js.length && js[0].title){ applyBlogs(js); return 'blogs.json'; }
-            else if(js?.blogs){ applyBlogs(js.blogs); return 'blogs.json(blogs)'; }
-          }
-          if(p.endsWith('.csv')){
-            const rows = parseCSV(await fetchText(url));
-            if(rows.length){ applyBlogRows(rows); return 'blogs.csv'; }
-          }
-          if(p.endsWith('.xlsx')){
+            if(Array.isArray(js)){ BlogPosts=js; return 'blogs.json'; }
+            else if(js?.blogs){ BlogPosts=js.blogs; return 'blogs.json(wrapper)'; }
+          } else if(p.endsWith('.csv')){
+            const txt = await fetchText(url);
+            const rows = parseCSV(txt);
+            BlogPosts = rows.map(r=>({ id:uid(), title:r.title||'', body:r.body||'', when: Date.now(), category:r.category||'' }));
+            return 'blogs.csv';
+          } else if(p.endsWith('.xlsx')){
             await ensureXLSX();
-            const wb = XLSX.read(await fetchBuf(url), {type:'array'});
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-            if(rows.length){ applyBlogRows(rows); return 'blogs.xlsx'; }
+            const buf=await fetchBuf(url);
+            const wb=XLSX.read(buf,{type:'array'});
+            const ws=wb.Sheets[wb.SheetNames[0]];
+            const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+            BlogPosts = rows.map(r=>({ id:uid(), title:r.title||'', body:r.body||'', when: Date.now(), category:r.category||'' }));
+            return 'blogs.xlsx';
           }
-        }catch(_e){}
+        }catch(e){ /* 다음 후보 시도 */ }
       }
       return null;
     }
-    function applyBlogRows(rows){
-      const arr = rows.map(r=>({ id: uid(), title: r.title || r.제목 || '제목 없음', body:  r.body  || r.내용 || '', when:  excelToDate(r.when || r.date || Date.now()).getTime() }));
-      applyBlogs(arr);
+
+    async function remoteReload(){
+      busy(true,'원격 데이터 확인 중...');
+      let log='';
+      const s = await tryLoadSets(); log += 'sets: ' + (s||'미발견') + '\\n';
+      const b = await tryLoadBlogs(); log += 'blogs: ' + (b||'미발견') + '\\n';
+      $('#dev-log').textContent = log;
+      busy(false, s||b? '원격 데이터 적용 완료':'원격 데이터가 없습니다');
+      renderHome(); renderSetList(); Blog.render();
     }
-    function applyBlogs(arr){
-      if(!Array.isArray(arr)) return;
-      BlogPosts = arr.map(p=>({ id:p.id||uid(), title:p.title||'제목 없음', body:p.body||'', when: p.when? +p.when : Date.now() }));
-      persist(); Blog.render(); renderHome();
-    }
-    async function reloadRemote(){
-      busy(true, '원격 데이터 로딩…');
-      let loaded=[];
-      try{
-        const a = await tryLoadSets(); if(a) loaded.push(a);
-        const b = await tryLoadBlogs(); if(b) loaded.push(b);
-        if(loaded.length){ note('원격 데이터 적용: '+loaded.join(', ')); }
-        else{ note('원격 데이터 없음 – 로컬 데모 사용', true); }
-      }catch(e){
-        console.error(e); note('원격 로드 실패: '+e.message, true);
-      }finally{
-        busy(false); renderHome(); renderSetList(); fillTargetSets();
+
+    /* ---------------------------- Event Handling --------------------------- */
+    document.addEventListener('click', (e)=>{
+      const a = e.target.closest('[data-action]'); if(!a) return;
+      const act = a.dataset.action;
+
+      // Nav
+      if(act==='toggle-theme'){ Theme.toggle(); }
+      if(a.matches('[data-nav]')){ routeTo(a.dataset.nav, routeTo.params||{}); }
+
+      // Sets → start
+      if(act==='start-mode'){
+        const id = a.dataset.id || CurrentSet?.id || DemoSets[0]?.id;
+        CurrentSet = DemoSets.find(s=>s.id===id) || DemoSets[0];
+        if(a.dataset.mode==='flash') routeTo('flash');
+        else if(a.dataset.mode==='quiz') routeTo('quiz');
       }
-    }
 
-    /* ------------------------- Event Delegation --------------------------- */
-    function attachGlobalHandlers(){
-      document.addEventListener('click', (e)=>{
-        const nav = e.target.closest('[data-nav]'); 
-        if(nav){ e.preventDefault(); const v=nav.dataset.nav; if(v==='detail'){ routeTo('detail', {id:CurrentSet?.id||DemoSets[0]?.id}); } else { routeTo(v); } return; }
-        const act = e.target.closest('[data-action]'); if(!act) return; const a = act.dataset.action;
+      // Flash
+      if(act==='flash-prev'){ Flash.prev(); }
+      if(act==='flash-next'){ Flash.next(); }
+      if(act==='flash-grade'){ Flash.grade(+a.dataset.ok===1); }
+      if(act==='start-timer'){ Flash.startTimer(); }
+      if(act==='flash-toggle'){ Flash.toggle(); }
 
-        if(a==='toggle-theme'){ Theme.toggle(); }
-        if(a==='open-detail'){ routeTo('detail',{id:act.dataset.id}); }
-        if(a==='start-mode'){ const id = act.dataset.id||CurrentSet?.id||DemoSets[0]?.id; CurrentSet = DemoSets.find(s=>s.id===id)||DemoSets[0]; const mode=act.dataset.mode||'flash'; routeTo(mode==='flash'?'flash':'quiz',{id}); }
+      // Quiz
+      if(act==='quiz-start'){ Quiz.start(); }
+      if(act==='quiz-next'){ Quiz.next(); }
+      if(act==='quiz-prev'){ Quiz.prev(); }
+      if(act==='quiz-restart'){ Quiz.start(); }
+      if(act==='quiz-pick'){ Quiz.pick(+a.dataset.idx); }
+      if(act==='quiz-fill'){ const v=$('#quiz-opts input')?.value||''; Quiz.fillCheck(v); }
 
-        // TTS
-        if(a==='tts-speak'){ tts.speak(act.dataset.text||''); }
-
-        // Flash
-        if(a==='flash-prev'){ Flash.prev(); }
-        if(a==='flash-next'){ Flash.next(); }
-        if(a==='flash-grade'){ Flash.grade( act.dataset.ok==='1' ); }
-        if(a==='start-timer'){ Flash.startTimer(); }
-        if(a==='flash-toggle'){ Flash.toggle(); }
-
-        // Quiz
-        if(a==='quiz-start'){ Quiz.start(); }
-        if(a==='quiz-next'){ Quiz.next(); }
-        if(a==='quiz-prev'){ Quiz.prev(); }
-        if(a==='quiz-restart'){ Quiz.start(); }
-        if(a==='quiz-pick'){ const idx=+act.dataset.idx; Quiz.pick(idx); }
-        if(a==='quiz-fill'){ const input=$('#quiz-opts input'); Quiz.fillCheck(input?.value||''); }
-
-        // Blog
-        if(a==='blog-new'){ Blog.new(); }
-        if(a==='blog-select'){ e.preventDefault(); Blog.select(act.dataset.id); routeTo('blog'); }
-        if(a==='blog-edit'){ Blog.editStart(); }
-        if(a==='blog-save'){ Blog.save(); }
-        if(a==='blog-cancel'){ Blog.cancel(); }
-        if(a==='blog-delete'){ Blog.delete(); }
-
-        // Admin
-        if(a==='adm-json'){ Admin.uploadJSON(); }
-        if(a==='adm-file'){ Admin.uploadFile(); }
-        if(a==='adm-export'){ Admin.exportAll(); }
-        if(a==='adm-reset'){ Admin.resetConfirm(); }
-        if(a==='remote-reload'){ reloadRemote(); }
-      });
-
-      // Flash 옵션 제어
-      $('#auto-next')?.addEventListener('change', (e)=>{ Flash.autoNext = !!e.target.checked; });
-      $('#auto-next-delay')?.addEventListener('change', (e)=>{ const v = +e.target.value; Flash.autoNextDelay = isNaN(v)?5000:v; });
-
-      // Live search
-      $('#q')?.addEventListener('input', renderSetList);
-      $('#mod')?.addEventListener('change', renderSetList);
-      $('#blog-q')?.addEventListener('input', ()=>Blog.render());
-
-      // Blog 본문 읽기
-      document.addEventListener('click', (e)=>{
-        const btn = e.target.closest('[data-action="tts-body"]');
-        if(btn){ e.preventDefault(); Blog.speakBody(); }
-      });
-
-      // Keyboard shortcuts
-      document.addEventListener('keydown', (e)=>{
-        const view = document.querySelector('section.view.active')?.id || '';
-        if(view==='view-flash'){
-          if(e.key==='ArrowRight') Flash.next();
-          if(e.key==='ArrowLeft') Flash.prev();
-          if(e.key===' '){ e.preventDefault(); Flash.toggle(); }
-        }
-      });
-    }
-
-    function runDiagLog(){
-      const log=[
-        '== DxCards Runtime ==',
-        `Sets: ${DemoSets.length}`,
-        `Cards(total): ${DemoSets.reduce((n,s)=>n+(s.cards?.length||0),0)}`,
-        `Blogs: ${BlogPosts.length}`,
-        `Theme: ${(document.documentElement.classList.contains('dark')?'dark':'light')}`,
-        'LocalStorage: '+(localStorage.getItem(KEY)?'present':'empty'),
-        'Router: '+(location.hash||'#home')
-      ].join('\n');
-      const dev=$('#dev-log'); if(dev) dev.textContent=log;
-    }
-
-    /* --------------------------------- BOOT -------------------------------- */
-    (async function boot(){
-      try{
-        Theme.init();
-        attachGlobalHandlers();
-        const initial = (location.hash.slice(1) || 'home');
-        routeTo(initial);
-
-        const restored = restoreLocal(); if(restored) note('로컬 데이터 복원');
-
-        await reloadRemote();
-
-        fillTargetSets(); renderSetList(); renderHome(); runDiagLog();
-      }catch(e){
-        console.error(e); note('초기화 실패: '+e.message, true);
+      // Blog
+      if(act==='blog-new'){ Blog.new(); }
+      if(act==='blog-select'){ routeTo('blog'); Blog.select(a.dataset.id); }
+      if(act==='blog-edit'){ Blog.editStart(); }
+      if(act==='blog-save'){ Blog.save(); }
+      if(act==='blog-cancel'){ Blog.cancel(); }
+      if(act==='blog-delete'){ Blog.delete(); }
+      if(act==='blog-list-toggle'){ Blog.toggleList(); }
+      if(act==='tts-body'){ Blog.speakBody(); }
+      if(act==='tts-stop'){ Blog.stopSpeak(); }
+      if(act==='toc-goto'){
+        const id = a.dataset.target; const h = document.getElementById(id);
+        if(h){ h.scrollIntoView({behavior:'smooth', block:'start'}); }
       }
+
+      // TTS generic (flash, quiz stems)
+      if(act==='tts-toggle'){ tts.toggle(a.dataset.text||''); }
+
+      // Admin
+      if(act==='adm-json'){ Admin.uploadJSON(); }
+      if(act==='adm-file'){ Admin.uploadFile(); }
+      if(act==='adm-export'){ Admin.exportAll(); }
+      if(act==='adm-reset'){ Admin.resetConfirm(); }
+      if(act==='remote-reload'){ remoteReload(); }
+      if(act==='save-admin-key'){
+        const k = $('#blog-key').value.trim();
+        if(!k){ note('키를 입력하세요', true); return; }
+        Admin.key = k; localStorage.setItem('adm_key', k);
+        $('#adm-key').value = k;
+        note('관리자 키 저장됨');
+      }
+    });
+
+    // Keyboard shortcuts for Flash
+    document.addEventListener('keydown', (e)=>{
+      if(!$('#view-flash').classList.contains('active')) return;
+      if(e.code==='Space'){ e.preventDefault(); Flash.toggle(); }
+      if(e.code==='ArrowRight'){ Flash.next(); }
+      if(e.code==='ArrowLeft'){ Flash.prev(); }
+    });
+
+    // Options change
+    $('#auto-next')?.addEventListener('change', ()=>{ Flash.autoNext = $('#auto-next').checked; });
+    $('#auto-next-delay')?.addEventListener('change', ()=>{ Flash.autoNextDelay = +$('#auto-next-delay').value || 5000; });
+
+    /* ------------------------------ INIT ------------------------------ */
+    (async function init(){
+      Theme.init();
+      restoreLocal();
+      renderHome(); renderSetList(); Blog.render();
+      // 관리자 뷰는 탭이 없으므로 해시로만 접근
+      const view = (location.hash||'#home').slice(1);
+      if(['home','sets','flash','quiz','blog','admin'].includes(view)) routeTo(view); else routeTo('home');
     })();
   </script>
 </body>

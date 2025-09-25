@@ -3,7 +3,7 @@
 
 ## 폴더구조
 dentblog/
-├─ index.html                # 제가 드린 파일을 index.html로 저장
+├─ index.html                
 ├─ data/
 │  ├─ sets.json              # ← 세트 데이터(아래 셋 중 ‘하나만’ 있어도 자동 인식)
 │  ├─ sets.csv

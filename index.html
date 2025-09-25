@@ -413,14 +413,11 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="loader" aria-hidden="true"><div class="spinner" aria-label="로딩중"></div></div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <script>
     // ====== 기본 설정 ======
     const baseUrl = 'https://raw.githubusercontent.com/nihicheli/dentblog/main/';
-    const RemotePaths = {
-      sets:  ['data/sets.json','data/sets.csv','data/sets.xlsx'],
-      blogs: ['data/blogs.json','data/blogs.csv','data/blogs.xlsx']
-    };
     const ADMIN_KEY='0917';
 
     // ====== 유틸 ======
@@ -436,8 +433,52 @@
     const sample=(a,n)=>{const x=[...a]; const out=[]; while(x.length&&out.length<n){ out.push(x.splice((Math.random()*x.length)|0,1)[0]) } return out };
     const shuffle=a=>{for(let i=a.length-1;i>0;i++){const j=(Math.random()*(i+1)|0);[a[i],a[j]]=[a[j]]}return a};
     const parseTags=t=>!t?[]:Array.isArray(t)?t:String(t).split(/;|,/).map(s=>s.trim()).filter(Boolean);
-    const splitCSV=line=>{ const res=[]; let cur=''; let q=false; for(let i=0;i<line.length;i++){ const ch=line[i]; if(ch==='"'){ if(q && line[i+1]==='"'){ cur+='"'; i++; } else { q=!q; } } else if(ch===',' && !q){ res.push(cur); cur=''; } else { cur+=ch; } } res.push(cur); return res.map(s=>s.trim()); };
-    const parseCSV=txt=>{ if(!txt) return []; const lines = txt.split(/\r?\n/).filter(l=>l.trim()); if(!lines.length) return []; const head = splitCSV(lines[0]); const out=[]; for(let i=1;i<lines.length;i++){ const cols = splitCSV(lines[i]); const row={}; head.forEach((h,idx)=> row[h]=cols[idx]); out.push(row); } return out; };
+    
+    // CSV 파싱 함수 수정 - 헤더를 첫 번째 행으로 인식하지 않고 데이터만 추출하도록 변경
+    const parseCSV=txt=>{
+      if(!txt) return [];
+      const lines = txt.split(/\r?\n/).filter(l=>l.trim());
+      if(!lines.length) return [];
+      
+      const headerLine = lines[0];
+      const headerPattern = /^[a-zA-Z_][a-zA-Z0-9_]*$/; // a simple pattern for single-word headers
+      const hasHeader = headerPattern.test(headerLine.split(',')[0].trim());
+
+      const dataLines = hasHeader ? lines.slice(1) : lines;
+      const headers = hasHeader ? headerLine.split(',').map(h => h.trim()) : ['q', 'a', 'e', 'img', 'tags', 'set', 'modality', 'set_desc', 'group'];
+
+      const res = [];
+      dataLines.forEach(line => {
+        let cur = '';
+        let inQuote = false;
+        const cols = [];
+        for (let i = 0; i < line.length; i++) {
+          const ch = line[i];
+          if (ch === '"') {
+            if (inQuote && line[i + 1] === '"') {
+              cur += '"';
+              i++;
+            } else {
+              inQuote = !inQuote;
+            }
+          } else if (ch === ',' && !inQuote) {
+            cols.push(cur.trim());
+            cur = '';
+          } else {
+            cur += ch;
+          }
+        }
+        cols.push(cur.trim());
+
+        const row = {};
+        headers.forEach((h, idx) => {
+          row[h] = cols[idx] || '';
+        });
+        res.push(row);
+      });
+      return res;
+    };
+
     const ph=label=>{ const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='720' height='420'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#e5e7eb'/><stop offset='1' stop-color='#cbd5e1'/></linearGradient></defs><rect width='100%' height='100%' fill='url(#g)'/><g fill='#1f2937' font-family='Arial' text-anchor='middle'><text x='50%' y='50%' font-size='22' font-weight='700'>${esc(label)}</text><text x='50%' y='58%' font-size='12' fill='#6b7280'>Demo Placeholder</text></g></svg>`; return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg); };
 
     // ====== TTS ======
@@ -467,19 +508,24 @@
       $$('.btn.icon[data-action="tts-body"]').forEach(b=>{ b.textContent = (tts.state==='speaking')? '❚❚' : (tts.state==='paused'? '▶' : '▶'); });
       $$('.btn.icon[data-action="tts-stop"]').forEach(b=> b.textContent='■');
     }
-
+    
     // ====== Markdown / 텍스트 변환 ======
-    const markdown=(src='')=>{
-      let s=esc(src); const heads=[];
-      s = s.replace(/^(#{1,4})\s+(.+)$/gm,(_,h,ct)=>{ const id = slug(ct); heads.push({id, level:h.length, text:ct}); return `<h${h.length} id="${id}">${ct}</h${h.length}>`; });
-      s=s.replace(/```([\s\S]*?)```/g,(m,code)=>`<pre><code>${code.replace(/</g,'&lt;')}</code></pre>`);
-      s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
-      s=s.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
-      s=s.replace(/\*([^*]+)\*/g,'<i>$1</i>');
-      s=s.replace(/\n/g,'<br>');
-      markdown.headings=heads;
-      return s;
+    const markdown = (src = '') => {
+      let s = marked.parse(src);
+      markdown.headings = [];
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = s;
+      
+      const headings = tempDiv.querySelectorAll('h1, h2, h3, h4');
+      headings.forEach((h, i) => {
+        const id = slug(h.textContent) + '-' + i;
+        h.id = id;
+        markdown.headings.push({ id, level: parseInt(h.tagName[1]), text: h.textContent });
+      });
+
+      return tempDiv.innerHTML;
     };
+    
     const toPlainText = (md='')=>{
       const tmp = document.createElement('div'); tmp.innerHTML = markdown(md||'');
       return (tmp.textContent||'').replace(/\s+\n/g,'\n');
@@ -493,49 +539,8 @@
     };
 
     // ====== 데모 데이터 ======
-    const DemoSets = [
-      { id:'set-pan', modality:'Panorama', title:'낭종 vs 종양 감별', desc:'경계/피질화/치근 흡수/매복치 관계로 감별 연습', tags:['낭종','종양','감별'], group:'영상감별(기본)',
-        cards:[
-          { q:'이 영상의 진단명은?', a:'Dentigerous cyst', e:'매복치 치관 주위에 well-defined corticated radiolucency, 치관 연결.', img:ph('Dentigerous cyst'), tags:['낭종','매복치'] },
-          { q:'이 영상의 진단명은?', a:'Ameloblastoma', e:'다방성, expansile, thinning/bowing, 치근 흡수 가능.', img:ph('Ameloblastoma'), tags:['종양','다방성'] },
-          { q:'이 영상의 진단명은?', a:'Radicular cyst', e:'비활성/괴사 치아 치근단의 원형 방사선투과성 병소, 얇은 피질 경계.', img:ph('Radicular cyst'), tags:['낭종','치근단'] },
-          { q:'이 영상의 진단명은?', a:'OKC', e:'Scalloped, 전후 길게, 상대적으로 팽창 적음, 재발 경향.', img:ph('OKC'), tags:['낭종','OKC'] },
-          { q:'다음 중 sunray appearance를 보이는 악성은?', a:'Osteosarcoma', e:'Periosteal reaction(sunburst)와 불규칙한 혼합음영.', img:ph('Osteosarcoma'), tags:['악성','periosteal'] }
-        ]
-      },
-      { id:'set-cbct', modality:'CBCT', title:'CBCT 혼합음영 병소', desc:'혼합음영·불규칙 경계 병소 감별 포인트', tags:['CBCT','혼합음영'], group:'영상감별(고급)',
-        cards:[
-          { q:'이 영상의 진단명은?', a:'Cemento-ossifying fibroma', e:'경계 명확·확장성·내부 혼합음영; 성인 여성, 하악 구치부 호발.', img:ph('COF'), tags:['혼합음영','양성'] },
-          { q:'이 영상의 진단명은?', a:'Chronic osteomyelitis', e:'불규칙 혼합음영, sequestrum/involucrum, periosteal reaction 가능.', img:ph('Osteomyelitis'), tags:['감염','염증'] },
-          { q:'이 영상의 진단명은?', a:'Fibrous dysplasia', e:'Ground-glass, 경계 불명확, cortical thinning; 청소년 호발.', img:ph('FD'), tags:['발육성','ground-glass'] },
-          { q:'이 영상의 진단명은?', a:'Osteosarcoma', e:'파괴적 경계, sunburst, widening of PDL space.', img:ph('OS'), tags:['악성','sunburst'] }
-        ]
-      }
-    ];
-    let BlogPosts = [
-      { id:uid(), title:'방사선학적 낭종 감별: Dentigerous vs Radicular vs OKC', body:`# 개요
-치성 낭종은 영상학적으로 **경계, 피질화, 치아와의 관계**로 감별합니다.
-
-## Dentigerous cyst
-- 매복치 *치관* 주위에 **well-defined, corticated** radiolucency
-- 치관과 병소의 **연결**이 핵심 단서
-
-## Radicular cyst
-- **비활성/괴사 치아** 치근단에 원형 투과성 병소
-- 얇은 코르텍스, 치근단 병변과의 연속성
-
-## OKC (Odontogenic keratocyst)
-- **Scalloped**, 전후 길게, 팽창 상대적으로 적음
-- 재발 경향, 다발성 시 NBCCS 고려`, when: Date.now()-1000*60*60*24*2, category:'영상감별' },
-      { id:uid(), title:'임플란트 합병증의 영상학적 징후', body:`## Peri-implant disease
-- **Mucositis**: 연조직 염증 중심, *골소실 없음*
-- **Peri-implantitis**: **crater-like** 골결손, 나사선 노출
-
-## 평가 포인트
-1. baseline 대비 **crestal bone level** 변화
-2. 나사선 노출 범위
-3. 보철 구조물 유무/적합`, when: Date.now()-1000*60*60*20, category:'임플란트' }
-    ];
+    let DemoSets = [];
+    let BlogPosts = [];
 
     // ====== 테마 ======
     const Theme={
@@ -585,7 +590,7 @@
           <div style='font-weight:900; font-size:16px;'>${esc(p.title)}</div>
           <div class='muted' style='font-size:12px; margin-bottom:6px;'>${mdDate(p.when)}${p.category? ' · '+esc(p.category):''}</div>
           <div class='muted' style='overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;'>
-            ${esc((p.body||'').replace(/\n/g, ' ').replace(/#+ /g, '').slice(0,180))}...
+            ${esc(toPlainText(p.body||'').slice(0,180))}...
           </div>
         </a>`).join('');
       $('#home-blog-list').innerHTML = latest || '<div class="muted">글이 없습니다.</div>';
@@ -881,31 +886,56 @@
         return true;
       }catch(e){ return false; }
     }
-
-    // ====== 원격 로드 ======
-    const fetchText = async (url)=> (await fetch(url, {cache:'no-store'})).text();
-    const fetchJSON = async (url)=> (await fetch(url, {cache:'no-store'})).json();
-    const fetchBuf  = async (url)=> (await fetch(url, {cache:'no-store'})).arrayBuffer();
-
+    
+    // 개발 로그 출력
     function logDev(...args){
       const el = $('#dev-log'); if(!el) return;
       el.textContent += args.join(' ') + '\n';
       el.scrollTop = el.scrollHeight;
     }
 
+    // ====== 원격 로드 ======
+    const fetchText = async (url)=> (await fetch(url, {cache:'no-store'})).text();
+    
     async function tryLoadSets(){
       try{
-        // ✅ Google Sheets CSV API
         const sheetId = "1BWSJMBLuEU2v7eon5MdM02fAFHV0z5T2tr3_42K15dY"; // sets 시트 ID
         const gid = "66467758"; // sets 시트 GID
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
     
         const txt = await fetchText(url);
         const rows = parseCSV(txt);
+        
         if(rows.length){
-          Sets = rows;
+          // 그룹별로 세트 데이터를 정리
+          const setsByGroup = {};
+          rows.forEach(row => {
+            const set_id = row.set || 'default';
+            const group_id = slug(row.group || row.set || 'default');
+            const group_title = row.group || 'Default';
+            
+            if (!setsByGroup[group_id]) {
+              setsByGroup[group_id] = {
+                id: group_id,
+                title: group_title,
+                modality: row.modality || 'Mixed',
+                desc: row.set_desc || '',
+                tags: parseTags(row.tags),
+                cards: []
+              };
+            }
+            setsByGroup[group_id].cards.push({
+              q: row.q,
+              a: row.a,
+              e: row.e,
+              img: row.img,
+              tags: parseTags(row.tags)
+            });
+          });
+          
+          DemoSets = Object.values(setsByGroup);
           renderSetList();
-          logDev('sets <- google sheet', `(${rows.length} rows)`);
+          logDev('sets <- google sheet', `(${DemoSets.length} sets, ${rows.length} cards)`);
           return 'sets.google';
         }
       }catch(e){
@@ -915,10 +945,8 @@
     }
 
 
-
     async function tryLoadBlogs(){
       try{
-        // Google Sheets CSV API
         const sheetId = "1B9zr1SQ7ROzIgwC2k8TmuTh0KfNM2-Y_FgNclQVEFZA"; // blogs 시트 ID
         const gid = "908527068"; // blogs gid
         const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
@@ -1031,204 +1059,5 @@
       updateTTSLabels();
     })();
   </script>
-
-  <!-- ===== PATCH: 헤더/칼럼 정규화 + 시트 우선 로더 (기존 기능/디자인 보존) ===== -->
-  <script>
-  /* 0) 시트 ID (이미 있다면 이 블록은 무시됨) */
-  window.SHEETS = window.SHEETS || {
-    blogs: { id: '1B9zr1SQ7ROzIgwC2k8TmuTh0KfNM2-Y_FgNclQVEFZA', gid: '908527068' },
-    sets:  { id: '1BWSJMBLuEU2v7eon5MdM02fAFHV0z5T2tr3_42K15dY', gid: '66467758' }
-  };
-  
-  /* 1) 유틸(없을 때만 정의) */
-  if (typeof fetchText !== 'function') {
-    async function fetchText(url){
-      const res = await fetch(url, {cache:'no-store'});
-      if(!res.ok) throw new Error(res.status+' '+res.statusText);
-      return await res.text();
-    }
-  }
-  if (typeof parseCSV !== 'function') {
-    // 따옴표/콤마/줄바꿈 안전 파서
-    function parseCSV(text){
-      const rows=[]; let row=[], i=0, s=text, val='', q=false;
-      const push=()=>{ row.push(val); val=''; };
-      const endrow=()=>{ push(); rows.push(row); row=[]; };
-      while(i<s.length){
-        const c=s[i];
-        if(q){
-          if(c==='"' && s[i+1]==='"'){ val+='"'; i+=2; continue; }
-          if(c==='"'){ q=false; i++; continue; }
-          val+=c; i++; continue;
-        }else{
-          if(c==='"'){ q=true; i++; continue; }
-          if(c===','){ push(); i++; continue; }
-          if(c==='\r'){ i++; continue; }
-          if(c==='\n'){ endrow(); i++; continue; }
-          val+=c; i++; continue;
-        }
-      }
-      if(val.length || row.length) endrow();
-      if(!rows.length) return [];
-      // 🔧 헤더 정리: BOM/제로폭 제거 + 트리밍
-      const clean = h => (h||'').toString()
-        .replace(/^\uFEFF/, '')                // BOM
-        .replace(/[\u200B-\u200D\uFEFF]/g,'')  // zero-width
-        .trim();
-      const headers = rows[0].map(clean);
-      return rows.slice(1).filter(r=> r.some(c=>String(c).trim().length)).map(cols=>{
-        const obj={};
-        headers.forEach((h,idx)=> obj[h]= (cols[idx]??'').toString().trim());
-        return obj;
-      });
-    }
-  }
-  if (typeof parseTags !== 'function') {
-    function parseTags(s){
-      if(!s) return [];
-      return s.split(/[,;]+/).map(x=>x.trim()).filter(Boolean);
-    }
-  }
-  if (typeof loadSheetCSV !== 'function') {
-    async function loadSheetCSV({id,gid}){
-      const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}`;
-      const txt = await fetchText(url);
-      return parseCSV(txt);
-    }
-  }
-  
-  /* 2) 헤더 키 정규화 & 별칭 매핑 */
-  function __cleanKey(k){
-    return (k||'').toString()
-      .replace(/^\uFEFF/,'').replace(/[\u200B-\u200D\uFEFF]/g,'') // BOM/zero-width
-      .toLowerCase().trim().replace(/[\s_-]+/g,'');               // 공백/언더/대시 제거
-  }
-  // sets 시트 별칭 → 표준키
-  const __SETS_ALIAS = {
-    // 기본
-    q:'q', question:'q', 문제:'q', 질문:'q',
-    a:'a', answer:'a', 정답:'a',
-    e:'e', explain:'e', explanation:'e', 해설:'e', 설명:'e',
-    img:'img', image:'img', imageurl:'img', imgurl:'img', 이미지:'img', 사진:'img',
-    tags:'tags', tag:'tags', 태그:'tags',
-    set:'set', setid:'set', setname:'set', 세트:'set', 세트명:'set', 세트이름:'set', 이름:'set', name:'set',
-    modality:'modality', mode:'modality', 모드:'modality', 유형:'modality', 영상:'modality', 영상구분:'modality',
-    setdesc:'set_desc', desc:'set_desc', 설명문:'set_desc', 세트설명:'set_desc',
-    group:'group', 분류:'group', 그룹:'group', 카테고리:'group', 과목:'group'
-  };
-  // blogs 시트 별칭 → 표준키
-  const __BLOGS_ALIAS = {
-    id:'id', 번호:'id', no:'id',
-    title:'title', 제목:'title', 타이틀:'title',
-    body:'body', 본문:'body', 내용:'body', text:'body', article:'body', post:'body',
-    date:'date', when:'date', 작성일:'date', 날짜:'date',
-    category:'category', cat:'category', tags:'category', 분류:'category', 태그:'category', 카테고리:'category'
-  };
-  function normalizeRow(row, aliasMap){
-    const out={};
-    for(const [k,v] of Object.entries(row)){
-      const ck = __cleanKey(k);
-      const key = aliasMap[ck] || ck; // 모르는 키는 원래 키(소문자/트림/결합)로 둠
-      out[key] = v;
-    }
-    return out;
-  }
-  
-  /* 3) 평평한 행 → 세트 구조로 */
-  if (typeof csvRowsToSets !== 'function') {
-    function csvRowsToSets(rows){
-      const map=new Map();
-      (rows||[]).forEach(r0=>{
-        const r = normalizeRow(r0, __SETS_ALIAS);   // ⬅️ 핵심: 헤더 정규화
-        const title = (r.set||'unnamed').trim();
-        const id = (typeof slug==='function') ? slug(title)
-                 : title.toLowerCase().replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-');
-        if(!map.has(id)){
-          map.set(id, {
-            id,
-            modality: r.modality || 'Mixed',
-            title,
-            desc: r.set_desc || '',
-            tags: [],
-            group: r.group || '',
-            cards: []
-          });
-        }
-        map.get(id).cards.push({
-          q: r.q || '',
-          a: r.a || '',
-          e: r.e || '',
-          img: r.img || '',
-          tags: parseTags(r.tags)
-        });
-      });
-      const sets = Array.from(map.values()).map(s=>{
-        s.cards = (s.cards||[]).map(c=>{
-          if (!c.img && typeof ph === 'function') return ({ ...c, img: ph(c.a||'Card') });
-          return c;
-        });
-        return s;
-      });
-      if (typeof replaceSets === 'function') {
-        replaceSets(sets);
-      } else if (Array.isArray(window.DemoSets)) {
-        window.DemoSets.length = 0; sets.forEach(s=> window.DemoSets.push(s));
-        if (typeof renderSetList==='function') renderSetList();
-        if (typeof renderHome==='function') renderHome();
-      } else {
-        window.Sets = sets;
-      }
-    }
-  }
-  
-  /* 4) tryLoadSets: 시트 우선 + 폴백(원래 로더) */
-  (function(){
-    const orig = window.tryLoadSets;
-    window.tryLoadSets = async function(){
-      try{
-        const raw = await loadSheetCSV(window.SHEETS.sets);
-        if(raw && raw.length){
-          csvRowsToSets(raw);
-          if (typeof logDev==='function') logDev('sets <- google sheet (normalized)', raw.length);
-          return 'sets.google';
-        }
-      }catch(e){
-        if (typeof logDev==='function') logDev('sets google fail:', e.message||e);
-      }
-      if (typeof orig === 'function') return orig.apply(this, arguments);
-      return null;
-    };
-  })();
-  
-  /* 5) tryLoadBlogs: 시트 우선 + 폴백(원래 로더) */
-  (function(){
-    const orig = window.tryLoadBlogs;
-    window.tryLoadBlogs = async function(){
-      try{
-        const raw = await loadSheetCSV(window.SHEETS.blogs);
-        if(raw && raw.length){
-          const rows = raw.map(r0=> normalizeRow(r0, __BLOGS_ALIAS)); // ⬅️ 제목/본문/날짜/카테고리 정규화
-          window.BlogPosts = rows.map(r=>({
-            id: r.id || (typeof uid==='function' ? uid() : (Math.random().toString(36).slice(2))),
-            title: r.title || '',
-            body: r.body  || '',
-            when: r.date ? +new Date(r.date) : Date.now(),
-            category: r.category || ''
-          }));
-          if (typeof persist==='function') try{persist();}catch{}
-          if (typeof renderHome==='function') try{renderHome();}catch{}
-          if (typeof logDev==='function') logDev('blogs <- google sheet (normalized)', rows.length);
-          return 'blogs.google';
-        }
-      }catch(e){
-        if (typeof logDev==='function') logDev('blogs google fail:', e.message||e);
-      }
-      if (typeof orig === 'function') return orig.apply(this, arguments);
-      return null;
-    };
-  })();
-  </script>
-  <!-- ===== /PATCH ===== -->
-
 </body>
 </html>

@@ -413,11 +413,14 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="loader" aria-hidden="true"><div class="spinner" aria-label="로딩중"></div></div>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <script>
     // ====== 기본 설정 ======
     const baseUrl = 'https://raw.githubusercontent.com/nihicheli/dentblog/main/';
+    const RemotePaths = {
+      sets:  ['data/sets.json','data/sets.csv','data/sets.xlsx'],
+      blogs: ['data/blogs.json','data/blogs.csv','data/blogs.xlsx']
+    };
     const ADMIN_KEY='0917';
 
     // ====== 유틸 ======
@@ -433,52 +436,8 @@
     const sample=(a,n)=>{const x=[...a]; const out=[]; while(x.length&&out.length<n){ out.push(x.splice((Math.random()*x.length)|0,1)[0]) } return out };
     const shuffle=a=>{for(let i=a.length-1;i>0;i++){const j=(Math.random()*(i+1)|0);[a[i],a[j]]=[a[j]]}return a};
     const parseTags=t=>!t?[]:Array.isArray(t)?t:String(t).split(/;|,/).map(s=>s.trim()).filter(Boolean);
-    
-    // CSV 파싱 함수 수정 - 헤더를 첫 번째 행으로 인식하지 않고 데이터만 추출하도록 변경
-    const parseCSV=txt=>{
-      if(!txt) return [];
-      const lines = txt.split(/\r?\n/).filter(l=>l.trim());
-      if(!lines.length) return [];
-      
-      const headerLine = lines[0];
-      const headerPattern = /^[a-zA-Z_][a-zA-Z0-9_]*$/; // a simple pattern for single-word headers
-      const hasHeader = headerPattern.test(headerLine.split(',')[0].trim());
-
-      const dataLines = hasHeader ? lines.slice(1) : lines;
-      const headers = hasHeader ? headerLine.split(',').map(h => h.trim()) : ['q', 'a', 'e', 'img', 'tags', 'set', 'modality', 'set_desc', 'group'];
-
-      const res = [];
-      dataLines.forEach(line => {
-        let cur = '';
-        let inQuote = false;
-        const cols = [];
-        for (let i = 0; i < line.length; i++) {
-          const ch = line[i];
-          if (ch === '"') {
-            if (inQuote && line[i + 1] === '"') {
-              cur += '"';
-              i++;
-            } else {
-              inQuote = !inQuote;
-            }
-          } else if (ch === ',' && !inQuote) {
-            cols.push(cur.trim());
-            cur = '';
-          } else {
-            cur += ch;
-          }
-        }
-        cols.push(cur.trim());
-
-        const row = {};
-        headers.forEach((h, idx) => {
-          row[h] = cols[idx] || '';
-        });
-        res.push(row);
-      });
-      return res;
-    };
-
+    const splitCSV=line=>{ const res=[]; let cur=''; let q=false; for(let i=0;i<line.length;i++){ const ch=line[i]; if(ch==='"'){ if(q && line[i+1]==='"'){ cur+='"'; i++; } else { q=!q; } } else if(ch===',' && !q){ res.push(cur); cur=''; } else { cur+=ch; } } res.push(cur); return res.map(s=>s.trim()); };
+    const parseCSV=txt=>{ if(!txt) return []; const lines = txt.split(/\r?\n/).filter(l=>l.trim()); if(!lines.length) return []; const head = splitCSV(lines[0]); const out=[]; for(let i=1;i<lines.length;i++){ const cols = splitCSV(lines[i]); const row={}; head.forEach((h,idx)=> row[h]=cols[idx]); out.push(row); } return out; };
     const ph=label=>{ const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='720' height='420'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#e5e7eb'/><stop offset='1' stop-color='#cbd5e1'/></linearGradient></defs><rect width='100%' height='100%' fill='url(#g)'/><g fill='#1f2937' font-family='Arial' text-anchor='middle'><text x='50%' y='50%' font-size='22' font-weight='700'>${esc(label)}</text><text x='50%' y='58%' font-size='12' fill='#6b7280'>Demo Placeholder</text></g></svg>`; return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg); };
 
     // ====== TTS ======
@@ -508,24 +467,19 @@
       $$('.btn.icon[data-action="tts-body"]').forEach(b=>{ b.textContent = (tts.state==='speaking')? '❚❚' : (tts.state==='paused'? '▶' : '▶'); });
       $$('.btn.icon[data-action="tts-stop"]').forEach(b=> b.textContent='■');
     }
-    
-    // ====== Markdown / 텍스트 변환 ======
-    const markdown = (src = '') => {
-      let s = marked.parse(src);
-      markdown.headings = [];
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = s;
-      
-      const headings = tempDiv.querySelectorAll('h1, h2, h3, h4');
-      headings.forEach((h, i) => {
-        const id = slug(h.textContent) + '-' + i;
-        h.id = id;
-        markdown.headings.push({ id, level: parseInt(h.tagName[1]), text: h.textContent });
-      });
 
-      return tempDiv.innerHTML;
+    // ====== Markdown / 텍스트 변환 ======
+    const markdown=(src='')=>{
+      let s=esc(src); const heads=[];
+      s = s.replace(/^(#{1,4})\s+(.+)$/gm,(_,h,ct)=>{ const id = slug(ct); heads.push({id, level:h.length, text:ct}); return `<h${h.length} id="${id}">${ct}</h${h.length}>`; });
+      s=s.replace(/```([\s\S]*?)```/g,(m,code)=>`<pre><code>${code.replace(/</g,'&lt;')}</code></pre>`);
+      s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
+      s=s.replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+      s=s.replace(/\*([^*]+)\*/g,'<i>$1</i>');
+      s=s.replace(/\n/g,'<br>');
+      markdown.headings=heads;
+      return s;
     };
-    
     const toPlainText = (md='')=>{
       const tmp = document.createElement('div'); tmp.innerHTML = markdown(md||'');
       return (tmp.textContent||'').replace(/\s+\n/g,'\n');
@@ -539,8 +493,49 @@
     };
 
     // ====== 데모 데이터 ======
-    let DemoSets = [];
-    let BlogPosts = [];
+    const DemoSets = [
+      { id:'set-pan', modality:'Panorama', title:'낭종 vs 종양 감별', desc:'경계/피질화/치근 흡수/매복치 관계로 감별 연습', tags:['낭종','종양','감별'], group:'영상감별(기본)',
+        cards:[
+          { q:'이 영상의 진단명은?', a:'Dentigerous cyst', e:'매복치 치관 주위에 well-defined corticated radiolucency, 치관 연결.', img:ph('Dentigerous cyst'), tags:['낭종','매복치'] },
+          { q:'이 영상의 진단명은?', a:'Ameloblastoma', e:'다방성, expansile, thinning/bowing, 치근 흡수 가능.', img:ph('Ameloblastoma'), tags:['종양','다방성'] },
+          { q:'이 영상의 진단명은?', a:'Radicular cyst', e:'비활성/괴사 치아 치근단의 원형 방사선투과성 병소, 얇은 피질 경계.', img:ph('Radicular cyst'), tags:['낭종','치근단'] },
+          { q:'이 영상의 진단명은?', a:'OKC', e:'Scalloped, 전후 길게, 상대적으로 팽창 적음, 재발 경향.', img:ph('OKC'), tags:['낭종','OKC'] },
+          { q:'다음 중 sunray appearance를 보이는 악성은?', a:'Osteosarcoma', e:'Periosteal reaction(sunburst)와 불규칙한 혼합음영.', img:ph('Osteosarcoma'), tags:['악성','periosteal'] }
+        ]
+      },
+      { id:'set-cbct', modality:'CBCT', title:'CBCT 혼합음영 병소', desc:'혼합음영·불규칙 경계 병소 감별 포인트', tags:['CBCT','혼합음영'], group:'영상감별(고급)',
+        cards:[
+          { q:'이 영상의 진단명은?', a:'Cemento-ossifying fibroma', e:'경계 명확·확장성·내부 혼합음영; 성인 여성, 하악 구치부 호발.', img:ph('COF'), tags:['혼합음영','양성'] },
+          { q:'이 영상의 진단명은?', a:'Chronic osteomyelitis', e:'불규칙 혼합음영, sequestrum/involucrum, periosteal reaction 가능.', img:ph('Osteomyelitis'), tags:['감염','염증'] },
+          { q:'이 영상의 진단명은?', a:'Fibrous dysplasia', e:'Ground-glass, 경계 불명확, cortical thinning; 청소년 호발.', img:ph('FD'), tags:['발육성','ground-glass'] },
+          { q:'이 영상의 진단명은?', a:'Osteosarcoma', e:'파괴적 경계, sunburst, widening of PDL space.', img:ph('OS'), tags:['악성','sunburst'] }
+        ]
+      }
+    ];
+    let BlogPosts = [
+      { id:uid(), title:'방사선학적 낭종 감별: Dentigerous vs Radicular vs OKC', body:`# 개요
+치성 낭종은 영상학적으로 **경계, 피질화, 치아와의 관계**로 감별합니다.
+
+## Dentigerous cyst
+- 매복치 *치관* 주위에 **well-defined, corticated** radiolucency
+- 치관과 병소의 **연결**이 핵심 단서
+
+## Radicular cyst
+- **비활성/괴사 치아** 치근단에 원형 투과성 병소
+- 얇은 코르텍스, 치근단 병변과의 연속성
+
+## OKC (Odontogenic keratocyst)
+- **Scalloped**, 전후 길게, 팽창 상대적으로 적음
+- 재발 경향, 다발성 시 NBCCS 고려`, when: Date.now()-1000*60*60*24*2, category:'영상감별' },
+      { id:uid(), title:'임플란트 합병증의 영상학적 징후', body:`## Peri-implant disease
+- **Mucositis**: 연조직 염증 중심, *골소실 없음*
+- **Peri-implantitis**: **crater-like** 골결손, 나사선 노출
+
+## 평가 포인트
+1. baseline 대비 **crestal bone level** 변화
+2. 나사선 노출 범위
+3. 보철 구조물 유무/적합`, when: Date.now()-1000*60*60*20, category:'임플란트' }
+    ];
 
     // ====== 테마 ======
     const Theme={
@@ -590,7 +585,7 @@
           <div style='font-weight:900; font-size:16px;'>${esc(p.title)}</div>
           <div class='muted' style='font-size:12px; margin-bottom:6px;'>${mdDate(p.when)}${p.category? ' · '+esc(p.category):''}</div>
           <div class='muted' style='overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;'>
-            ${esc(toPlainText(p.body||'').slice(0,180))}...
+            ${esc((p.body||'').replace(/\n/g, ' ').replace(/#+ /g, '').slice(0,180))}...
           </div>
         </a>`).join('');
       $('#home-blog-list').innerHTML = latest || '<div class="muted">글이 없습니다.</div>';
@@ -886,91 +881,134 @@
         return true;
       }catch(e){ return false; }
     }
-    
-    // 개발 로그 출력
+
+    // ====== 원격 로드 ======
+    const fetchText = async (url)=> (await fetch(url, {cache:'no-store'})).text();
+    const fetchJSON = async (url)=> (await fetch(url, {cache:'no-store'})).json();
+    const fetchBuf  = async (url)=> (await fetch(url, {cache:'no-store'})).arrayBuffer();
+
     function logDev(...args){
       const el = $('#dev-log'); if(!el) return;
       el.textContent += args.join(' ') + '\n';
       el.scrollTop = el.scrollHeight;
     }
 
-    // ====== 원격 로드 ======
-    const fetchText = async (url)=> (await fetch(url, {cache:'no-store'})).text();
-    
     async function tryLoadSets(){
-      try{
-        const sheetId = "1BWSJMBLuEU2v7eon5MdM02fAFHV0z5T2tr3_42K15dY"; // sets 시트 ID
-        const gid = "66467758"; // sets 시트 GID
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
-    
-        const txt = await fetchText(url);
-        const rows = parseCSV(txt);
-        
-        if(rows.length){
-          // 그룹별로 세트 데이터를 정리
-          const setsByGroup = {};
-          rows.forEach(row => {
-            const set_id = row.set || 'default';
-            const group_id = slug(row.group || row.set || 'default');
-            const group_title = row.group || 'Default';
-            
-            if (!setsByGroup[group_id]) {
-              setsByGroup[group_id] = {
-                id: group_id,
-                title: group_title,
-                modality: row.modality || 'Mixed',
-                desc: row.set_desc || '',
-                tags: parseTags(row.tags),
-                cards: []
-              };
+      for(const p of RemotePaths.sets){
+        const url = baseUrl + p;
+        try{
+          if(p.endsWith('.json')){
+            const js = await fetchJSON(url);
+            if(Array.isArray(js)){
+              replaceSets(js);
+              logDev('sets <-', p, '(array)');
+              return 'sets.json';
+            } else if(js?.sets){
+              replaceSets(js.sets);
+              logDev('sets <-', p, '(wrapper.sets)');
+              return 'sets.json(wrapper)';
             }
-            setsByGroup[group_id].cards.push({
-              q: row.q,
-              a: row.a,
-              e: row.e,
-              img: row.img,
-              tags: parseTags(row.tags)
-            });
-          });
-          
-          DemoSets = Object.values(setsByGroup);
-          renderSetList();
-          logDev('sets <- google sheet', `(${DemoSets.length} sets, ${rows.length} cards)`);
-          return 'sets.google';
+          } else if(p.endsWith('.csv')){
+            const txt = await fetchText(url);
+            const rows = parseCSV(txt);
+            if(rows.length){
+              // CSV는 카드 행 형태를 세트별로 묶어서 생성
+              const bySet = {};
+              rows.forEach(r=>{
+                const setName = (r.set||'기본 세트').trim();
+                bySet[setName] = bySet[setName]||{ id:slug(setName), modality:r.modality||'Mixed', title:setName, desc:r.set_desc||'', group:r.group||'', tags:[], cards:[] };
+                bySet[setName].cards.push({ q:r.q||'', a:r.a||'', e:r.e||'', img:r.img||'', tags:parseTags(r.tags) });
+              });
+              replaceSets(Object.values(bySet));
+              logDev('sets <-', p, `(${rows.length} rows)`);
+              return 'sets.csv';
+            }
+          } else if(p.endsWith('.xlsx')){
+            const buf = await fetchBuf(url);
+            await ensureXLSX();
+            const wb = XLSX.read(buf, {type:'array'});
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+            if(rows.length){
+              const bySet = {};
+              rows.forEach(r=>{
+                const setName = (r.set||'기본 세트').trim();
+                bySet[setName] = bySet[setName]||{ id:slug(setName), modality:r.modality||'Mixed', title:setName, desc:r.set_desc||'', group:r.group||'', tags:[], cards:[] };
+                bySet[setName].cards.push({ q:r.q||'', a:r.a||'', e:r.e||'', img:r.img||'', tags:parseTags(r.tags) });
+              });
+              replaceSets(Object.values(bySet));
+              logDev('sets <-', p, `(${rows.length} rows)`);
+              return 'sets.xlsx';
+            }
+          }
+        }catch(e){
+          logDev('sets load fail:', p, e.message||e);
         }
-      }catch(e){
-        logDev('sets load fail (google):', e.message||e);
       }
       return null;
     }
-
 
     async function tryLoadBlogs(){
-      try{
-        const sheetId = "1B9zr1SQ7ROzIgwC2k8TmuTh0KfNM2-Y_FgNclQVEFZA"; // blogs 시트 ID
-        const gid = "908527068"; // blogs gid
-        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
-        
-        const txt = await fetchText(url);
-        const rows = parseCSV(txt);
-        if(rows.length){
-          BlogPosts = rows.map(r=>({
-            id: r.id || uid(),
-            title: r.title || '',
-            body: r.body || '',
-            when: r.date ? +new Date(r.date) : Date.now(),
-            category: r.category || r.cat || r.tags || ''
-          }));
-          persist(); renderHome();
-          logDev('blogs <- google sheet', `(${rows.length} rows)`);
-          return 'blogs.google';
+      for(const p of RemotePaths.blogs){
+        const url = baseUrl + p;
+        try{
+          if(p.endsWith('.json')){
+            const js = await fetchJSON(url);
+            let arr = [];
+            if(Array.isArray(js)) arr = js;
+            else if(js?.blogs) arr = js.blogs;
+            if(arr.length){
+              BlogPosts = arr.map(b=>({
+                id: b.id || uid(),
+                title: b.title || '',
+                body: b.body || '',
+                when: b.when ? +b.when : Date.now(),
+                category: b.category || ''
+              }));
+              persist(); renderHome();
+              logDev('blogs <-', p, `(${arr.length})`);
+              return 'blogs.json';
+            }
+          } else if(p.endsWith('.csv')){
+            const txt = await fetchText(url);
+            const rows = parseCSV(txt);
+            if(rows.length){
+              BlogPosts = rows.map(r=>({
+                id: uid(),
+                title: r.title || '',
+                body: r.body || '',
+                when: r.when ? +r.when : Date.now(),
+                category: r.category || r.cat || ''
+              }));
+              persist(); renderHome();
+              logDev('blogs <-', p, `(${rows.length} rows)`);
+              return 'blogs.csv';
+            }
+          } else if(p.endsWith('.xlsx')){
+            const buf = await fetchBuf(url);
+            await ensureXLSX();
+            const wb = XLSX.read(buf, {type:'array'});
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+            if(rows.length){
+              BlogPosts = rows.map(r=>({
+                id: uid(),
+                title: r.title || '',
+                body: r.body || '',
+                when: r.when ? +r.when : Date.now(),
+                category: r.category || r.cat || ''
+              }));
+              persist(); renderHome();
+              logDev('blogs <-', p, `(${rows.length} rows)`);
+              return 'blogs.xlsx';
+            }
+          }
+        }catch(e){
+          logDev('blogs load fail:', p, e.message||e);
         }
-      }catch(e){
-        logDev('blogs load fail (google):', e.message||e);
       }
       return null;
     }
-
 
     async function remoteReload(){
       busy(true,'원격 데이터 확인 중...');

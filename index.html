@@ -154,6 +154,21 @@
     .select{position:relative; display:inline-flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:6px 10px}
     .select select{border:none; outline:none; background:transparent; padding:6px; min-width:160px; color:var(--text)}
     .select:after{content:'⌵'; color:var(--muted);}
+    
+    @media (max-width: 768px) {
+        .home .card.shadow {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+        .home .grid {
+            grid-template-columns: 1fr;
+        }
+        .filters {
+            display: grid;
+            gap: 8px;
+        }
+    }
+
   </style>
 </head>
 <body>
@@ -441,6 +456,7 @@
     // ====== 기본 설정 ======
     const baseUrl = 'https://raw.githubusercontent.com/nihicheli/dentblog/main/';
     const ADMIN_KEY='0917';
+    const VISIBLE_CATEGORIES_LIMIT = 6;
 
     // ====== 유틸 ======
     const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
@@ -579,7 +595,7 @@
     let DemoSets = [];
     let BlogPosts = [];
     const SetsFilters = { group: '', modality: '', tags: [] };
-    const BlogsFilters = { category: [], sort: 'desc' };
+    const BlogsFilters = { category: [], sort: 'desc', showAllCategories: false };
 
     // ====== 테마 ======
     const Theme={
@@ -639,9 +655,7 @@
       const count = (s.cards?.length||0);
       const mod = s.modality||'Mixed';
       const img = (s.cards && s.cards[0]?.img) || '';
-      const thumb = img
-        ? `<img class='thumb' src='${esc(img)}' alt='preview'>`
-        : '';
+      const thumb = ''
     
       return `<div class='set-tile'>
         ${thumb}
@@ -673,7 +687,7 @@
         modSelect.innerHTML = '<option value="">전체</option>' + mods.map(m => `<option value="${esc(m)}" ${SetsFilters.modality === m ? 'selected' : ''}>${esc(m)}</option>`).join('');
 
         // 태그 필터 (버튼형)
-        const tags = uniqueSetsTags().slice(0, 10);
+        const tags = uniqueSetsTags();
         const tagsList = $('#tag-filter-list');
         tagsList.innerHTML = tags.map(t => `<button class="btn small filter ${SetsFilters.tags.includes(t) ? 'active' : ''}" data-action="filter-tag" data-filter-value="${esc(t)}">#${esc(t)}</button>`).join('');
     }
@@ -694,7 +708,7 @@
         
         return okQ && okG && okM && okT;
       });
-      $('#set-list').innerHTML = list.map(tile).join('') || '<div class="card muted">조건에 맞는 세트가 없습니다.</div>';
+      $('#set-list').innerHTML = list.map(s => tile(s)).join('') || '<div class="card muted">조건에 맞는 세트가 없습니다.</div>';
     }
 
     // ====== Flash ======
@@ -933,14 +947,23 @@
       toggleList(){
         this.listOpen = !this.listOpen;
         $('#blog-filters').style.display = this.listOpen ? 'block' : 'none';
+        $$('#blog-list li').forEach(li => li.style.display = this.listOpen ? 'block' : 'none');
         this.render();
-        },
+      },
       checkKey(){ const k=$('#blog-key').value.trim(); if(k!==ADMIN_KEY){ note('관리자 키 오류',true); return false } return true; },
       
       renderFilters(){
           const allCategories = [...new Set(BlogPosts.flatMap(p => (p.category || '').split(/;|,/).map(c => c.trim()).filter(c => c !== '')))];
           const filterList = $('#category-filter-list');
-          filterList.innerHTML = allCategories.map(c => `<button class="btn small filter ${BlogsFilters.category.includes(c) ? 'active' : ''}" data-action="filter-category" data-filter-value="${esc(c)}">${esc(c)}</button>`).join('');
+          let displayCategories = allCategories;
+          let showMoreButton = '';
+          
+          if (allCategories.length > VISIBLE_CATEGORIES_LIMIT && !BlogsFilters.showAllCategories) {
+              displayCategories = allCategories.slice(0, VISIBLE_CATEGORIES_LIMIT);
+              showMoreButton = `<button class="btn small" data-action="toggle-categories">[전체보기]</button>`;
+          }
+
+          filterList.innerHTML = displayCategories.map(c => `<button class="btn small filter ${BlogsFilters.category.includes(c) ? 'active' : ''}" data-action="filter-category" data-filter-value="${esc(c)}">${esc(c)}</button>`).join('') + showMoreButton;
 
           $('#blog-sort').value = BlogsFilters.sort;
       }
@@ -1152,6 +1175,11 @@
       if(act==='blog-cancel'){ Blog.cancel(); return; }
       if(act==='blog-delete'){ Blog.delete(); return; }
       if(act==='blog-list-toggle'){ Blog.toggleList(); return; }
+      if(act==='toggle-categories'){
+          BlogsFilters.showAllCategories = !BlogsFilters.showAllCategories;
+          Blog.renderFilters();
+          return;
+      }
       if(act==='toc-goto'){ const id=el.dataset.target; const t=document.getElementById(id); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); return; }
       if(act==='tts-body'){ Blog.speakBody(); return; }
       if(act==='filter-category'){

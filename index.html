@@ -9,21 +9,26 @@
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
   <style>
     :root{
-      --bg:#fafafc; --panel:#ffffff; --panel-2:#f3f5f8; --text:#0f172a; --muted:#55627a; --line:#e4e8ef;
-      --brand:#111827; --brand-2:#1f2937; --ok:#16a34a; --bad:#dc2626; --warn:#f59e0b;
-      --radius:14px; --shadow:0 10px 30px rgba(15,23,42,.08); --maxw:1120px;
-      --fs-hero: clamp(24px, 2.4vw, 36px);
-      --fs-h1: clamp(20px, 2vw, 28px);
-      --fs-h2: clamp(18px, 1.7vw, 24px);
-      --fs-h3: clamp(16px, 1.5vw, 20px);
+      /* 색상 및 디자인 톤 조정: 전체적으로 밝고 부드럽게 */
+      --bg:#f9fafc; --panel:#ffffff; --panel-2:#f0f2f5; --text:#1e293b; 
+      --muted:#64748b; /* 부드러운 회색 */
+      --line:#e2e8f0; /* 밝은 라인 색상 */
+      --brand:#334155; --brand-2:#475569; --ok:#10b981; --bad:#ef4444; --warn:#f59e0b;
+      --radius:10px; --shadow:0 6px 15px rgba(30,41,59,.06); --maxw:1120px;
+      /* 폰트 크기 정의 */
+      --fs-hero: clamp(28px, 2.8vw, 40px);
+      --fs-h1: clamp(22px, 2.2vw, 32px);
+      --fs-h2: clamp(18px, 1.8vw, 24px);
+      --fs-h3: clamp(16px, 1.6vw, 20px);
       --fs-body: clamp(14px, 1.2vw, 16px);
-      --fs-small: clamp(12px, 1vw, 14px); /* 토글 및 작은 요소 폰트 */
+      --fs-small: clamp(12px, 1vw, 14px); /* 작은 요소 폰트 */
+      --header-brand-size: clamp(16px, 1.8vw, 20px); /* DentBlog 폰트 크기 조정 */
     }
     html.dark{
-      --bg:#0f172a; --panel:#111827; --panel-2:#1f2937; --text:#e5e7eb; --muted:#94a3b8; --line:#374151;
-      --brand:#e5e7eb; --brand-2:#cbd5e1; --ok:#4ade80; --bad:#f87171; --warn:#facc15;
+      --bg:#0f172a; --panel:#1e293b; --panel-2:#334155; --text:#f1f5f9; --muted:#94a3b8; --line:#374151;
+      --brand:#f1f5f9; --brand-2:#cbd5e1; --ok:#4ade80; --bad:#f87171; --warn:#facc15;
     }
-    *{box-sizing:border-box}
+    *{box-sizing:border-box; font-weight: 500;} /* 전반적인 폰트 두께 조정 */
     html,body{height:100%}
     body{
       margin:0; font:500 var(--fs-body)/1.65 "Pretendard","Inter","Segoe UI",system-ui,-apple-system,sans-serif;
@@ -34,37 +39,54 @@
     img{max-width:100%;display:block}
     button{cursor:pointer; font-family:inherit}
     
-    /* 폰트 크기 조정 */
+    /* 폰트 및 필터 UI 통일 */
     .filter-group select,
+    .filters input#q,
     #timer-select, 
     #auto-next-delay,
     #blog-sort {
         font-size: var(--fs-small);
-        padding: 8px 10px;
+        padding: 8px 12px;
+        border-radius: var(--radius);
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--text);
+        line-height: normal; /* 높이 맞춤 */
+    }
+    /* 타이머 드롭다운 높이 통일 */
+    #timer-select, #auto-next-delay {
+        padding: 6px 12px;
     }
     /* 통계 폰트 조정 */
     #home-stats .stat,
-    .filters input#q {
-        font-size: var(--fs-small);
+    .stat .card-count,
+    #flash-pos { /* Flashcard 위치 정보도 통일 */
+        font-size: var(--fs-small); 
+        font-weight: 700;
+        padding: 6px 10px; /* 타이머 옆에 맞춤 */
+        border-radius: var(--radius);
+        background: var(--panel);
+        border: 1px solid var(--line);
     }
-    #home-stats b,
-    .stat .card-count {
-        font-size: var(--fs-body); /* 통계 수치는 바디 폰트로 유지 */
+    .stat b {
+        font-size: var(--fs-body); 
+        font-weight: 700;
     }
     .set-tile .chip {
-        font-size: 11px; /* 카드 개수 칩은 더 작게 */
-        padding: 2px 8px;
+        font-size: 11px; 
+        padding: 3px 8px;
     }
     
     header{position:sticky;top:0;z-index:50;background:color-mix(in oklab, var(--panel) 88%, transparent);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
     .nav{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900; letter-spacing:.1px; color:var(--brand)}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700; letter-spacing:.1px; color:var(--brand)}
+    .brand div{ font-size: var(--header-brand-size); font-weight: 900;} /* DentBlog 크기 조정 */
     .brand .logo{font-size:22px; line-height:1}
     .tabs{margin-left:auto;display:flex;gap:6px}
-    .tab{padding:10px 14px;border-radius:10px;background:var(--panel); color:var(--muted); font-weight:700; box-shadow:0 1px 0 var(--line) inset; transition:all .15s}
-    .tab.active{background:linear-gradient(180deg,#eef2ff,#e0e7ff); color:#111827}
-    html.dark .tab.active{background:var(--panel-2); color:var(--text)}
-    .theme{margin-left:6px;border:none;border-radius:12px;padding:10px 12px;background:var(--panel); box-shadow:0 1px 0 var(--line) inset; color:var(--muted)}
+    .tab{padding:10px 14px;border-radius:var(--radius);background:var(--panel); color:var(--muted); font-weight:700; box-shadow:0 1px 0 var(--line) inset; transition:all .15s}
+    .tab.active{background:var(--brand); color:#fff}
+    html.dark .tab.active{background:var(--brand-2); color:var(--text)}
+    .theme{margin-left:6px;border:none;border-radius:var(--radius);padding:10px 12px;background:var(--panel); box-shadow:0 1px 0 var(--line) inset; color:var(--muted)}
 
     main{max-width:var(--maxw);margin:0 auto;padding:18px}
     section.view{display:none}
@@ -74,30 +96,30 @@
     .shadow{box-shadow:var(--shadow)}
     .muted{color:var(--muted)}
 
-    .btn{border:none;background:linear-gradient(180deg,#ffffff,#f8fafc);color:#0b1020;border-radius:12px;padding:10px 14px; font-weight:800; box-shadow:0 1px 0 rgba(0,0,0,.04) inset; transition:transform .08s ease;}
+    .btn{border:none;background:linear-gradient(180deg,#ffffff,#f8fafc);color:#0b1020;border-radius:var(--radius);padding:10px 14px; font-weight:700; box-shadow:0 1px 0 rgba(0,0,0,.04) inset; transition:transform .08s ease;}
     .btn:active{transform:translateY(1px)}
     html.dark .btn{background:var(--panel); color:var(--text)}
-    .btn.primary{background:linear-gradient(180deg,#222,#111); color:#fff}
-    .btn.ok{background:linear-gradient(180deg,#34d399,#16a34a);color:#fff}
+    .btn.primary{background:linear-gradient(180deg,var(--brand),var(--brand-2)); color:#fff}
+    .btn.ok{background:linear-gradient(180deg,#34d399,#10b981);color:#fff}
     .btn.bad{background:linear-gradient(180deg,#fca5a5,#ef4444);color:#fff}
-    .btn.small{padding:8px 10px; border-radius:10px; font-weight:700}
+    .btn.small{padding:8px 10px; border-radius:8px; font-weight:700}
     .btn.round{border-radius:999px; padding:8px 10px}
-    .btn.icon{width:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:12px;font-size:16px}
+    .btn.icon{width:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:var(--radius);font-size:16px}
     .btn.filter{background:var(--panel-2); color:var(--muted); font-weight:700; box-shadow:0 1px 0 var(--line) inset; transition:all .15s}
-    .btn.filter.active{background:linear-gradient(180deg,#eef2ff,#e0e7ff); color:#111827}
-    html.dark .btn.filter.active{background:var(--panel); color:var(--text)}
+    .btn.filter.active{background:var(--brand); color:#fff}
+    html.dark .btn.filter.active{background:var(--brand-2); color:var(--text)}
 
-    .btn-nav{border:none;background:var(--panel);color:var(--text);border-radius:12px;padding:10px 12px;display:inline-flex;align-items:center;gap:6px;font-weight:800;box-shadow:0 1px 0 var(--line) inset;transition:transform .08s}
+    .btn-nav{border:none;background:var(--panel);color:var(--text);border-radius:var(--radius);padding:10px 12px;display:inline-flex;align-items:center;gap:6px;font-weight:700;box-shadow:0 1px 0 var(--line) inset;transition:transform .08s}
     .btn-nav:active{transform:translateY(1px)}
 
     .chips{display:flex;gap:6px;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#eef2ff;color:#1e3a8a;font-size:12px}
+    .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#eef2ff;color:var(--brand);font-size:12px}
     html.dark .chip{background:var(--panel-2); color:var(--text)}
     .grid{display:grid;gap:12px}
     .hero{display:grid;gap:8px;margin:6px 0 14px;text-align:center;padding: 16px 0;}
     .hero h1{margin:0;font-size:var(--fs-hero); font-weight:900}
     .hero p{margin:0 auto; max-width:780px; font-size: clamp(15px, 1.3vw, 18px)}
-    .stat{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line); font-weight:800}
+    .stat{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line); font-weight:500;}
 
     .typing{
         display: inline-block;
@@ -109,7 +131,7 @@
     @keyframes typing{ from{width:0} to{width:100%} }
     @keyframes caret{ 50%{border-color:transparent} }
 
-    .set-tile{display:flex;gap:14px; cursor:pointer; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--panel)}
+    .set-tile{display:flex;gap:14px; cursor:pointer; padding:12px; border:1px solid var(--line); border-radius:var(--radius); background:var(--panel)}
     .set-tile:hover{background:var(--panel-2)}
     
     .tile-body{flex:1;display:grid;gap:6px}
@@ -119,13 +141,13 @@
     .progress>i{display:block;height:100%;background:#111827}
 
     .flash-frame{display:grid; grid-template-columns:1fr 1fr; gap:16px; box-shadow:var(--shadow)}
-    @media (max-width:900px){ .flash-frame{grid-template-columns:1fr} }
-    .flash-visual{display:flex; justify-content:center; align-items:center; padding:16px}
+    .flash-frame > .card { order: 3; } 
+    
+    .flash-visual{display:flex; justify-content:center; align-items:center; padding:16px; order: 1;}
     .flash-visual img{max-height:420px; width:100%; height:auto; object-fit:contain}
 
-    .flash-card{position:relative; padding:12px; cursor:pointer; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+    .flash-card{position:relative; padding:12px; cursor:pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; order: 2;}
     
-    /* 카드 UI 변경: 문제 아래에 정답이 바로 보이도록 조정 */
     .flash-card .front{
         display: flex;
         flex-direction: column;
@@ -133,54 +155,45 @@
         justify-content: center;
         gap: 10px;
         padding: 16px;
-        border-radius: 12px;
+        border-radius: var(--radius);
         border: 1px solid var(--line);
         background: var(--panel);
         text-align: center;
-        white-space: normal;
         word-wrap: break-word;
         line-height: 1.5;
         width: 100%;
         min-height: 120px;
+        transition: border-radius .2s;
     }
     .flash-card .back {
-        display: none; /* 기본적으로 숨김 */
+        display: none; 
         background: var(--panel-2); 
         padding: 12px;
-        border-radius: 10px;
+        border-radius: var(--radius);
         margin-top: 10px;
         border: 1px solid var(--line);
         width: 100%;
+        text-align: center; 
     }
     .flash-card.show-back .back { display: block; }
+    .flash-card.show-back .front .hint { display: none !important; } 
 
+    /* Flashcard 모바일 최적화 */
     @media (max-width: 900px) {
         .flash-frame {
             display: flex;
             flex-direction: column;
+            gap: 12px;
         }
-        .flash-visual {
-            order: 1;
-        }
-        .flash-card {
-            order: 2;
-        }
-        .flash-card .front {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-            border-bottom: none;
-        }
-        .flash-card .back {
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            margin-top: 0;
-        }
+        .flash-frame > .card { order: 4; } /* 채점/타이머 카드는 가장 아래로 */
+        .flash-visual { order: 1; }
+        .flash-card { order: 2; }
     }
 
 
     .hint{ font-size:var(--fs-small); color:var(--muted) }
-    .countdown{position:absolute; inset:0; display:grid; place-items:center;background:rgba(0,0,0,.55); color:#fff; font-size:48px; font-weight:900;border-radius:12px; opacity:0; transition:opacity .2s;pointer-events:none; z-index:2;}
-    .countdown.show{ opacity:1; pointer-events:auto }
+    .countdown{position:absolute; inset:0; display:grid; place-items:center;background:rgba(0,0,0,.55); color:#fff; font-size:48px; font-weight:900;border-radius:var(--radius); opacity:0; transition:opacity .2s;pointer-events:none; z-index:2;}
+    .countdown.show{ opacity:1; pointer-items:auto }
 
     .bin{ text-align:center }
     .bin-bar{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;}
@@ -195,51 +208,20 @@
     @media (max-width:980px){.blog{grid-template-columns:1fr}}
     .blog-sidebar{position:sticky; top:84px; align-self:flex-start; max-height:calc(100vh - 120px); overflow-y:auto; padding:0;}
     .blog-list{list-style:none;padding:0;margin:0}
-    .blog-list a{display:block;padding:10px 12px;border-radius:10px;color:var(--muted);border:1px solid transparent}
+    .blog-list a{display:block;padding:10px 12px;border-radius:var(--radius);color:var(--muted);border:1px solid transparent; font-weight: 500;}
     .blog-list a:hover{background:var(--panel-2); color:var(--text)}
-    .blog-list a.active{background:#111827; color:#fff; font-weight:800; border-color:transparent}
-    .blog-view{padding:18px;min-height:160px; background:var(--panel); border-radius:12px; box-shadow:var(--shadow)}
+    .blog-list a.active{background:var(--brand); color:#fff; font-weight:700; border-color:transparent}
+    .blog-view{padding:18px;min-height:160px; background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow)}
     .blog-view h1{font-size:var(--fs-h1);margin:.2em 0 .5em; border-bottom:1px solid var(--line); padding-bottom:8px}
     .blog-view h2{font-size:var(--fs-h2);margin:1.3em 0 .4em; border-bottom:none; padding-bottom:0}
     .blog-view h3{font-size:var(--fs-h3);margin:1em 0 .4em}
     .editor input,.editor textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text)}
     .editor textarea{min-height:180px;margin-bottom:8px}
     .toc{margin-top:12px;font-size:var(--fs-small)}
-    .toc ul{list-style:none;margin:0;padding-left:0}
+    .toc ul{list-style:none;padding-left:0; margin: 6px 0 0;}
     .toc li{margin:6px 0 0 0;padding-left:12px;border-left:1px dashed var(--line)}
-    .toc a{color:var(--muted)}
+    .toc a{color:var(--muted); font-weight: 500;}
     .toc a:hover{color:var(--text)}
-
-    .toast{position:fixed;inset:auto 16px 16px auto;background:#111827;color:#e5e7eb;border:1px solid #374151;padding:10px 12px;border-radius:10px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:all .25s}
-    .toast.show{opacity:1;transform:translateY(0)}
-    #loader{position:fixed; inset:0; display:none; place-items:center; background:color-mix(in oklab, var(--bg) 70%, transparent); z-index:100}
-    #loader.show{display:grid}
-    .spinner{width:42px;height:42px;border-radius:50%;border:4px solid #cbd5e1;border-top-color:#111827; animation:spin 1s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    footer{margin:24px 0;color:var(--muted); text-align:center}
-
-    .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .filters .label{font-weight:800; color:var(--muted); font-size:12px}
-    .filter-group{display:flex;gap:6px;align-items:center}
-    .select{position:relative; display:inline-flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:6px 10px}
-    .select select{border:none; outline:none; background:transparent; padding:6px; min-width:160px; color:var(--text)}
-    .select:after{content:'⌵'; color:var(--muted);}
-    
-    @media (max-width: 768px) {
-        .home > div:last-child { /* 추천 세트 & 칼럼 최신을 포함하는 그리드 */
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-        .filters {
-            display: flex; /* 모바일에서 필터는 가로 스크롤 가능하도록 유지 */
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 8px;
-        }
-        .filter-group {
-            flex-shrink: 0;
-        }
-    }
     
     /* 사이드 메뉴 스타일 */
     .side-menu {
@@ -286,6 +268,57 @@
     .side-menu li a:hover {
         background: var(--panel-2);
     }
+    
+    /* 푸터 스타일 */
+    footer {
+        margin: 32px auto;
+        color: var(--muted); 
+        text-align: center;
+        padding: 12px 0;
+        border-top: 1px solid var(--line);
+        max-width: var(--maxw);
+    }
+    footer a {
+        font-size: var(--fs-small);
+        font-weight: 500;
+    }
+    
+    /* 세트 필터 레이아웃 조정 */
+    .sets .filters {
+        display: flex;
+        flex-direction: column; /* 기본 세로 정렬 */
+        gap: 6px; /* 상하 간격 추가 */
+    }
+    .sets .filters .filter-group {
+        gap: 6px;
+        margin-bottom: 8px; /* 필터 그룹 간 하단 여백 */
+    }
+    .sets .filters .filter-group.inline-group {
+        display: flex; /* 과목/분류를 포함하는 그룹 */
+        flex-wrap: wrap;
+        gap: 6px; /* 과목/분류 간격 */
+    }
+
+    @media (min-width: 600px) {
+        /* 검색창과 과목/분류를 분리 */
+        .sets .filters > input#q {
+            margin-bottom: 12px;
+        }
+        .sets .filters .filter-group.inline-group {
+             /* 데스크톱에서 과목/분류는 한 줄에 */
+            flex-direction: row; 
+            align-items: center;
+        }
+    }
+    @media (max-width: 599px) {
+        .sets .filters .filter-group.inline-group {
+            flex-direction: column;
+            gap: 8px;
+        }
+        .sets .filters .filter-group > div {
+            width: 100%;
+        }
+    }
 
   </style>
 </head>
@@ -331,22 +364,22 @@
 
       <div class="card shadow" style="padding:0; overflow:hidden; margin-bottom:12px">
         <div style="display:flex; overflow:auto; gap:12px; padding:12px;">
-          <img src="https://via.placeholder.com/1100x120/222222/ffffff?text=BANNER+1" alt="배너" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:8px;"/>
+          <img src="https://via.placeholder.com/1100x120/222222/ffffff?text=BANNER+1" alt="배너" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:var(--radius);"/>
         </div>
       </div>
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div class="card shadow">
-          <div class="muted" style="font-weight:800;margin-bottom:8px">추천 세트</div>
+          <div class="muted" style="font-weight:700;margin-bottom:8px">추천 세트</div>
           <div id="home-reco" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr));"></div>
         </div>
         <div class="card shadow">
-          <div class="muted" style="font-weight:800;margin-bottom:8px">칼럼 최신</div>
+          <div class="muted" style="font-weight:700;margin-bottom:8px">칼럼 최신</div>
           <div id="home-blog-list" class="grid" style="grid-template-columns:1fr; gap:8px;"></div>
         </div>
       </div>
 
-      <footer><a href="https://dashing-leek-81d.notion.site/27b4376fbca680d2b09af2c3fea276d6?source=copy_link" target="_blank">© 2025 DentBlog · made by DO</a></footer>
+      <!-- 푸터는 main 밖으로 이동하여 모든 페이지에 적용됨 -->
     </section>
 
     <section id="view-sets" class="view sets">
@@ -354,23 +387,26 @@
         <h1 style="font-size:var(--fs-h1)">학습 세트</h1>
       </div>
       <div class="card shadow" style="margin-bottom:12px">
-        <div class="filters" style="flex-wrap: wrap;">
-            <input id="q" placeholder="검색" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a; min-width: 150px; font-size: var(--fs-small);"/>
-            <div class="filter-group">
-                <label for="group" class="label">과목</label>
-                <select id="group" style="padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a;appearance:none;-webkit-appearance:none;padding-right:28px;">
-                    <option value="">전체</option>
-                </select>
+        <div class="filters" style="padding: 12px 0;">
+            <!-- 검색 (독립된 행) -->
+            <input id="q" placeholder="검색" style="width: 100%;"/>
+            
+            <!-- 과목/분류 (같은 행) -->
+            <div class="filter-group inline-group" style="margin-top: 12px;">
+                <div class="filter-group">
+                    <label for="group" class="label">과목</label>
+                    <select id="group"></select>
+                </div>
+                <div class="filter-group">
+                    <label for="mod" class="label">분류</label>
+                    <select id="mod"></select>
+                </div>
             </div>
-            <div class="filter-group">
-                <label for="mod" class="label">분류</label>
-                <select id="mod" style="padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#0f172a;appearance:none;-webkit-appearance:none;padding-right:28px;">
-                    <option value="">전체</option>
-                </select>
-            </div>
-            <div class="filter-group">
+            
+            <!-- 태그 (독립된 행) -->
+            <div class="filter-group" style="margin-top: 12px;">
                 <label for="tags" class="label">태그</label>
-                <div id="tag-filter-list" class="chips"></div>
+                <div id="tag-filter-list" class="chips" style="margin-top: 6px;"></div>
             </div>
         </div>
       </div>
@@ -382,28 +418,31 @@
         <div style="flex:1;">
           <h2 id="flash-title" style="margin:0; font-size:var(--fs-h1)"></h2>
         </div>
-        <!-- 이전/다음 카드 버튼을 이 위치에 추가 -->
-        <div style="display:flex;gap:8px;">
-          <button class="btn-nav" data-action="flash-prev">←</button>
-          <button class="btn-nav" data-action="flash-next">→</button>
+        <!-- 이전/다음 카드 버튼 -->
+        <div style="display:flex;gap:8px;" id="flash-nav-buttons">
+          <button class="btn-nav" data-action="flash-prev" id="flash-prev-btn" style="padding: 8px 12px; font-size: var(--fs-small);">← 이전 카드</button>
+          <button class="btn-nav" data-action="flash-next" id="flash-next-btn" style="padding: 8px 12px; font-size: var(--fs-small);">다음 카드 →</button>
         </div>
       </div>
 
       <div class="progress"><i id="flash-bar" style="width:0%"></i></div>
 
       <div id="flash-frame" class="card shadow flash-frame" style="margin-top:12px">
+        
         <div class="flash-visual">
           <img id="flash-img" alt="x-ray"/>
         </div>
-
+        
+        <!-- 문제 카드 (문제+정답 통합) -->
         <div class="flash-card" id="flash-card" data-action="flash-toggle" aria-label="카드를 클릭하거나 스페이스바를 눌러 정답을 확인하세요">
           <div class="front" id="flash-front">
-            <div style="font-weight:900; font-size:var(--fs-h2); display:flex; flex-direction: column; align-items:center; justify-content:center; text-align:center; width: 100%;">
+            <div style="font-weight:700; font-size:var(--fs-h2); display:flex; flex-direction: column; align-items:center; justify-content:center; text-align:center; width: 100%;">
               <span id="flash-question">이 영상의 진단명은?</span>
+              <!-- 정답 부분 -->
               <div class="back" id="flash-back" style="display: none; padding: 0; margin-top: 16px; width: 100%; border: none; background: transparent;">
-                  <div class="muted" style="margin-bottom: 4px; font-size: var(--fs-small);">정답</div>
-                  <div id="flash-answer" style="font-size:var(--fs-h2);font-weight:900;margin:4px 0 8px"></div>
-                  <div id="flash-explain" class="muted" style="max-width:520px;margin:0 auto; font-size: var(--fs-body);"></div>
+                  <div class="muted" style="margin-bottom: 4px; font-size: var(--fs-small); font-weight: 700; text-align: center;">정답</div>
+                  <div id="flash-answer" style="font-size:var(--fs-h2); font-weight: 700; margin:4px 0 8px; text-align: center;"></div>
+                  <div id="flash-explain" class="muted" style="max-width:520px;margin:0 auto; font-size: var(--fs-body); text-align: center;"></div>
               </div>
             </div>
             <div class="hint">카드를 클릭하거나 스페이스바를 눌러 정답을 확인하세요</div>
@@ -411,7 +450,7 @@
         </div>
 
         <div class="card">
-          <div class="muted" style="font-weight:800;margin-bottom:8px">채점</div>
+          <div class="muted" style="font-weight:700;margin-bottom:8px; font-size: var(--fs-small);">채점</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn ok"  data-action="flash-grade" data-ok="1">알았다</button>
             <button class="btn bad" data-action="flash-grade" data-ok="0">몰랐다</button>
@@ -420,23 +459,24 @@
         </div>
 
         <div class="card">
-          <div class="muted" style="font-weight:800;margin-bottom:8px">탐색·타이머</div>
+          <div class="muted" style="font-weight:700;margin-bottom:8px; font-size: var(--fs-small);">타이머</div>
           <div style="display:flex;gap:10px;align-items:center; flex-wrap:wrap">
-            <span id="flash-pos" class="stat">0/0</span>
-            <label>타이머
-              <select id="timer-select" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel);min-width:100px; font-size: var(--fs-small);">
+            <!-- 폰트/패딩 통일 -->
+            <span id="flash-pos" class="stat" style="font-weight: 700; padding: 6px 10px;">0/0</span>
+            <label style="font-size: var(--fs-small);">타이머
+              <select id="timer-select">
                 <option value="3">3초</option>
                 <option value="5" selected>5초</option>
                 <option value="10">10초</option>
               </select>
             </label>
-            <label style="display:inline-flex;gap:6px;align-items:center;margin-left:8px">
+            <label style="display:inline-flex;gap:6px;align-items:center;margin-left:8px; font-size: var(--fs-small);">
               <input type="checkbox" id="auto-next" checked />
               정답 후 자동 넘김
             </label>
-            <label>
+            <label style="font-size: var(--fs-small);">
               지연
-              <select id="auto-next-delay" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel);min-width:90px; font-size: var(--fs-small);">
+              <select id="auto-next-delay">
                 <option value="3000">3초</option>
                 <option value="5000" selected>5초</option>
                 <option value="7000">7초</option>
@@ -452,7 +492,6 @@
 
     <section id="view-quiz" class="view">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <button class="btn-nav" data-nav="sets">← 세트</button>
         <h2 id="quiz-title" style="margin:0; font-size:var(--fs-h1)"></h2>
       </div>
       <div class="card shadow" style="margin-bottom:10px">
@@ -478,7 +517,7 @@
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <h1 style="margin:0;font-size:var(--fs-h1)">칼럼</h1>
         <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-          <input id="blog-q" placeholder="검색" style="padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text); min-width: 150px;"/>
+          <input id="blog-q" placeholder="검색" style="padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text); min-width: 150px; font-size: var(--fs-small);"/>
         </div>
       </div>
 
@@ -486,14 +525,14 @@
         <aside class="blog-sidebar">
           <div class="card" style="padding:12px; position:sticky; top:84px; align-self:flex-start; max-height:calc(100vh - 120px); overflow-y:auto;">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-bottom:8px; border-bottom:1px solid var(--line)">
-              <div style="font-weight:900; font-size:1.05em;">글 목록</div>
+              <div style="font-weight:700; font-size:var(--fs-body);">글 목록</div>
               <button class="btn small" data-action="blog-list-toggle" id="blog-list-toggle-btn" title="접기/펼치기">⏶</button>
             </div>
             
             <div id="blog-filters" class="filters" style="margin-top:12px; display: block; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 12px;">
                 <div class="filter-group">
                     <label for="blog-sort" class="label">정렬</label>
-                    <select id="blog-sort" style="padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#0f172a;appearance:none;-webkit-appearance:none;padding-right:28px; font-size: var(--fs-small);">
+                    <select id="blog-sort" style="font-size: var(--fs-small);">
                         <option value="desc">최신순</option>
                         <option value="asc">오래된순</option>
                     </select>
@@ -510,12 +549,12 @@
         <div>
           <div id="blog-view" class="blog-view"></div>
           
-          <!-- 이전/ 탐색 버튼 -->
+          <!-- 이전/다음 글 탐색 버튼 -->
           <div id="blog-nav-buttons" style="display:flex; justify-content:space-between; gap: 8px; margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px;">
-            <button class="btn-nav" data-action="blog-prev" id="blog-prev-btn" style="visibility: hidden;">← </button>
-            <button class="btn-nav" data-action="blog-next" id="blog-next-btn" style="visibility: hidden;"> →</button>
+            <button class="btn-nav" data-action="blog-prev" id="blog-prev-btn" style="visibility: hidden; flex: 1; text-align: left; padding: 10px; font-size: var(--fs-small);">← 이전 글</button>
+            <button class="btn-nav" data-action="blog-next" id="blog-next-btn" style="visibility: hidden; flex: 1; text-align: right; padding: 10px; font-size: var(--fs-small);">다음 글 →</button>
           </div>
-          <!-- /이전/ 탐색 버튼 -->
+          <!-- /이전/다음 글 탐색 버튼 -->
           
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
             <button class="btn icon" data-action="tts-body" aria-label="본문 읽기/일시정지">▶</button>
@@ -572,6 +611,8 @@
       </div>
     </section>
   </main>
+  
+  <footer><a href="https://dashing-leek-81d.notion.site/27b4376fbca680d2b09af2c3fea276d6?source=copy_link" target="_blank">© 2025 DentBlog · made by DO</a></footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="loader" aria-hidden="true"><div class="spinner" aria-label="로딩중"></div></div>
@@ -588,7 +629,17 @@
     const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
     const $  = (sel,root=document)=>root.querySelector(sel);
     const logDev=(...args)=>{ const el = $('#dev-log'); if(!el) return; el.textContent += args.join(' ') + '\n'; el.scrollTop = el.scrollHeight; };
-    const note=(msg, warn)=>{ const t=$('#toast'); if(!t) return; t.textContent=msg; t.style.background= warn? '#991b1b':'#111827'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1400); };
+    const note=(msg, warn)=>{ 
+        // "세트가 원격 데이터로 갱신되었습니다." 메시지 삭제 요청 반영
+        if (msg === '세트가 원격 데이터로 갱신되었습니다.') return; 
+        
+        const t=$('#toast'); 
+        if(!t) return; 
+        t.textContent=msg; 
+        t.style.background= warn? '#991b1b':'#111827'; 
+        t.classList.add('show'); 
+        setTimeout(()=>t.classList.remove('show'), 1400); 
+    };
     const busy=(on,msg)=>{ const l=$('#loader'); if(!l) return; if(on){ l.classList.add('show'); if(msg) note(msg); } else { l.classList.remove('show'); } };
     const uid=()=>Math.random().toString(36).slice(2,9);
     const slug=s=>(s||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')||('id-'+uid());
@@ -770,16 +821,17 @@
     const homeStats=()=>({ sets: DemoSets.length, cards: DemoSets.reduce((n,s)=>n+(s.cards?.length||0),0), blogs: BlogPosts.length });
     function renderHome(){
       const st=homeStats();
+      // 통계 폰트 크기 조정 반영
       $('#home-stats').innerHTML = [
-        `<span class='stat'>세트 <b>${st.sets}</b></span>`,
-        `<span class='stat'>카드 <b>${st.cards}</b></span>`,
-        `<span class='stat'>칼럼 <b>${st.blogs}</b></span>`
+        `<span class='stat'>세트 <b style="font-weight:700;">${st.sets}</b></span>`,
+        `<span class='stat'>카드 <b style="font-weight:700;">${st.cards}</b></span>`,
+        `<span class='stat'>칼럼 <b style="font-weight:700;">${st.blogs}</b></span>`
       ].join(' ');
       $('#home-reco').innerHTML = DemoSets.map(s=>tile(s)).join('');
       const latest = [...BlogPosts].sort((a,b)=>b.when-a.when).slice(0,6)
         .map(p=>`<a class='card' href="#blog" data-action="blog-select" data-id="${p.id}" style='padding:12px;'>
-          <div style='font-weight:900; font-size:16px;'>${esc(p.title)}</div>
-          <div class='muted' style='font-size:12px; margin-bottom:6px;'>${mdDate(p.when)}${p.category? ' · '+esc(p.category):''}</div>
+          <div style='font-weight:700; font-size:var(--fs-body);'>${esc(p.title)}</div>
+          <div class='muted' style='font-size:var(--fs-small); margin-bottom:6px;'>${mdDate(p.when)}${p.category? ' · '+esc(p.category):''}</div>
           <div class='muted' style='overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;'>
             ${esc(toPlainText(p.body||'').slice(0,180))}...
           </div>
@@ -797,8 +849,8 @@
         ${thumb}
         <div class='tile-body'>
           <div style='display:flex;align-items:center;gap:8px;justify-content:space-between'>
-            <div style='font-weight:900; font-size:16px'>${esc(s.title)}</div>
-            <span class='chip'><span class='card-count'>🃏 ${count}장</span></span>
+            <div style='font-weight:700; font-size:var(--fs-body);'>${esc(s.title)}</div>
+            <span class='chip'><span class='card-count' style="font-weight: 700;">🃏 ${count}장</span></span>
           </div>
           <div style='display:flex;gap:8px;margin-top:6px'>
             <button class='btn primary' data-action='start-mode' data-mode='flash' data-id='${s.id}'>Flash</button>
@@ -858,18 +910,47 @@
           <div class="bin">
             <div class="bin-bar"><i style="width:0%"></i></div>
             <div class="muted" style="font-size:12px;margin-top:4px">${lb}</div>
-            <div style="font-weight:900;font-size:18px">0</div>
+            <div style="font-weight:700;font-size:var(--fs-body)">0</div>
           </div>`).join('');
         $('#auto-next').checked = this.autoNext;
         $('#auto-next-delay').value = String(this.autoNextDelay);
         $('#autoplay-btn').textContent = this.autoplay ? '❚❚' : '▶';
         this.render();
         if(!CurrentSet?.cards?.length){ note('이 세트에는 카드가 없습니다. Admin에서 데이터 확인 또는 원격 새로고침을 실행하세요.', true); }
+        Flash.updateNavButtons(this.i);
       },
-      reset(){ this.setId=CurrentSet?.id||null; this.order = (CurrentSet?.cards||[]).map((_,i)=>i); this.bins=[[],[],[],[],[]]; this.bins[0]=[...this.order]; this.i=0; this.flipped=false; this.stopTimer(); this.render(); },
+      reset(){ 
+        this.setId=CurrentSet?.id||null; 
+        this.order = (CurrentSet?.cards||[]).map((_,i)=>i); 
+        this.bins=[[],[],[],[],[]]; 
+        this.bins[0]=[...this.order]; 
+        this.i=0; 
+        this.flipped=false; 
+        this.stopTimer(); 
+        this.render(); 
+        Flash.updateNavButtons(this.i);
+      },
       card(){ return CurrentSet?.cards?.[this.order[this.i]]; },
-      showFront(){ this.flipped=false; const fc=$('#flash-card'); fc.classList.remove('show-back'); fc.classList.add('show-front'); const b=$('#flash-back'); if(b) b.style.display='none'; },
-      showBack(){ this.flipped=true; const fc=$('#flash-card'); fc.classList.remove('show-front'); fc.classList.add('show-back'); const b=$('#flash-back'); if(b) b.style.display='block'; },
+      showFront(){ 
+          this.flipped=false; 
+          const fc=$('#flash-card'); 
+          const b=$('#flash-back'); 
+          const hint=$('#flash-card .hint');
+          fc.classList.remove('show-back'); 
+          fc.classList.add('show-front'); 
+          if(b) b.style.display='none'; 
+          if(hint) hint.style.display='block';
+      },
+      showBack(){ 
+          this.flipped=true; 
+          const fc=$('#flash-card'); 
+          const b=$('#flash-back'); 
+          const hint=$('#flash-card .hint');
+          fc.classList.remove('show-front'); 
+          fc.classList.add('show-back'); 
+          if(b) b.style.display='block'; 
+          if(hint) hint.style.display='none'; // 정답 보일 때 힌트 문구 삭제
+      },
       toggle(){ this.flipped? this.showFront() : this.showBack(); this.stopTimer(); },
       next(){
         const total = this.order.length;
@@ -883,8 +964,40 @@
           if(attempts>total) break;
         }while(true);
         this.flipped=false; this.stopTimer(); this.render();
+        Flash.updateNavButtons(this.i);
       },
-      prev(){ if(this.i>0){ this.i--; this.flipped=false; this.stopTimer(); this.render(); } },
+      prev(){ 
+        if(this.i>0){ 
+            this.i--; 
+            this.flipped=false; 
+            this.stopTimer(); 
+            this.render(); 
+        } 
+        Flash.updateNavButtons(this.i);
+      },
+      updateNavButtons(currentIndex){
+          const total = this.order.length;
+          const prevBtn = $('#flash-prev-btn');
+          const nextBtn = $('#flash-next-btn');
+          
+          const title = CurrentSet?.title || '세트';
+          
+          if(currentIndex > 0){
+              prevBtn.textContent = `← ${title}`;
+              prevBtn.style.visibility = 'visible';
+          } else {
+              prevBtn.textContent = `← 이전 카드`;
+              prevBtn.style.visibility = 'hidden';
+          }
+          
+          if(currentIndex < total - 1){
+              nextBtn.textContent = `${title} →`;
+              nextBtn.style.visibility = 'visible';
+          } else {
+              nextBtn.textContent = `다음 카드 →`;
+              nextBtn.style.visibility = 'hidden';
+          }
+      },
       binOf(idx){ return this.bins.findIndex(b=>b.includes(idx)); },
       moveBin(idx, to){ let from=this.binOf(idx); if(from<0) from=0; this.bins[from]=this.bins[from].filter(x=>x!==idx); this.bins[to].push(idx); },
       grade(ok){
@@ -974,7 +1087,7 @@
         </div>
         <div style='display:grid;gap:10px'>
           ${q?.image?`<img src='${q.image}' alt='x-ray' style="max-height:360px; object-fit:contain"/>`:''}
-          <div style='font-weight:900; font-size:var(--fs-h2)'>
+          <div style='font-weight:700; font-size:var(--fs-h2)'>
             <span>${esc(q?.stem||'')}</span>
           </div>
           <div id='quiz-opts' class='grid' style="gap:8px"></div>
@@ -1017,6 +1130,7 @@
         this.renderView(p); 
         $$('#blog-list a').forEach(el => el.classList.toggle('active', el.dataset.id === id));
         this.updateNavButtons(id);
+        $('#blog-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
       },
       renderView(p){
         const htmlBody = marked.parse(p.body || '');
@@ -1033,24 +1147,24 @@
         const prevBtn = $('#blog-prev-btn');
         const nextBtn = $('#blog-next-btn');
 
-        //  버튼
+        // 이전 글 버튼
         if (prevPost) {
             prevBtn.style.visibility = 'visible';
             prevBtn.dataset.id = prevPost.id;
-            prevBtn.textContent = `← ${esc(prevPost.title)}`;
+            prevBtn.textContent = `← ${esc(prevPost.title)}`; // 워딩 변경 반영
         } else {
             prevBtn.style.visibility = 'hidden';
-            prevBtn.textContent = '← ';
+            prevBtn.textContent = '← 이전 글';
         }
 
-        //  버튼
+        // 다음 글 버튼
         if (nextPost) {
             nextBtn.style.visibility = 'visible';
             nextBtn.dataset.id = nextPost.id;
-            nextBtn.textContent = `${esc(nextPost.title)} →`;
+            nextBtn.textContent = `${esc(nextPost.title)} →`; // 워딩 변경 반영
         } else {
             nextBtn.style.visibility = 'hidden';
-            nextBtn.textContent = ' →';
+            nextBtn.textContent = '다음 글 →';
         }
       },
       prev(){
@@ -1084,7 +1198,7 @@
             return;
         }
 
-        let h='<div style="font-weight:900;margin:10px 0 6px">목차</div><ul>';
+        let h='<div style="font-weight:700;margin:10px 0 6px">목차</div><ul>';
         let prev = 1;
         toc.forEach(({id, level, text})=>{
             if(level>prev) h+='<ul>';
@@ -1133,8 +1247,7 @@
         } else { 
             $('#blog-view').innerHTML = ''; 
             $('#blog-toc').style.display = 'none'; 
-            $('#blog-prev-btn').style.visibility = 'hidden';
-            $('#blog-next-btn').style.visibility = 'hidden';
+            this.updateNavButtons(null);
         }
         renderHome();
         this.renderFilters();
@@ -1385,7 +1498,13 @@
           Blog.renderFilters();
           return;
       }
-      if(act==='toc-goto'){ const id=el.dataset.target; const t=document.getElementById(id); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+      // 목차 이동 기능 복원
+      if(act==='toc-goto'){ 
+        const id=el.dataset.target; 
+        const t=document.getElementById(id); 
+        if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); 
+        return; 
+      }
       if(act==='tts-body'){ Blog.speakBody(); return; }
       if(act==='filter-category'){
           const category = el.dataset.filterValue;

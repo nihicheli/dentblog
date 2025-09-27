@@ -9,43 +9,21 @@
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
   <style>
     :root{
-      /* 색상 및 디자인 톤 조정: 전체적으로 밝고 부드럽게 */
-      --bg:#f9fafc; --panel:#ffffff; --panel-2:#f0f2f5; --text:#1e293b; 
-      --muted:#64748b; /* 부드러운 회색 */
-      --line:#e2e8f0; /* 밝은 라인 색상 */
-      --brand:#1e293b; /* DentBlog와 버튼 색상 (어두운 검정색 계열) */
-      --brand-2:#334155; 
-      --ok:#10b981; --bad:#ef4444; --warn:#f59e0b;
-      --radius:10px; --shadow:0 6px 15px rgba(30,41,59,.06); --maxw:1120px;
-      /* 폰트 크기 정의 */
-      --fs-hero: clamp(24px, 2.4vw, 32px); /* 제목 크기 축소 */
-      --fs-h1: clamp(20px, 2vw, 28px); /* H1 크기 축소 */
-      --fs-h2: clamp(16px, 1.6vw, 20px); 
-      --fs-h3: clamp(14px, 1.4vw, 18px); 
+      --bg:#fafafc; --panel:#ffffff; --panel-2:#f3f5f8; --text:#0f172a; --muted:#55627a; --line:#e4e8ef;
+      --brand:#111827; --brand-2:#1f2937; --ok:#16a34a; --bad:#dc2626; --warn:#f59e0b;
+      --radius:14px; --shadow:0 10px 30px rgba(15,23,42,.08); --maxw:1120px;
+      --fs-hero: clamp(24px, 2.4vw, 36px);
+      --fs-h1: clamp(20px, 2vw, 28px);
+      --fs-h2: clamp(18px, 1.7vw, 24px);
+      --fs-h3: clamp(16px, 1.5vw, 20px);
       --fs-body: clamp(14px, 1.2vw, 16px);
-      --fs-small: clamp(12px, 1vw, 14px); /* 작은 요소 폰트 */
-      --fs-xsmall: clamp(11px, 0.9vw, 13px); /* 필터 라벨, 알았다/몰랐다, 홈 미리보기 폰트 크기 */
-      --header-brand-size: clamp(18px, 2vw, 24px); /* DentBlog 폰트 크기 조정 */
+      --fs-small: clamp(12px, 1vw, 14px);
     }
-    
-    /* 모바일 폰트 최적화 */
-    @media (max-width: 768px) {
-        :root {
-            --fs-hero: 22px;
-            --fs-h1: 18px;
-            --fs-h2: 16px;
-            --fs-body: 13px;
-            --fs-small: 12px;
-            --fs-xsmall: 11px;
-            --header-brand-size: 16px;
-        }
-    }
-    
     html.dark{
-      --bg:#0f172a; --panel:#1e293b; --panel-2:#334155; --text:#f1f5f9; --muted:#94a3b8; --line:#374151;
-      --brand:#f1f5f9; --brand-2:#cbd5e1; --ok:#4ade80; --bad:#f87171; --warn:#facc15;
+      --bg:#0f172a; --panel:#111827; --panel-2:#1f2937; --text:#e5e7eb; --muted:#94a3b8; --line:#374151;
+      --brand:#e5e7eb; --brand-2:#cbd5e1; --ok:#4ade80; --bad:#f87171; --warn:#facc15;
     }
-    *{box-sizing:border-box; font-weight: 500;} 
+    *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; font:500 var(--fs-body)/1.65 "Pretendard","Inter","Segoe UI",system-ui,-apple-system,sans-serif;
@@ -55,65 +33,16 @@
     a{color:inherit;text-decoration:none}
     img{max-width:100%;display:block}
     button{cursor:pointer; font-family:inherit}
-    
-    /* 폰트 및 필터 UI 통일 */
-    .filter-group select,
-    .filters input#q,
-    .sets input#q-header, /* 검색창 */
-    #timer-select, 
-    #auto-next-delay,
-    #blog-sort {
-        font-size: var(--fs-small);
-        padding: 8px 12px;
-        border-radius: var(--radius);
-        border: 1px solid var(--line);
-        background: var(--panel);
-        color: var(--text);
-        line-height: normal;
-        /* 높이 통일을 위한 최소 높이 설정 */
-        min-height: 38px;
-    }
-    .filter-group .label {
-        font-size: var(--fs-xsmall); /* 필터 라벨 폰트 크기 */
-        font-weight: 700;
-    }
-    /* 타이머 드롭다운 높이 통일 */
-    #timer-select, #auto-next-delay {
-        padding: 6px 12px;
-        min-height: 34px;
-    }
-    /* 통계 폰트 조정 */
-    #home-stats .stat,
-    .stat .card-count,
-    #flash-pos {
-        font-size: var(--fs-small); 
-        font-weight: 700;
-        padding: 6px 10px; 
-        border-radius: var(--radius);
-        background: var(--panel);
-        border: 1px solid var(--line);
-    }
-    .stat b {
-        font-size: var(--fs-body); 
-        font-weight: 700;
-    }
-    .set-tile .chip {
-        font-size: 11px; 
-        padding: 3px 8px;
-    }
-    
+
     header{position:sticky;top:0;z-index:50;background:color-mix(in oklab, var(--panel) 88%, transparent);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
     .nav{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 16px}
-    .brand{display:flex;align-items:center;gap:10px;letter-spacing:.1px; color:var(--brand)}
-    .brand div{ font-size: var(--header-brand-size); font-weight: 700;} /* DentBlog 폰트 두께 및 크기 조정 */
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900; letter-spacing:.1px; color:var(--brand)}
     .brand .logo{font-size:22px; line-height:1}
     .tabs{margin-left:auto;display:flex;gap:6px}
-    .tab{padding:10px 14px;border-radius:var(--radius);background:var(--panel); color:var(--muted); font-weight:700; box-shadow:0 1px 0 var(--line) inset; transition:all .15s}
-    .tab.active{background:var(--brand); color:#fff}
-    /* 4. 다크모드에서 클릭된 탭 색상 수정 */
-    html.dark .tab.active{background:var(--brand-2); color:var(--text);}
-    
-    .theme{margin-left:6px;border:none;border-radius:var(--radius);padding:10px 12px;background:var(--panel); box-shadow:0 1px 0 var(--line) inset; color:var(--muted)}
+    .tab{padding:10px 14px;border-radius:10px;background:var(--panel); color:var(--muted); font-weight:700; box-shadow:0 1px 0 var(--line) inset; transition:all .15s}
+    .tab.active{background:linear-gradient(180deg,#eef2ff,#e0e7ff); color:#111827}
+    html.dark .tab.active{background:var(--panel-2); color:var(--text)}
+    .theme{margin-left:6px;border:none;border-radius:12px;padding:10px 12px;background:var(--panel); box-shadow:0 1px 0 var(--line) inset; color:var(--muted)}
 
     main{max-width:var(--maxw);margin:0 auto;padding:18px}
     section.view{display:none}
@@ -123,59 +52,30 @@
     .shadow{box-shadow:var(--shadow)}
     .muted{color:var(--muted)}
 
-    /* 버튼 크기 조정 및 디자인 롤백 */
-    .btn{border:none;background:linear-gradient(180deg,#ffffff,#f8fafc);color:#0b1020;border-radius:var(--radius);padding:10px 14px; font-weight:700; box-shadow:0 1px 0 rgba(0,0,0,.04) inset; transition:transform .08s ease;}
+    .btn{border:none;background:linear-gradient(180deg,#ffffff,#f8fafc);color:#0b1020;border-radius:12px;padding:10px 14px; font-weight:800; box-shadow:0 1px 0 rgba(0,0,0,.04) inset; transition:transform .08s ease;}
     .btn:active{transform:translateY(1px)}
     html.dark .btn{background:var(--panel); color:var(--text)}
-    
-    .btn.primary{background:linear-gradient(180deg,var(--brand),var(--brand-2)); color:#fff; padding: 8px 12px; font-size: var(--fs-body);}
-    .btn.ok{background:linear-gradient(180deg,#34d399,#10b981);color:#fff; padding: 8px 12px; font-size: var(--fs-xsmall);} /* 알았다/몰랐다 폰트 크기 조정 */
-    .btn.bad{background:linear-gradient(180deg,#fca5a5,#ef4444);color:#fff; padding: 8px 12px; font-size: var(--fs-xsmall);} /* 알았다/몰랐다 폰트 크기 조정 */
-    
-    .btn.small {
-        padding: 6px 10px;
-        font-size: var(--fs-small);
-    }
-    .btn.round{padding: 6px 8px;}
+    .btn.primary{background:linear-gradient(180deg,#222,#111); color:#fff}
+    .btn.ok{background:linear-gradient(180deg,#34d399,#16a34a);color:#fff}
+    .btn.bad{background:linear-gradient(180deg,#fca5a5,#ef4444);color:#fff}
+    .btn.small{padding:8px 10px; border-radius:10px; font-weight:700}
+    .btn.round{border-radius:999px; padding:8px 10px}
+    .btn.icon{width:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:12px;font-size:16px}
+    .btn.filter{background:var(--panel-2); color:var(--muted); font-weight:700; box-shadow:0 1px 0 var(--line) inset; transition:all .15s}
+    .btn.filter.active{background:linear-gradient(180deg,#eef2ff,#e0e7ff); color:#111827}
+    html.dark .btn.filter.active{background:var(--panel); color:var(--text)}
 
-    .btn.filter{
-        /* 태그 필터 디자인 롤백 */
-        background: var(--panel-2); 
-        color: var(--muted); 
-        box-shadow: 0 1px 0 var(--line) inset; 
-        transition: all .15s
-    }
-    .btn.filter.active{
-        background: var(--brand); 
-        color: #fff;
-        box-shadow: 0 1px 0 var(--line) inset; 
-    }
-    html.dark .btn.filter.active{background:var(--brand-2); color:var(--text)}
-
-    .btn-nav{border:none;background:var(--panel);color:var(--text);border-radius:var(--radius);padding:10px 12px;display:inline-flex;align-items:center;gap:6px;font-weight:700;box-shadow:0 1px 0 var(--line) inset;transition:transform .08s}
+    .btn-nav{border:none;background:var(--panel);color:var(--text);border-radius:12px;padding:10px 12px;display:inline-flex;align-items:center;gap:6px;font-weight:800;box-shadow:0 1px 0 var(--line) inset;transition:transform .08s}
     .btn-nav:active{transform:translateY(1px)}
 
     .chips{display:flex;gap:6px;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#eef2ff;color:var(--brand);font-size:12px}
+    .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:#eef2ff;color:#1e3a8a;font-size:12px}
     html.dark .chip{background:var(--panel-2); color:var(--text)}
-    
-    /* 홈 화면 그리드 비율 조정 */
-    .home > div:nth-child(3) { 
-        display:grid; 
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* 1:1 비율 유지 */
-        gap:12px; 
-    }
-    @media (max-width: 768px) {
-        .home > div:nth-child(3) { 
-            grid-template-columns: 1fr;
-            gap: 16px; 
-        }
-    }
     .grid{display:grid;gap:12px}
     .hero{display:grid;gap:8px;margin:6px 0 14px;text-align:center;padding: 16px 0;}
     .hero h1{margin:0;font-size:var(--fs-hero); font-weight:900}
     .hero p{margin:0 auto; max-width:780px; font-size: clamp(15px, 1.3vw, 18px)}
-    .stat{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--radius);background:var(--panel);border:1px solid var(--line); font-weight:500;}
+    .stat{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:var(--panel);border:1px solid var(--line); font-weight:800}
 
     .typing{
         display: inline-block;
@@ -187,85 +87,30 @@
     @keyframes typing{ from{width:0} to{width:100%} }
     @keyframes caret{ 50%{border-color:transparent} }
 
-    .set-tile{
-        display:flex;
-        gap:14px; 
-        cursor:pointer; 
-        padding:12px; 
-        border:1px solid var(--line); 
-        border-radius:var(--radius); 
-        background:var(--panel);
-        /* 홈 목록 깨짐 방지 */
-        min-width: 0; 
-    }
+    .set-tile{display:flex;gap:14px; cursor:pointer; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--panel)}
     .set-tile:hover{background:var(--panel-2)}
-    
-    .tile-body{flex:1;display:grid;gap:6px; min-width: 0;}
+    .thumb{width:112px;height:84px;border-radius:10px;border:1px dashed var(--line);overflow:hidden;background:var(--panel-2);display:grid;place-items:center; color:var(--muted); font-size:12px}
+    .thumb:before{content:'미리보기 없음';}
+    .tile-body{flex:1;display:grid;gap:6px}
 
     .progress{height:10px;background:#e5e7eb;border:1px solid #d1d5db;border-radius:999px;overflow:hidden}
     html.dark .progress{background:var(--panel-2);border-color:var(--line)}
     .progress>i{display:block;height:100%;background:#111827}
 
     .flash-frame{display:grid; grid-template-columns:1fr 1fr; gap:16px; box-shadow:var(--shadow)}
-    .flash-frame > .card { order: 3; } 
-    
-    .flash-visual{display:flex; justify-content:center; align-items:center; padding:16px; order: 1;}
+    @media (max-width:900px){ .flash-frame{grid-template-columns:1fr} }
+    .flash-visual{display:flex; justify-content:center; align-items:center; padding:16px}
     .flash-visual img{max-height:420px; width:100%; height:auto; object-fit:contain}
 
-    .flash-card{position:relative; padding:12px; cursor:pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; order: 2;}
-    
-    .flash-card .front{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 16px;
-        border-radius: var(--radius);
-        border: 1px solid var(--line);
-        background: var(--panel);
-        text-align: center;
-        word-wrap: break-word;
-        line-height: 1.5;
-        width: 100%;
-        min-height: 120px;
-        transition: border-radius .2s;
-    }
-    .flash-card .back {
-        display: none; 
-        background: var(--panel-2); 
-        padding: 12px;
-        border-radius: var(--radius);
-        margin-top: 10px;
-        border: 1px solid var(--line);
-        width: 100%;
-        text-align: center; 
-    }
-    .flash-card.show-back .back { display: block; }
-    .flash-card.show-back .front .hint { display: none !important; } 
+    .flash-card{position:relative; padding:12px; cursor:pointer}
+    .flash-card .front,.flash-card .back{display:none;flex-direction:column; align-items:center; justify-content:center;gap:10px; padding:16px; border-radius:12px; border:1px solid var(--line);background:var(--panel); text-align:center;white-space:normal; word-wrap:break-word; line-height:1.5;}
+    .flash-card .back{ background:var(--panel-2) }
+    .flash-card.show-front .front{ display:flex }
+    .flash-card.show-back  .back{ display:flex }
 
-    /* Flashcard 모바일 최적화 */
-    @media (max-width: 900px) {
-        .flash-frame {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .flash-frame > .card { order: 4; } /* 채점/타이머 카드는 가장 아래로 */
-        .flash-visual { order: 1; }
-        .flash-card { order: 2; }
-    }
-
-    /* 퀴즈 최종 점수 크기 조정 */
-    .quiz-result-score {
-        font-size: clamp(24px, 4vw, 36px) !important; /* 크기 한 단계 더 축소 */
-        font-weight: 700;
-        margin: 6px 0 14px !important;
-    }
-
-    .hint{ font-size:var(--fs-small); color:var(--muted) }
-    .countdown{position:absolute; inset:0; display:grid; place-items:center;background:rgba(0,0,0,.55); color:#fff; font-size:48px; font-weight:900;border-radius:var(--radius); opacity:0; transition:opacity .2s;pointer-events:none; z-index:2;}
-    .countdown.show{ opacity:1; pointer-items:auto }
+    .hint{ font-size:12px; color:var(--muted) }
+    .countdown{position:absolute; inset:0; display:grid; place-items:center;background:rgba(0,0,0,.55); color:#fff; font-size:48px; font-weight:900;border-radius:12px; opacity:0; transition:opacity .2s;pointer-events:none; z-index:2;}
+    .countdown.show{ opacity:1; pointer-events:auto }
 
     .bin{ text-align:center }
     .bin-bar{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;}
@@ -279,105 +124,49 @@
     .blog{display:grid;grid-template-columns:320px 1fr;gap:16px; min-height:600px}
     @media (max-width:980px){.blog{grid-template-columns:1fr}}
     .blog-sidebar{position:sticky; top:84px; align-self:flex-start; max-height:calc(100vh - 120px); overflow-y:auto; padding:0;}
-    
-    /* 글 목록 <li> 스타일 */
     .blog-list{list-style:none;padding:0;margin:0}
-    .blog-list a{display:block;padding:10px 12px;border-radius:var(--radius);color:var(--muted);border:1px solid transparent; font-weight: 500;}
+    .blog-list a{display:block;padding:10px 12px;border-radius:10px;color:var(--muted);border:1px solid transparent}
     .blog-list a:hover{background:var(--panel-2); color:var(--text)}
-    .blog-list a.active{background:var(--brand); color:#fff; font-weight:700; border-color:transparent}
-    
-    .blog-view{padding:18px;min-height:160px; background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .blog-list a.active{background:#111827; color:#fff; font-weight:800; border-color:transparent}
+    .blog-view{padding:18px;min-height:160px; background:var(--panel); border-radius:12px; box-shadow:var(--shadow)}
     .blog-view h1{font-size:var(--fs-h1);margin:.2em 0 .5em; border-bottom:1px solid var(--line); padding-bottom:8px}
     .blog-view h2{font-size:var(--fs-h2);margin:1.3em 0 .4em; border-bottom:none; padding-bottom:0}
     .blog-view h3{font-size:var(--fs-h3);margin:1em 0 .4em}
     .editor input,.editor textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text)}
     .editor textarea{min-height:180px;margin-bottom:8px}
-    
-    /* TOC 스타일 */
     .toc{margin-top:12px;font-size:var(--fs-small)}
-    .toc ul{list-style:none;padding-left:0; margin: 6px 0 0;}
+    .toc ul{list-style:none;margin:0;padding-left:0}
     .toc li{margin:6px 0 0 0;padding-left:12px;border-left:1px dashed var(--line)}
-    .toc a{color:var(--muted); font-weight: 500;}
+    .toc a{color:var(--muted)}
     .toc a:hover{color:var(--text)}
-    
-    /* 푸터 스타일 */
-    footer {
-        margin: 32px auto;
-        color: var(--muted); 
-        text-align: center;
-        padding: 12px 0;
-        border-top: 1px solid var(--line);
-        max-width: var(--maxw);
-    }
-    footer a {
-        font-size: var(--fs-small);
-        font-weight: 500;
-    }
-    
-    /* 세트 필터 레이아웃 조정 */
-    .sets .filters {
-        display: flex;
-        flex-direction: column; 
-        gap: 4px; /* 상하 간격: 4px로 최종 조정 */
-    }
-    .sets .filters .filter-group {
-        gap: 8px;
-        align-items: center;
-    }
-    .sets .filters .filter-group.inline-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-    }
-    .sets .filters > input#q {
-        width: 100%;
-    }
 
-    @media (min-width: 600px) {
-        .sets .filters .filter-group.inline-group {
-            flex-direction: row; 
+    .toast{position:fixed;inset:auto 16px 16px auto;background:#111827;color:#e5e7eb;border:1px solid #374151;padding:10px 12px;border-radius:10px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:all .25s}
+    .toast.show{opacity:1;transform:translateY(0)}
+    #loader{position:fixed; inset:0; display:none; place-items:center; background:color-mix(in oklab, var(--bg) 70%, transparent); z-index:100}
+    #loader.show{display:grid}
+    .spinner{width:42px;height:42px;border-radius:50%;border:4px solid #cbd5e1;border-top-color:#111827; animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    footer{margin:24px 0;color:var(--muted); text-align:center}
+
+    .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .filters .label{font-weight:800; color:var(--muted); font-size:12px}
+    .filter-group{display:flex;gap:6px;align-items:center}
+    .select{position:relative; display:inline-flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:6px 10px}
+    .select select{border:none; outline:none; background:transparent; padding:6px; min-width:160px; color:var(--text)}
+    .select:after{content:'⌵'; color:var(--muted);}
+    
+    @media (max-width: 768px) {
+        .home .card.shadow {
+            grid-column: 1 / -1;
+            width: 100%;
         }
-        .sets .filters .filter-group {
-            display: flex;
-            align-items: center;
+        .home .grid {
+            grid-template-columns: 1fr;
         }
-    }
-    @media (max-width: 599px) {
-        .sets .filters .filter-group.inline-group {
-            flex-direction: column;
+        .filters {
+            display: grid;
             gap: 8px;
         }
-        .sets .filters .filter-group {
-            width: 100%;
-            justify-content: space-between;
-        }
-    }
-    
-    /* 칼럼 탐색 버튼 정렬 */
-    #blog-nav-buttons {
-        display: flex; 
-        justify-content: space-between; 
-    }
-    #blog-prev-btn { 
-        text-align: left !important; 
-        margin-right: auto;
-    }
-    #blog-next-btn { 
-        text-align: right !important; 
-        margin-left: auto;
-    }
-    
-    /* 글 목록 토글 기능 관련 스타일 */
-    .blog-toggle-area {
-        overflow: hidden;
-        transition: all 0.3s ease-out;
-    }
-    .blog-toggle-area.collapsed {
-        max-height: 0 !important; /* height 대신 max-height 사용 */
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-        border-top: none !important;
     }
 
   </style>
@@ -411,48 +200,46 @@
 
       <div class="card shadow" style="padding:0; overflow:hidden; margin-bottom:12px">
         <div style="display:flex; overflow:auto; gap:12px; padding:12px;">
-          <img src="https://via.placeholder.com/1100x120/222222/ffffff?text=BANNER+1" alt="배너" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:var(--radius);"/>
+          <img src="https://via.placeholder.com/1100x120/222222/ffffff?text=BANNER+1" alt="배너" style="width:100%; min-width:320px; height:120px; object-fit:cover; border-radius:8px;"/>
         </div>
       </div>
 
-      <div style="display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:12px;"> <!-- 1:1 비율 유지 -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div class="card shadow">
-          <div class="muted" style="font-weight:700;margin-bottom:8px">추천 세트</div>
+          <div class="muted" style="font-weight:800;margin-bottom:8px">추천 세트</div>
           <div id="home-reco" class="grid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr));"></div>
         </div>
         <div class="card shadow">
-          <div class="muted" style="font-weight:700;margin-bottom:8px">칼럼 최신</div>
+          <div class="muted" style="font-weight:800;margin-bottom:8px">칼럼 최신</div>
           <div id="home-blog-list" class="grid" style="grid-template-columns:1fr; gap:8px;"></div>
         </div>
       </div>
+
+      <footer>© 2025 DentBlog · made by DO</footer>
     </section>
 
     <section id="view-sets" class="view sets">
-      <div class="hero" style="text-align:left; display: flex; align-items: center; justify-content: space-between;">
-        <h1 style="font-size:var(--fs-h1); font-weight: 700; margin: 0;">학습 세트</h1>
-        <!-- 검색창을 제목 옆으로 이동 -->
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <input id="q-header" placeholder="검색" style="padding:8px 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel);color:var(--text); min-width: 150px; font-size: var(--fs-small);"/>
-        </div>
+      <div class="hero" style="text-align:left">
+        <h1 style="font-size:var(--fs-h1)">학습 세트</h1>
       </div>
       <div class="card shadow" style="margin-bottom:12px">
-        <div class="filters" style="padding: 12px 0;">
-            <!-- 과목/분류 (같은 행, 높이 정렬됨) -->
-            <div class="filter-group inline-group" style="align-items: flex-start; gap: 16px;">
-                <div class="filter-group">
-                    <label for="group" class="label">과목</label>
-                    <select id="group"></select>
-                </div>
-                <div class="filter-group">
-                    <label for="mod" class="label">분류</label>
-                    <select id="mod"></select>
-                </div>
+        <div class="filters" style="flex-wrap: wrap;">
+            <input id="q" placeholder="검색" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a; min-width: 150px;"/>
+            <div class="filter-group">
+                <label for="group" class="label">과목</label>
+                <select id="group" style="padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#0f172a;appearance:none;-webkit-appearance:none;padding-right:28px;">
+                    <option value="">전체</option>
+                </select>
             </div>
-            
-            <!-- 태그 (독립된 행) -->
-            <div class="filter-group" style="margin-top: 8px;">
+            <div class="filter-group">
+                <label for="mod" class="label">분류</label>
+                <select id="mod" style="padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#0f172a;appearance:none;-webkit-appearance:none;padding-right:28px;">
+                    <option value="">전체</option>
+                </select>
+            </div>
+            <div class="filter-group">
                 <label for="tags" class="label">태그</label>
-                <div id="tag-filter-list" class="chips" style="margin-top: 6px;"></div>
+                <div id="tag-filter-list" class="chips"></div>
             </div>
         </div>
       </div>
@@ -461,42 +248,42 @@
 
     <section id="view-flash" class="view">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
+        <button class="btn-nav" data-nav="sets">이전</button>
         <div style="flex:1;">
           <h2 id="flash-title" style="margin:0; font-size:var(--fs-h1)"></h2>
         </div>
-        <!-- 이전/다음 카드 버튼 -->
-        <div style="display:flex;gap:8px;" id="flash-nav-buttons">
-          <button class="btn-nav" data-action="flash-prev" id="flash-prev-btn" style="padding: 8px 12px; font-size: var(--fs-small);">← 이전 카드</button>
-          <button class="btn-nav" data-action="flash-next" id="flash-next-btn" style="padding: 8px 12px; font-size: var(--fs-small);">다음 카드 →</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-nav" data-action="flash-prev">←</button>
+          <button class="btn-nav" data-action="flash-next">→</button>
         </div>
       </div>
 
       <div class="progress"><i id="flash-bar" style="width:0%"></i></div>
 
       <div id="flash-frame" class="card shadow flash-frame" style="margin-top:12px">
-        
         <div class="flash-visual">
           <img id="flash-img" alt="x-ray"/>
         </div>
-        
-        <!-- 문제 카드 (문제+정답 통합) -->
-        <div class="flash-card" id="flash-card" data-action="flash-toggle" aria-label="카드를 클릭하거나 스페이스바를 눌러 정답을 확인하세요">
+
+        <div class="flash-card" id="flash-card" data-action="flash-toggle" aria-label="카드를 클릭하면 정답을 볼 수 있습니다">
           <div class="front" id="flash-front">
-            <div style="font-weight:700; font-size:var(--fs-h2); display:flex; flex-direction: column; align-items:center; justify-content:center; text-align:center; width: 100%;">
+            <div style="font-weight:900; font-size:var(--fs-h2); display:flex; align-items:center; justify-content:center; text-align:center">
               <span id="flash-question">이 영상의 진단명은?</span>
-              <!-- 정답 부분 -->
-              <div class="back" id="flash-back" style="display: none; padding: 0; margin-top: 16px; width: 100%; border: none; background: transparent;">
-                  <div class="muted" style="margin-bottom: 4px; font-size: var(--fs-small); font-weight: 700; text-align: center;">정답</div>
-                  <div id="flash-answer" style="font-size:var(--fs-h2); font-weight: 700; margin:4px 0 8px; text-align: center;"></div>
-                  <div id="flash-explain" class="muted" style="max-width:520px;margin:0 auto; font-size: var(--fs-body); text-align: center;"></div>
-              </div>
             </div>
             <div class="hint">카드를 클릭하거나 스페이스바를 눌러 정답을 확인하세요</div>
           </div>
+          <div class="back" id="flash-back">
+            <div>
+              <div class="muted">정답</div>
+              <div id="flash-answer" style="font-size:var(--fs-h2);font-weight:900;margin:4px 0 8px"></div>
+              <div id="flash-explain" class="muted" style="max-width:520px;margin:0 auto"></div>
+            </div>
+          </div>
+          <div id="countdown" class="countdown" aria-hidden="true"></div>
         </div>
 
         <div class="card">
-          <div class="muted" style="font-weight:700;margin-bottom:8px; font-size: var(--fs-small);">채점</div>
+          <div class="muted" style="font-weight:800;margin-bottom:8px">채점</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn ok"  data-action="flash-grade" data-ok="1">알았다</button>
             <button class="btn bad" data-action="flash-grade" data-ok="0">몰랐다</button>
@@ -505,24 +292,23 @@
         </div>
 
         <div class="card">
-          <div class="muted" style="font-weight:700;margin-bottom:8px; font-size: var(--fs-small);">타이머</div>
-          <div style="display:flex;gap:16px;align-items:center; flex-wrap:wrap"> <!-- gap: 16px로 늘려 좌우 간격 확보 -->
-            <!-- 폰트/패딩 통일 -->
-            <span id="flash-pos" class="stat" style="font-weight: 700; padding: 6px 10px;">0/0</span>
-            <label style="font-size: var(--fs-small);">타이머
-              <select id="timer-select">
+          <div class="muted" style="font-weight:800;margin-bottom:8px">타이머</div>
+          <div style="display:flex;gap:10px;align-items:center; flex-wrap:wrap">
+            <span id="flash-pos" class="stat">0/0</span>
+            <label>타이머
+              <select id="timer-select" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel);min-width:100px">
                 <option value="3">3초</option>
                 <option value="5" selected>5초</option>
                 <option value="10">10초</option>
               </select>
             </label>
-            <label style="display:inline-flex;gap:6px;align-items:center;margin-left:8px; font-size: var(--fs-small);">
+            <label style="display:inline-flex;gap:6px;align-items:center;margin-left:8px">
               <input type="checkbox" id="auto-next" checked />
               정답 후 자동 넘김
             </label>
-            <label style="font-size: var(--fs-small);">
+            <label>
               지연
-              <select id="auto-next-delay">
+              <select id="auto-next-delay" style="padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel);min-width:90px">
                 <option value="3000">3초</option>
                 <option value="5000" selected>5초</option>
                 <option value="7000">7초</option>
@@ -537,12 +323,9 @@
     </section>
 
     <section id="view-quiz" class="view">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <button class="btn-nav" data-nav="sets">← 세트</button>
         <h2 id="quiz-title" style="margin:0; font-size:var(--fs-h1)"></h2>
-        <div id="quiz-nav-buttons" style="display:flex;gap:8px;">
-          <button class="btn-nav" data-action="quiz-prev">← 이전</button>
-          <button class="btn-nav" data-action="quiz-next">다음 →</button>
-        </div>
       </div>
       <div class="card shadow" style="margin-bottom:10px">
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
@@ -565,67 +348,43 @@
 
     <section id="view-blog" class="view">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <h1 style="font-size:var(--fs-h1); font-weight: 700;">칼럼</h1>
+        <h1 style="margin:0;font-size:var(--fs-h1)">칼럼</h1>
         <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-          <input id="blog-q" placeholder="검색" style="padding:8px 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel);color:var(--text); min-width: 150px; font-size: var(--fs-small);"/>
+          <input id="blog-q" placeholder="검색" style="padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text); min-width: 150px;"/>
+          <button class="btn" data-action="blog-new">새 글</button>
         </div>
       </div>
 
       <div class="blog">
         <aside class="blog-sidebar">
           <div class="card" style="padding:12px; position:sticky; top:84px; align-self:flex-start; max-height:calc(100vh - 120px); overflow-y:auto;">
-            
-            <!-- 정렬 및 태그 필터 토글 영역 -->
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-bottom:8px; border-bottom:1px solid var(--line)">
-              <div style="font-weight:700; font-size:var(--fs-body);">정렬 및 태그</div>
-              <button class="btn small" data-action="blog-filters-toggle" id="blog-filters-toggle-btn" title="접기/펼치기">⏶</button>
+              <div style="font-weight:900; font-size:1.05em;">글 목록</div>
+              <button class="btn small" data-action="blog-list-toggle" title="접기/펼치기">⏵</button>
             </div>
-            <div id="blog-filters" class="filters blog-toggle-area" style="margin-top:4px; display: block; gap: 4px; border-bottom: 1px solid var(--line); padding-bottom: 12px; height: auto;">
+            <div id="blog-filters" class="filters" style="margin-top:8px; display: block; gap: 8px;">
                 <div class="filter-group">
                     <label for="blog-sort" class="label">정렬</label>
-                    <select id="blog-sort" style="font-size: var(--fs-small);">
+                    <select id="blog-sort" style="padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#0f172a;appearance:none;-webkit-appearance:none;padding-right:28px;">
                         <option value="desc">최신순</option>
                         <option value="asc">오래된순</option>
                     </select>
                 </div>
-                <div class="filter-group" style="margin-top: 8px; display: block;">
-                    <label class="label">태그</label>
-                    <div id="category-filter-list" class="chips" style="margin-top: 6px;"></div>
+                <div class="filter-group" style="margin-top: 8px;">
+                    <label class="label">카테고리</label>
+                    <div id="category-filter-list" class="chips"></div>
                 </div>
             </div>
-
-            <!-- 글 목록 토글 영역 -->
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-top:12px; padding-bottom:8px; border-bottom:1px solid var(--line)">
-              <div style="font-weight:700; font-size:var(--fs-body);">글 목록</div>
-              <button class="btn small" data-action="blog-list-toggle" id="blog-list-toggle-btn" title="접기/펼치기">⏶</button>
-            </div>
-            
-            <div id="blog-list-wrapper" class="blog-toggle-area" style="height: auto;">
-                <ul id="blog-list" class="blog-list" style="margin-top:12px;"></ul>
-            </div>
-            
-            <!-- 목차 토글 영역 -->
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-top:12px; padding-bottom:8px; border-bottom:1px solid var(--line)">
-              <div style="font-weight:700; font-size:var(--fs-body);">목차</div>
-              <button class="btn small" data-action="blog-toc-toggle" id="blog-toc-toggle-btn" title="접기/펼치기">⏶</button>
-            </div>
-            <div id="blog-toc-wrapper" class="blog-toggle-area" style="height: auto;">
-                <div id="blog-toc" class="toc" style="display:none;"></div>
-            </div>
-            
+            <ul id="blog-list" class="blog-list" style="margin-top:8px"></ul>
+            <div id="blog-toc" class="toc" style="display:none;"></div>
           </div>
         </aside>
         <div>
           <div id="blog-view" class="blog-view"></div>
-          
-          <!-- 이전/다음 글 탐색 버튼 -->
-          <div id="blog-nav-buttons" style="display:flex; justify-content:space-between; gap: 8px; margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px;">
-            <button class="btn-nav" data-action="blog-prev" id="blog-prev-btn" style="visibility: hidden; flex-shrink: 1; text-align: left; padding: 10px; font-size: var(--fs-small); max-width: 48%;">← 이전 글</button>
-            <button class="btn-nav" data-action="blog-next" id="blog-next-btn" style="visibility: hidden; flex-shrink: 1; text-align: right; padding: 10px; font-size: var(--fs-small); max-width: 48%; margin-left: auto;">다음 글 →</button>
-          </div>
-          <!-- /이전/다음 글 탐색 버튼 -->
-          
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+            <input id="blog-key" type="password" placeholder="관리자 키" style="padding:10px;border-radius:12px;border:1px solid var(--line)" />
+            <button class="btn" data-action="blog-edit">수정</button>
+            <button class="btn bad" data-action="blog-delete">삭제</button>
             <button class="btn icon" data-action="tts-body" aria-label="본문 읽기/일시정지">▶</button>
             <button class="btn icon" data-action="tts-stop" aria-label="정지">■</button>
           </div>
@@ -702,20 +461,8 @@
     const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
     const $  = (sel,root=document)=>root.querySelector(sel);
     const logDev=(...args)=>{ const el = $('#dev-log'); if(!el) return; el.textContent += args.join(' ') + '\n'; el.scrollTop = el.scrollHeight; };
-    const note=(msg, warn)=>{ 
-        // 5. 모든 알림 메시지 제거
-        return;
-    };
-    const busy=(on,msg)=>{ 
-      // 5. 모든 알림 메시지 제거 (로딩 관련 메시지 포함)
-      const l=$('#loader'); 
-      if(!l) return; 
-      if(on){ 
-        l.classList.add('show'); 
-      } else { 
-        l.classList.remove('show'); 
-      } 
-    };
+    const note=(msg, warn)=>{ const t=$('#toast'); if(!t) return; t.textContent=msg; t.style.background= warn? '#991b1b':'#111827'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1400); };
+    const busy=(on,msg)=>{ const l=$('#loader'); if(!l) return; if(on){ l.classList.add('show'); if(msg) note(msg); } else { l.classList.remove('show'); } };
     const uid=()=>Math.random().toString(36).slice(2,9);
     const slug=s=>(s||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')||('id-'+uid());
     const esc=s=>(s==null?'':String(s)).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
@@ -725,7 +472,7 @@
     const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1)|0);[a[i],a[j]]=[a[j]]}return a};
     const parseTags=t=>!t?[]:Array.isArray(t)?t:String(t).split(/;|,/).map(s=>s.trim()).filter(Boolean);
     
-    // CSV 파싱 함수 개선 (따옴표 처리, 줄바꿈 인식, 첫 행 헤더 제외)
+    // CSV 파싱 함수 개선 (따옴표 처리, 줄바꿈 인식)
     const parseGoogleCSV = (txt, type) => {
       if (!txt) return [];
       const lines = txt.split(/\r?\n/);
@@ -767,7 +514,7 @@
         let q = false;
         for(let i=0; i<line.length; i++){
           const ch = line[i];
-          if(ch==='"' && line[i+1]==='"' && q){ /* 따옴표 내의 이스케이프된 따옴표 처리 */
+          if(ch==='"' && line[i+1]==='"'){
             cur += '"';
             i++;
           } else if(ch==='"'){
@@ -847,7 +594,7 @@
     let DemoSets = [];
     let BlogPosts = [];
     const SetsFilters = { group: '', modality: '', tags: [] };
-    const BlogsFilters = { category: [], sort: 'desc', showAllCategories: false, filtersOpen: true, listOpen: true, tocOpen: false };
+    const BlogsFilters = { category: [], sort: 'desc', showAllCategories: false };
 
     // ====== 테마 ======
     const Theme={
@@ -855,6 +602,7 @@
         document.documentElement.classList.toggle('dark');
         const isDark=document.documentElement.classList.contains('dark');
         $('#theme-btn').textContent=isDark?'🌙':'☀️';
+        note(isDark?'다크 모드 적용':'라이트 모드 적용');
         localStorage.setItem('theme', isDark?'dark':'light');
       },
       init(){
@@ -886,18 +634,16 @@
     function renderHome(){
       const st=homeStats();
       $('#home-stats').innerHTML = [
-        `<span class='stat'>세트 <b style="font-weight:700;">${st.sets}</b></span>`,
-        `<span class='stat'>카드 <b style="font-weight:700;">${st.cards}</b></span>`,
-        `<span class='stat'>칼럼 <b style="font-weight:700;">${st.blogs}</b></span>`
+        `<span class='stat'>세트 <b>${st.sets}</b></span>`,
+        `<span class='stat'>카드 <b>${st.cards}</b></span>`,
+        `<span class='stat'>칼럼 <b>${st.blogs}</b></span>`
       ].join(' ');
-      
       $('#home-reco').innerHTML = DemoSets.map(s=>tile(s)).join('');
-      
       const latest = [...BlogPosts].sort((a,b)=>b.when-a.when).slice(0,6)
         .map(p=>`<a class='card' href="#blog" data-action="blog-select" data-id="${p.id}" style='padding:12px;'>
-          <div style='font-weight:700; font-size:var(--fs-body);'>${esc(p.title)}</div>
-          <div class='muted' style='font-size:var(--fs-xsmall); margin-bottom:6px;'>${mdDate(p.when)}${p.category? ' · '+esc(p.category):''}</div>
-          <div class='muted' style='overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size: var(--fs-xsmall); line-height: 1.4;'>
+          <div style='font-weight:900; font-size:16px;'>${esc(p.title)}</div>
+          <div class='muted' style='font-size:12px; margin-bottom:6px;'>${mdDate(p.when)}${p.category? ' · '+esc(p.category):''}</div>
+          <div class='muted' style='overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;'>
             ${esc(toPlainText(p.body||'').slice(0,180))}...
           </div>
         </a>`).join('');
@@ -908,18 +654,18 @@
       const count = (s.cards?.length||0);
       const mod = s.modality||'Mixed';
       const img = (s.cards && s.cards[0]?.img) || '';
-      const thumb = '' 
+      const thumb = ''
     
       return `<div class='set-tile'>
         ${thumb}
         <div class='tile-body'>
           <div style='display:flex;align-items:center;gap:8px;justify-content:space-between'>
-            <div style='font-weight:700; font-size:var(--fs-body);'>${esc(s.title)}</div>
-            <span class='chip'><span class='card-count' style="font-weight: 700;">🃏 ${count}장</span></span>
+            <div style='font-weight:900; font-size:16px'>${esc(s.title)}</div>
+            <span class='chip'>🃏 ${count}장</span>
           </div>
           <div style='display:flex;gap:8px;margin-top:6px'>
-            <button class='btn primary small' data-action='start-mode' data-mode='flash' data-id='${s.id}'>Flash</button>
-            <button class='btn small' data-action='start-mode' data-mode='quiz' data-id='${s.id}'>Quiz</button>
+            <button class='btn primary' data-action='start-mode' data-mode='flash' data-id='${s.id}'>Flash</button>
+            <button class='btn' data-action='start-mode' data-mode='quiz' data-id='${s.id}'>Quiz</button>
           </div>
         </div>
       </div>`;
@@ -929,14 +675,17 @@
     function uniqueSetsTags(){ const allTags = DemoSets.flatMap(s => (s.tags || [])).filter(t => t.trim() !== ''); const tagCounts = {}; allTags.forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1); return Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]); }
 
     function renderSetFilters(){
+        // 과목 필터
         const groups = uniqueGroups();
         const groupSelect = $('#group');
         groupSelect.innerHTML = '<option value="">전체</option>' + groups.map(g => `<option value="${esc(g)}" ${SetsFilters.group === g ? 'selected' : ''}>${esc(g)}</option>`).join('');
         
+        // 분류 필터
         const mods = uniqueModalities();
         const modSelect = $('#mod');
         modSelect.innerHTML = '<option value="">전체</option>' + mods.map(m => `<option value="${esc(m)}" ${SetsFilters.modality === m ? 'selected' : ''}>${esc(m)}</option>`).join('');
 
+        // 태그 필터 (버튼형)
         const tags = uniqueSetsTags();
         const tagsList = $('#tag-filter-list');
         tagsList.innerHTML = tags.map(t => `<button class="btn small filter ${SetsFilters.tags.includes(t) ? 'active' : ''}" data-action="filter-tag" data-filter-value="${esc(t)}">#${esc(t)}</button>`).join('');
@@ -944,7 +693,7 @@
 
     function renderSetList(){
       renderSetFilters();
-      const q = $('#q-header')?.value?.trim().toLowerCase()||''; // 헤더 검색창 사용
+      const q = $('#q')?.value?.trim().toLowerCase()||'';
       const groupFilter = SetsFilters.group;
       const modFilter = SetsFilters.modality;
       const activeTags = SetsFilters.tags;
@@ -972,68 +721,19 @@
           <div class="bin">
             <div class="bin-bar"><i style="width:0%"></i></div>
             <div class="muted" style="font-size:12px;margin-top:4px">${lb}</div>
-            <div style="font-weight:700;font-size:var(--fs-body)">0</div>
+            <div style="font-weight:900;font-size:18px">0</div>
           </div>`).join('');
         $('#auto-next').checked = this.autoNext;
         $('#auto-next-delay').value = String(this.autoNextDelay);
         $('#autoplay-btn').textContent = this.autoplay ? '❚❚' : '▶';
         this.render();
         if(!CurrentSet?.cards?.length){ note('이 세트에는 카드가 없습니다. Admin에서 데이터 확인 또는 원격 새로고침을 실행하세요.', true); }
-        Flash.updateNavButtons(this.i);
       },
-      reset(){ 
-        this.setId=CurrentSet?.id||null; 
-        this.order = (CurrentSet?.cards||[]).map((_,i)=>i); 
-        this.bins=[[],[],[],[],[]]; 
-        this.bins[0]=[...this.order]; 
-        this.i=0; 
-        this.flipped=false; 
-        this.stopTimer(); 
-        this.render(); 
-        Flash.updateNavButtons(this.i);
-      },
+      reset(){ this.setId=CurrentSet?.id||null; this.order = (CurrentSet?.cards||[]).map((_,i)=>i); this.bins=[[],[],[],[],[]]; this.bins[0]=[...this.order]; this.i=0; this.flipped=false; this.stopTimer(); this.render(); },
       card(){ return CurrentSet?.cards?.[this.order[this.i]]; },
-      showFront(){ 
-          this.flipped=false; 
-          const fc=$('#flash-card'); 
-          const b=$('#flash-back'); 
-          const hint=$('#flash-card .hint');
-          fc.classList.remove('show-back'); 
-          fc.classList.add('show-front'); 
-          if(b) b.style.display='none'; 
-          if(hint) hint.style.display='block';
-      },
-      showBack(){ 
-          this.flipped=true; 
-          const fc=$('#flash-card'); 
-          const b=$('#flash-back'); 
-          const hint=$('#flash-card .hint');
-          fc.classList.remove('show-front'); 
-          fc.classList.add('show-back'); 
-          if(b) b.style.display='block'; 
-          if(hint) hint.style.display='none'; // 정답 보일 때 힌트 문구 삭제
-      },
-      toggle(){ 
-          // 3. 타이머 기능 복구
-          if (this.flipped) {
-              this.showFront(); 
-          } else {
-              this.showBack();
-              this.stopTimer(); 
-              
-              if($('#auto-next').checked) { 
-                  const delay = +($('#auto-next-delay').value||this.autoNextDelay);
-                  setTimeout(()=> {
-                      if(this.autoplay){
-                          this.next();
-                          if(this.allMastered()) this.stopAutoplay(true); else this.startTimer();
-                      } else {
-                          this.next();
-                      }
-                  }, delay || 5000);
-              }
-          }
-      },
+      showFront(){ this.flipped=false; const fc=$('#flash-card'); fc.classList.remove('show-back'); fc.classList.add('show-front'); },
+      showBack(){ this.flipped=true; const fc=$('#flash-card'); fc.classList.remove('show-front'); fc.classList.add('show-back'); },
+      toggle(){ this.flipped? this.showFront() : this.showBack(); this.stopTimer(); },
       next(){
         const total = this.order.length;
         let attempts = 0;
@@ -1046,40 +746,8 @@
           if(attempts>total) break;
         }while(true);
         this.flipped=false; this.stopTimer(); this.render();
-        Flash.updateNavButtons(this.i);
       },
-      prev(){ 
-        if(this.i>0){ 
-            this.i--; 
-            this.flipped=false; 
-            this.stopTimer(); 
-            this.render(); 
-        } 
-        Flash.updateNavButtons(this.i);
-      },
-      updateNavButtons(currentIndex){
-          const total = this.order.length;
-          const prevBtn = $('#flash-prev-btn');
-          const nextBtn = $('#flash-next-btn');
-          
-          const title = CurrentSet?.title || '세트';
-          
-          if(currentIndex > 0){
-              prevBtn.textContent = `← ${title}`;
-              prevBtn.style.visibility = 'visible';
-          } else {
-              prevBtn.textContent = `← 이전 카드`;
-              prevBtn.style.visibility = 'hidden';
-          }
-          
-          if(currentIndex < total - 1){
-              nextBtn.textContent = `${title} →`;
-              nextBtn.style.visibility = 'visible';
-          } else {
-              nextBtn.textContent = `다음 카드 →`;
-              nextBtn.style.visibility = 'hidden';
-          }
-      },
+      prev(){ if(this.i>0){ this.i--; this.flipped=false; this.stopTimer(); this.render(); } },
       binOf(idx){ return this.bins.findIndex(b=>b.includes(idx)); },
       moveBin(idx, to){ let from=this.binOf(idx); if(from<0) from=0; this.bins[from]=this.bins[from].filter(x=>x!==idx); this.bins[to].push(idx); },
       grade(ok){
@@ -1151,12 +819,7 @@
     // ====== Quiz ======
     let CurrentSet = null;
     const Quiz={ sheet:[], i:0, score:0,
-      mount(){ 
-        if(!CurrentSet) CurrentSet=DemoSets[0]; 
-        $('#quiz-title').textContent=(CurrentSet?.title||'')+' – Quiz'; 
-        $('#quiz-stage').style.display='none'; 
-        this.updateNavButtons();
-      },
+      mount(){ if(!CurrentSet) CurrentSet=DemoSets[0]; $('#quiz-title').textContent=(CurrentSet?.title||'')+' – Quiz'; $('#quiz-stage').style.display='none'; },
       start(){
         if(!CurrentSet?.cards?.length){ note('이 세트에 카드가 없어 퀴즈를 시작할 수 없습니다.', true); return; }
         const mode=$('#quiz-mode').value; const n=+$('#quiz-n').value;
@@ -1169,12 +832,12 @@
         const q=this.cur(); const stage=$('#quiz-stage'); stage.style.display='block';
         stage.innerHTML = `
         <div class='muted' style='display:flex;gap:8px;align-items:center;margin-bottom:8px'>
-          문항 <b style="font-weight:700;">${this.i+1}/${this.sheet.length}</b>
-          <span style='margin-left:auto'>점수 <b style="font-weight:700;">${this.score}</b></span>
+          문항 <b>${this.i+1}/${this.sheet.length}</b>
+          <span style='margin-left:auto'>점수 <b>${this.score}</b></span>
         </div>
         <div style='display:grid;gap:10px'>
           ${q?.image?`<img src='${q.image}' alt='x-ray' style="max-height:360px; object-fit:contain"/>`:''}
-          <div style='font-weight:700; font-size:var(--fs-h2)'>
+          <div style='font-weight:900; font-size:var(--fs-h2)'>
             <span>${esc(q?.stem||'')}</span>
           </div>
           <div id='quiz-opts' class='grid' style="gap:8px"></div>
@@ -1193,23 +856,13 @@
           const btn=document.createElement('button'); btn.className='btn'; btn.textContent='확인'; btn.dataset.action='quiz-fill';
           wrap.appendChild(input); wrap.appendChild(btn);
         }
-        this.updateNavButtons();
-      },
-      updateNavButtons(){
-          const prevBtn = $('#quiz-nav-buttons [data-action="quiz-prev"]');
-          const nextBtn = $('#quiz-nav-buttons [data-action="quiz-next"]');
-          if (prevBtn) prevBtn.style.visibility = (this.i > 0 && this.sheet.length > 0) ? 'visible' : 'hidden';
-          if (nextBtn) nextBtn.style.visibility = (this.i < this.sheet.length - 1 && this.sheet.length > 0) ? 'visible' : 'hidden';
       },
       pick(idx){ const q=this.cur(); const nodes=$$('#quiz-opts .opt'); nodes.forEach((n,i)=>{n.dataset.action=''; n.classList.toggle('correct', i===q.answerIndex); if(i===idx && i!==q.answerIndex) n.classList.add('wrong');}); if(idx===q.answerIndex){this.score++; note('정답!');} else {note('오답');} this.explain(); },
       fillCheck(val){ const q=this.cur(); const ok = norm(val)===norm(q.answerText); if(ok){this.score++; note('정답!');} else {note('오답');} this.explain(ok?undefined:`정답: ${q.answerText}`); },
       explain(extra){ const q=this.cur(); const exp=$('#quiz-exp'); exp.style.display='block'; exp.textContent = (extra? extra+ ' · ' : '') + (q.explain||''); },
       next(){ if(this.i<this.sheet.length-1){ this.i++; this.render(); } else this.finish(); },
       prev(){ if(this.i>0){ this.i--; this.render(); } },
-      finish(){ 
-        const acc=((this.score/this.sheet.length)*100|0); 
-        $('#quiz-stage').innerHTML = `<div style='font-size:var(--fs-h2); font-weight:700; margin-bottom:6px'>퀴즈 완료!</div><div class='muted'>최종 점수</div><div class='quiz-result-score'>${this.score}/${this.sheet.length} (${acc}%)</div><div style='display:flex;gap:8px'><button class='btn primary' data-action='quiz-restart'>다시 풀기</button><button class='btn' data-action='start-mode' data-mode='flash'>Flash 복습</button></div>`; 
-      }
+      finish(){ const acc=((this.score/this.sheet.length)*100|0); $('#quiz-stage').innerHTML = `<div style='font-size:22px;font-weight:900;margin-bottom:6px'>퀴즈 완료!</div><div class='muted'>최종 점수</div><div style='font-size:46px;font-weight:900;margin:6px 0 14px'>${this.score}/${this.sheet.length} (${acc}%)</div><div style='display:flex;gap:8px'><button class='btn primary' data-action='quiz-restart'>다시 풀기</button><button class='btn' data-action='start-mode' data-mode='flash'>Flash 복습</button></div>`; }
     };
     function makeQ(mode, k){
       if(mode==='tf'){ const truth = Math.random()<0.5; const others = DemoSets.flatMap(s=>s.cards).filter(x=>x!==k); const alt = others.length? sample(others,1)[0] : k; const text = truth ? k.a : alt.a; const stem = '이 영상의 진단명은 ' + esc(text) + ' 이다.'; return {kind:'tf', stem, image:k.img, explain:k.e, options:['O','X'], answerIndex: truth?0:1}; }
@@ -1218,79 +871,33 @@
     }
 
     // ====== Blog ======
-    const Blog={ curId:null, blogList:[],
-      new(){ /* 관리자 기능 제거 */ },
-      select(id){ 
-        this.curId=id; 
-        const p=BlogPosts.find(x=>x.id===id); 
-        if(!p) return; 
-        this.renderView(p); 
-        $$('#blog-list a').forEach(el => el.classList.toggle('active', el.dataset.id === id));
-        this.updateNavButtons(id);
-        $('#blog-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      },
+    const Blog={ curId:null, listOpen:true,
+      new(){ this.curId=null; this.showEditor(true); $('#blog-title').value=''; $('#blog-body').value=''; $('#blog-view').innerHTML='<div class="muted">새 글 작성 중...</div>'; $('#blog-toc').style.display='none'; },
+      select(id){ this.curId=id; const p=BlogPosts.find(x=>x.id===id); if(!p) return; this.showEditor(false); this.renderView(p); $$('#blog-list a').forEach(el => el.classList.toggle('active', el.dataset.id === id)); },
       renderView(p){
-        const htmlBody = markdown(p.body || ''); 
+        const htmlBody = marked.parse(p.body || '');
         const html = `<h1>${esc(p.title)}</h1><div class="muted" style="margin-bottom:12px">${mdDate(p.when)}${p.category? ' · '+esc(p.category):''}</div>`+ htmlBody; 
         $('#blog-view').innerHTML=html;
         Blog.renderTOC();
       },
-      updateNavButtons(currentId){
-        const list = this.blogList;
-        const currentIndex = list.findIndex(p => p.id === currentId);
-        const prevPost = list[currentIndex - 1];
-        const nextPost = list[currentIndex + 1];
-
-        const prevBtn = $('#blog-prev-btn');
-        const nextBtn = $('#blog-next-btn');
-
-        if (prevPost) {
-            prevBtn.style.visibility = 'visible';
-            prevBtn.dataset.id = prevPost.id;
-            prevBtn.textContent = `← ${esc(prevPost.title)}`;
-        } else {
-            prevBtn.style.visibility = 'hidden';
-            prevBtn.textContent = '← 이전 글';
-        }
-
-        if (nextPost) {
-            nextBtn.style.visibility = 'visible';
-            nextBtn.dataset.id = nextPost.id;
-            nextBtn.textContent = `${esc(nextPost.title)} →`;
-        } else {
-            nextBtn.style.visibility = 'hidden';
-            nextBtn.textContent = '다음 글 →';
-        }
-      },
-      prev(){
-        const list = this.blogList;
-        const currentIndex = list.findIndex(p => p.id === this.curId);
-        if (currentIndex > 0) {
-            this.select(list[currentIndex - 1].id);
-        }
-      },
-      next(){
-        const list = this.blogList;
-        const currentIndex = list.findIndex(p => p.id === this.curId);
-        if (currentIndex < list.length - 1) {
-            this.select(list[currentIndex + 1].id);
-        }
-      },
       renderTOC(){
-        const toc = markdown.headings || [];
+        const toc = [];
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = marked.parse(BlogPosts.find(p => p.id === Blog.curId)?.body || '');
+        tempDiv.querySelectorAll('h1, h2, h3, h4').forEach((h, i) => {
+            const id = slug(h.textContent) + '-' + i;
+            h.id = id;
+            toc.push({ id, level: parseInt(h.tagName[1]), text: h.textContent });
+        });
+
         const el=$('#blog-toc');
-        const tocWrapper = $('#blog-toc-wrapper');
-        
-        if(!toc.length){
+        if(!toc.length || !this.listOpen){
             el.style.display='none';
-            tocWrapper.style.display='none';
             el.innerHTML='';
             return;
         }
 
-        tocWrapper.style.display='block';
-        
-        let h='<div style="font-weight:700;margin:10px 0 6px">목차</div><ul>';
+        let h='<div style="font-weight:900;margin:10px 0 6px">목차</div><ul>';
         let prev = 1;
         toc.forEach(({id, level, text})=>{
             if(level>prev) h+='<ul>';
@@ -1300,15 +907,13 @@
         });
         h+='</ul>'.repeat(prev)+'</ul>';
         el.innerHTML=h;
-
-        if (BlogsFilters.tocOpen) {
-            el.style.display = 'block';
-            $('#blog-toc-toggle-btn').textContent = '⏶';
-        } else {
-            el.style.display = 'none';
-            $('#blog-toc-toggle-btn').textContent = '⏷';
-        }
+        el.style.display='block';
       },
+      editStart(){ if(!this.checkKey()) return; const p=BlogPosts.find(x=>x.id===this.curId); if(!p){ note('선택된 글 없음'); return; } this.showEditor(true); $('#blog-title').value=p.title; $('#blog-body').value=p.body; },
+      save(){ if(!this.checkKey()) return; const t=$('#blog-title').value.trim(); const b=$('#blog-body').value.trim(); if(!t||!b){ note('제목/내용을 입력'); return; } if(this.curId){ const p=BlogPosts.find(x=>x.id===this.curId); if(p){ p.title=t; p.body=b; p.when=Date.now(); this.renderView(p); } } else { const np={id:uid(), title:t, body:b, when:Date.now()}; BlogPosts.unshift(np); this.curId=np.id; this.render(); } persist(); note('저장됨'); this.showEditor(false); renderHome(); },
+      cancel(){ this.showEditor(false); const p=BlogPosts.find(x=>x.id===this.curId); if(p) this.renderView(p); },
+      delete(){ if(!this.checkKey()) return; if(!this.curId){ note('선택된 글 없음'); return; } if(!confirm('정말 삭제할까요?')) return; BlogPosts = BlogPosts.filter(x=>x.id!==this.curId); this.curId = BlogPosts[0]?.id||null; persist(); this.render(); note('삭제됨'); renderHome(); },
+      showEditor(show){ $('#blog-editor').style.display= show? 'block':'none'; },
       render(){
         const q = ($('#blog-q')?.value||'').toLowerCase();
         const sort = BlogsFilters.sort;
@@ -1328,81 +933,42 @@
             else return a.when - b.when;
         });
 
-        this.blogList = list;
-
-        $('#blog-list').innerHTML = list.map(p=>`<li><a data-action='blog-select' data-id='${p.id}'>${esc(p.title)}</a></li>`).join('') || '<div class="muted" style="padding:8px">글이 없습니다.</div>';
-        
-        // 목록 표시 상태 업데이트
-        if (BlogsFilters.listOpen) {
-            $('#blog-list-toggle-btn').textContent = '⏶';
-            $('#blog-list-wrapper').style.display = 'block';
-        } else {
-            $('#blog-list-toggle-btn').textContent = '⏷';
-            $('#blog-list-wrapper').style.display = 'none';
-        }
-
-        if(this.curId){ 
-            const p = list.find(x=>x.id===this.curId);
-            if(p) this.select(this.curId);
-            else if (list.length > 0) this.select(list[0].id);
-        } else if (list.length > 0) { 
-            this.select(list[0].id);
-        } else { 
-            $('#blog-view').innerHTML = ''; 
-            $('#blog-toc').style.display = 'none'; 
-            this.updateNavButtons(null);
-        }
+        $('#blog-list').innerHTML = this.listOpen ? (list.map(p=>`<li><a data-action='blog-select' data-id='${p.id}'>${esc(p.title)}</a></li>`).join('') || '<div class="muted" style="padding:8px">글이 없습니다.</div>') : '';
+        if(this.listOpen) this.renderTOC(); else { $('#blog-toc').style.display='none'; $('#blog-toc').innerHTML=''; }
+        if(this.curId){ const p = BlogPosts.find(x=>x.id===this.curId); if(p) this.select(this.curId);
+        } else if (list.length > 0) { this.select(list[0].id);
+        } else { $('#blog-view').innerHTML = ''; $('#blog-toc').style.display = 'none'; }
         renderHome();
         this.renderFilters();
       },
       speakBody(){ const p=BlogPosts.find(x=>x.id===this.curId); if(!p) return; const text = toPlainText(p.body||''); if(!text.trim()) { note('읽을 본문이 없습니다.'); return; } tts.toggle(text); },
       stopSpeak(){ tts.stop(); },
-      
-      updateFilterVisibility(){
-        const filters = $('#blog-filters');
-        const btn = $('#blog-filters-toggle-btn');
-        if (filters) filters.style.display = BlogsFilters.filtersOpen ? 'block' : 'none';
-        if (btn) btn.textContent = BlogsFilters.filtersOpen ? '⏶' : '⏷';
-      },
       toggleList(){
-        BlogsFilters.listOpen = !BlogsFilters.listOpen;
+        this.listOpen = !this.listOpen;
+        $('#blog-filters').style.display = this.listOpen ? 'block' : 'none';
+        $$('#blog-list li').forEach(li => li.style.display = this.listOpen ? 'block' : 'none');
         this.render();
       },
-      toggleFilters(){
-        BlogsFilters.filtersOpen = !BlogsFilters.filtersOpen;
-        this.updateFilterVisibility();
-      },
-      toggleToc(){
-        BlogsFilters.tocOpen = !BlogsFilters.tocOpen;
-        const el = $('#blog-toc');
-        const btn = $('#blog-toc-toggle-btn');
-        if (el) el.style.display = BlogsFilters.tocOpen ? 'block' : 'none';
-        if (btn) btn.textContent = BlogsFilters.tocOpen ? '⏶' : '⏷';
-      },
+      checkKey(){ const k=$('#blog-key').value.trim(); if(k!==ADMIN_KEY){ note('관리자 키 오류',true); return false } return true; },
       
       renderFilters(){
           const allCategories = [...new Set(BlogPosts.flatMap(p => (p.category || '').split(/;|,/).map(c => c.trim()).filter(c => c !== '')))];
           const filterList = $('#category-filter-list');
           let displayCategories = allCategories;
-          let toggleButton = '';
+          let showMoreButton = '';
           
-          if (allCategories.length > VISIBLE_CATEGORIES_LIMIT) {
-              if (!BlogsFilters.showAllCategories) {
-                  displayCategories = allCategories.slice(0, VISIBLE_CATEGORIES_LIMIT);
-                  toggleButton = `<button class="btn small" data-action="toggle-categories">전체</button>`;
-              } else {
-                  toggleButton = `<button class="btn small" data-action="toggle-categories">접기</button>`;
-              }
+          if (allCategories.length > VISIBLE_CATEGORIES_LIMIT && !BlogsFilters.showAllCategories) {
+              displayCategories = allCategories.slice(0, VISIBLE_CATEGORIES_LIMIT);
+              showMoreButton = `<button class="btn small" data-action="toggle-categories">[전체보기]</button>`;
           }
 
-          filterList.innerHTML = displayCategories.map(c => `<button class="btn small filter ${BlogsFilters.category.includes(c) ? 'active' : ''}" data-action="filter-category" data-filter-value="${esc(c)}">${esc(c)}</button>`).join('') + toggleButton;
+          filterList.innerHTML = displayCategories.map(c => `<button class="btn small filter ${BlogsFilters.category.includes(c) ? 'active' : ''}" data-action="filter-category" data-filter-value="${esc(c)}">${esc(c)}</button>`).join('') + showMoreButton;
 
           $('#blog-sort').value = BlogsFilters.sort;
-          this.updateFilterVisibility();
       }
     };
 
-    // ====== Admin (기능은 유지하되 UI에서 숨김) ======
+    // ====== Admin ======
     const Admin={ mount(){ fillTargetSets(); $('#adm-key').value=''; },
       checkKey(){ const k=$('#adm-key').value.trim(); if(k!==ADMIN_KEY){ note('관리자 키 오류',true); return false } return true; },
       uploadJSON(){ if(!this.checkKey())return; try{ const arr=JSON.parse($('#adm-json').value||'[]'); addCards(arr, targetSetId()); note('등록 완료'); routeTo('sets'); }catch(e){ note('JSON 오류: '+e.message,true) } },
@@ -1543,7 +1109,7 @@
     }
     
     async function remoteReload(){
-      busy(true); // 로딩 메시지 없이 로더만 띄움
+      busy(true,'원격 데이터 확인 중...');
       const a = await tryLoadSetsFromGoogleSheet();
       const b = await tryLoadBlogsFromGoogleSheet();
       busy(false, (a||b)? '원격 데이터 적용 완료' : '원격 데이터 없음');
@@ -1603,32 +1169,17 @@
       // Blog
       if(act==='blog-new'){ Blog.new(); return; }
       if(act==='blog-select'){ const id=el.dataset.id; Blog.select(id); return; }
-      if(act==='blog-prev'){ Blog.prev(); return; }
-      if(act==='blog-next'){ Blog.next(); return; }
       if(act==='blog-edit'){ Blog.editStart(); return; }
       if(act==='blog-save'){ Blog.save(); return; }
       if(act==='blog-cancel'){ Blog.cancel(); return; }
       if(act==='blog-delete'){ Blog.delete(); return; }
       if(act==='blog-list-toggle'){ Blog.toggleList(); return; }
-      if(act==='blog-filters-toggle'){ 
-        Blog.toggleFilters(); 
-        return; 
-      }
-      if(act==='blog-toc-toggle'){ 
-        Blog.toggleToc();
-        return; 
-      }
       if(act==='toggle-categories'){
           BlogsFilters.showAllCategories = !BlogsFilters.showAllCategories;
           Blog.renderFilters();
           return;
       }
-      if(act==='toc-goto'){ 
-        const id=el.dataset.target; 
-        const t=document.getElementById(id); 
-        if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); 
-        return; 
-      }
+      if(act==='toc-goto'){ const id=el.dataset.target; const t=document.getElementById(id); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); return; }
       if(act==='tts-body'){ Blog.speakBody(); return; }
       if(act==='filter-category'){
           const category = el.dataset.filterValue;
@@ -1652,7 +1203,7 @@
     });
 
     // 입력 이벤트
-    $('#q-header')?.addEventListener('input', renderSetList); // 세트 검색창
+    $('#q')?.addEventListener('input', renderSetList);
     $('#group')?.addEventListener('change', (e) => {
       SetsFilters.group = e.target.value;
       renderSetList();
@@ -1675,34 +1226,6 @@
       if(e.key==='ArrowRight'){ Flash.next(); }
       if(e.key==='ArrowLeft'){ Flash.prev(); }
     });
-    
-    // 키보드 단축키 (Quiz)
-    window.addEventListener('keydown',(e)=>{
-        const isQuiz = $('#view-quiz')?.classList.contains('active');
-        if(!isQuiz || Quiz.sheet.length === 0 || $('#quiz-stage').style.display === 'none') return;
-
-        // Spacebar to pick option 1 (O/X first option)
-        if (e.code === 'Space') {
-            const currentQuestion = Quiz.cur();
-            if (currentQuestion.kind === 'tf' || currentQuestion.kind === 'mc') {
-                e.preventDefault();
-                const option1 = $('#quiz-opts .opt[data-idx="0"]');
-                if (option1) Quiz.pick(0);
-            }
-        }
-        
-        // ArrowRight to next question
-        if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            Quiz.next();
-        }
-        // ArrowLeft to previous question
-        if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            Quiz.prev();
-        }
-    });
-
 
     // ====== 부트스트랩 ======
     (async function init(){

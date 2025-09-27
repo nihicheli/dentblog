@@ -358,7 +358,7 @@
             <input id="q" placeholder="검색" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a; min-width: 150px; font-size: var(--fs-small);"/>
             <div class="filter-group">
                 <label for="group" class="label">과목</label>
-                <select id="group" style="padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#0f172a;appearance:none;-webkit-appearance:none;padding-right:28px;">
+                <select id="group" style="padding:12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#0f172a;appearance:none;-webkit-appearance:none;padding-right:28px;">
                     <option value="">전체</option>
                 </select>
             </div>
@@ -1038,7 +1038,7 @@
         if (prevPost) {
             prevBtn.style.visibility = 'visible';
             prevBtn.dataset.id = prevPost.id;
-            prevBtn.textContent = `← : ${esc(prevPost.title)}`;
+            prevBtn.textContent = `← ${esc(prevPost.title)}`;
         } else {
             prevBtn.style.visibility = 'hidden';
             prevBtn.textContent = '← ';
@@ -1048,7 +1048,7 @@
         if (nextPost) {
             nextBtn.style.visibility = 'visible';
             nextBtn.dataset.id = nextPost.id;
-            nextBtn.textContent = `: ${esc(nextPost.title)} →`;
+            nextBtn.textContent = `${esc(nextPost.title)} →`;
         } else {
             nextBtn.style.visibility = 'hidden';
             nextBtn.textContent = ' →';
@@ -1160,9 +1160,9 @@
           if (allCategories.length > VISIBLE_CATEGORIES_LIMIT) {
               if (!BlogsFilters.showAllCategories) {
                   displayCategories = allCategories.slice(0, VISIBLE_CATEGORIES_LIMIT);
-                  toggleButton = `<button class="btn small" data-action="toggle-categories">[전체 태그 보기]</button>`;
+                  toggleButton = `<button class="btn small" data-action="toggle-categories">전체</button>`;
               } else {
-                  toggleButton = `<button class="btn small" data-action="toggle-categories">[접기]</button>`;
+                  toggleButton = `<button class="btn small" data-action="toggle-categories">접기</button>`;
               }
           }
 

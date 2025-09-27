@@ -789,7 +789,7 @@
     <section id="view-blog" class="view">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <h1 style="margin:0;font-size:var(--fs-h1)">칼럼</h1>
-        <button class="btn toggle-icon" data-action="blog-sidebar-toggle" id="blog-sidebar-toggle-btn" aria-label="사이드바 토글">⏷</button>
+        <button class="btn toggle-icon" data-action="blog-sidebar-toggle" id="blog-sidebar-toggle-btn" aria-label="사이드바 토글">▾</button>
         
         <div class="blog-header-controls" style="margin-left:auto;">
             <input id="blog-q" placeholder="칼럼 검색"/>
@@ -803,7 +803,7 @@
             <!-- 정렬 및 태그 섹션 -->
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-bottom:8px;">
               <div>정렬 및 태그</div>
-              <button class="btn toggle-icon" data-action="blog-filters-toggle" id="blog-filters-toggle-btn" title="접기/펼치기">⏶</button>
+              <button class="btn toggle-icon" data-action="blog-filters-toggle" id="blog-filters-toggle-btn" title="접기/펼치기">▴</button>
             </div>
             <div id="blog-filters" class="filters" style="margin-top:4px; margin-bottom: 24px; display: block; gap: 12px;">
                 <div class="filter-group" style="margin-bottom: 12px;">
@@ -822,14 +822,14 @@
             <!-- 글 목록 섹션 -->
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-top:4px; padding-bottom:8px;">
               <div>글 목록</div>
-              <button class="btn toggle-icon" data-action="blog-list-toggle" id="blog-list-toggle-btn" title="접기/펼치기">⏶</button>
+              <button class="btn toggle-icon" data-action="blog-list-toggle" id="blog-list-toggle-btn" title="접기/펼치기">▴</button>
             </div>
             <ul id="blog-list" class="blog-list" style="margin-top:4px; margin-bottom: 24px;"></ul>
             
             <!-- 목차 섹션 -->
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px; padding-top:4px; padding-bottom:8px;">
               <div>목차</div>
-              <button class="btn toggle-icon" data-action="blog-toc-toggle" id="blog-toc-toggle-btn" title="접기/펼치기">⏶</button>
+              <button class="btn toggle-icon" data-action="blog-toc-toggle" id="blog-toc-toggle-btn" title="접기/펼치기">▴</button>
             </div>
             <div id="blog-toc" class="toc" style="display:none; margin-top: 4px;"></div>
 
@@ -1426,7 +1426,7 @@
         if(!toc.length || !BlogsFilters.tocOpen){
             el.style.display='none';
             el.innerHTML='';
-            btn.textContent = '⏷';
+            btn.textContent = '▾';
             return;
         }
 
@@ -1441,7 +1441,7 @@
         h+='</ul>'.repeat(prev)+'</ul>';
         el.innerHTML=h;
         el.style.display='block';
-        btn.textContent = '⏶';
+        btn.textContent = '▴';
       },
       editStart(){ /* 관리자 기능 제거 */ },
       save(){ /* 관리자 기능 제거 */ },
@@ -1476,21 +1476,21 @@
 
         // 필터/목록 토글 상태 반영
         filtersDiv.style.display = BlogsFilters.filtersOpen ? 'block' : 'none';
-        filtersBtn.textContent = BlogsFilters.filtersOpen ? '⏶' : '⏷';
+        filtersBtn.textContent = BlogsFilters.filtersOpen ? '▴' : '▾';
         
         if(BlogsFilters.listOpen) {
             listUl.innerHTML = list.map(p=>`<li><a data-action='blog-select' data-id='${p.id}'>${esc(p.title)}</a></li>`).join('') || '<div class="muted" style="padding:8px">글이 없습니다.</div>';
             listUl.style.display = 'block';
-            listBtn.textContent = '⏶';
+            listBtn.textContent = '▴';
         } else {
             listUl.innerHTML = '';
             listUl.style.display = 'none';
-            listBtn.textContent = '⏷';
+            listBtn.textContent = '▾';
         }
         
         // 사이드바 토글 상태 반영
         sidebarEl.classList.toggle('collapsed', !BlogsFilters.sidebarOpen);
-        sidebarBtn.textContent = BlogsFilters.sidebarOpen ? '⏷' : '⏶';
+        sidebarBtn.textContent = BlogsFilters.sidebarOpen ? '▾' : '▴';
 
         this.renderTOC(); 
 
